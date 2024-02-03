@@ -1,0 +1,137 @@
+.ui-autocomplete {
+            max-height: 300px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+            /* add padding to account for vertical scrollbar */
+            padding-right: 20px;
+    }
+    /* IE 6 doesn't support max-height
+     * we use height instead, but this forces the menu to always be this tall
+     */
+    * html .ui-autocomplete {
+        height: 200px;
+    }
+     .ui-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    display: none;
+    min-width: 160px;   
+    padding: 4px 0;
+    margin: 0 0 10px 25px;
+    list-style: none;
+    background-color: #ffffff;
+    border-color: #ccc;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-style: solid;
+    border-width: 1px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+}
+
+.ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.ui-state-hover, .ui-state-active {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #0088cc;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    background-image: none;
+}
+.btn-primary{
+  background:#81C784;
+}
+
+.btn-primary:hover{
+  background: #428bca;
+}
+
+#footer {
+   position:fixed;
+   margin-left: 4px;
+   left:0px;
+   bottom:0px;
+   height:120px;
+   padding: 10px;
+   width: 447px;
+   max-width: 100%;
+   float: left;
+   background:transparent;
+   border-radius: 2px;
+}
+#footer_paid {
+   position:fixed;
+   margin-left: 4px;
+   left:0px;
+   bottom:0px;
+   height:220px;
+   padding: 10px;
+   width: 447px;
+   max-width: 100%;
+   float: left;
+   background:transparent;
+   border-radius: 2px;
+}
+.tab{
+  width: 100%;
+  padding: 5px;
+}
+.tab thead{
+  border-bottom:1px solid #EEEEEE;
+  padding: 4px 6px; 
+}
+.tab tr{
+  padding: 4px 6px;
+  text-align: left; 
+}
+.tab tbody tr td{
+  border:1px solid #EEEEEE;
+  padding: 6px 6px; 
+  width: 100%;
+  
+}
+.tab>tbody>tr:nth-child(odd)>td, 
+.tab>tbody>tr:nth-child(odd)>th {
+   background-color: #FAFAFA;
+ }
+ .tab>tbody>tr:nth-child(even)>td, 
+.tab>tbody>tr:nth-child(even)>th {
+   background-color: #FFF;
+ }
+ .sidebar{
+  border:1px solid #EEEEEE;
+  width: 100%;
+ }
+ .sidebar thead tr{
+
+   border:1px solid #EEEEEE;
+ }
+  .sidebar thead tr td{
+
+   border:1px solid #EEEEEE;
+ }
+/* IE 6 */
+* html #footer {
+   position:absolute;
+   top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
+}

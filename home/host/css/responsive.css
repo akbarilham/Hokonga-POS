@@ -1,0 +1,318 @@
+/* Extra small devices (phones, less than 768px) */
+@media (max-width : 766px) {
+
+    /* PAGE INNER WHITE BACKGROUND WRAPPER */
+    .inner-wrapper {
+        width  : 100%;
+        margin : 0;
+        }
+
+    /* SERVICE ICON */
+    .services-box span.icon {
+        margin-bottom : 20px;
+        }
+
+    /* GLOBAl SIDE MARGIN */
+    .sm-margin {
+        margin-top : 30px;
+        }
+
+    /* TESTIMONIAL */
+    .client-testimonial-caruosel {
+        margin-top : 30px;
+        }
+
+    /* GLOBAL MARGIN BOTTOM */
+    .mb-30 {
+        margin-bottom : 30px;
+        }
+
+    /* FOOTER WRAPPER */
+    .footer-wrapper .social-icon {
+        text-align    : center;
+        margin-bottom : 20px;
+        }
+
+    /* BACK TO TOP */
+    .backtop {
+        display : none;
+        }
+
+    /* NAVIGATION */
+    .nav > li > a {
+        padding : 10px 2px;
+        }
+
+    /* ERROR PAGE */
+    .page-notfound strong {
+        font-size   : 90px;
+        line-height : 90px;
+        }
+
+    /*HOME RECENT PROJECT*/
+    .portfolio-content .grid-block figure {
+        width        : 100%;
+        margin-right : 0;
+        }
+
+    /*PROJECT*/
+    .css-project-box .img-box {
+        float   : none !important;
+        display : block;
+        margin  : 0 0 20px;
+        }
+
+    .css-project-box .img-box img {
+        max-width : 100%;
+        }
+
+    .css-project-box .img-box a::before {
+        left : 48%;
+        top  : 48%;
+        }
+
+    }
+
+/* Landscape Mobile */
+@media only screen and (min-width : 480px) and (max-width : 767px) {
+
+    /* GLOBAl SIDE MARGIN */
+    .sm-margin {
+        margin-top : 30px;
+        }
+
+    /* CLIENT TESTIMONIAL */
+    .client-testimonial-caruosel {
+        margin-top : 30px;
+        }
+
+    /* GLOBAl BOTTOM MARGIN */
+    .mb-30 {
+        margin-bottom : 30px;
+        }
+
+    /* FOOTER SOCIAL ICON */
+    .footer-wrapper .social-icon {
+        text-align    : center;
+        margin-bottom : 20px;
+        }
+
+    /*PROJECT*/
+    .css-project-box .img-box {
+        float   : none !important;
+        display : block;
+        margin  : 0 0 20px;
+        }
+
+    .css-project-box .img-box img {
+        max-width : 100%;
+        }
+
+    .css-project-box .img-box a::before {
+        left : 48%;
+        top  : 48%;
+        }
+
+    }
+
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width : 768px) and (max-width : 991px) {
+
+    /* NAVBAR HIDE */
+    .navbar-collapse.collapse {
+        display : none !important;
+        }
+
+    /* PAGE INNER WHITE BACKGROUND WRAPPER */
+    .inner-wrapper {
+        width  : 100%;
+        margin : 0;
+        }
+
+    /* SOCIAL ICON */
+    .social-icon {
+        margin-top : 0px;
+        }
+
+    .client-testimonial-caruosel {
+        margin-top : 30px;
+        }
+
+    .mb-30 {
+        margin-bottom : 30px;
+        }
+
+    /* GLOBAl SIDE MARGIN */
+    .sm-margin {
+        margin-top : 30px;
+        }
+
+    /* FOOTER TOP */
+    .footer-wrapper .social-icon {
+        text-align    : center;
+        margin-bottom : 20px;
+        margin-top    : 0px;
+        }
+
+    /* BACK TO TOP */
+    .backtop {
+        bottom  : 0px;
+        display : block;
+        }
+
+    .call-to-action-box .floatleft,
+    .call-to-action-box .floatright {
+        width : 50%;
+        }
+
+    /* PROGRESS CHART */
+    .our_progress {
+        width       : 138px;
+        margin-left : 0px;
+        }
+
+    #donutchart1,
+    #donutchart2,
+    #donutchart3,
+    #donutchart4,
+    #donutchart5 {
+        margin-left : 5px;
+        }
+
+    /* PORTFOLIO GRID */
+    .grid li {
+        width : 360px;
+        }
+
+    /*HOME RECENT PROJECT*/
+    .portfolio-content .grid-block figure {
+        width : 47.6%;
+        }
+
+    .portfolio-content .grid-block figure:nth-child(2n+2) {
+        margin-right : 0;
+        }
+
+    /*PROJECT*/
+    .css-project-box .img-box {
+        float   : none !important;
+        display : block;
+        margin  : 0 0 20px;
+        }
+
+    .css-project-box .img-box img {
+        max-width : 100%;
+        }
+
+    .css-project-box .img-box a::before {
+        left : 44%;
+        top  : 44%;
+        }
+
+    }
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width : 992px) and (max-width : 1199px) {
+
+    /* PAGE INNER WHITE BACKGROUND WRAPPER */
+    .inner-wrapper {
+        width : 98%;
+        }
+
+    /* SERVICE BOX */
+    .services-box span.icon {
+        margin-bottom : 20px;
+        }
+
+    /* PROGRESS CHART */
+    .our-progress {
+        width : 172px;
+        }
+
+    #donutchart1,
+    #donutchart2,
+    #donutchart3,
+    #donutchart4,
+    #donutchart5 {
+        margin-left : 15px;
+        }
+
+    /* PORTFOLIO GRID WIDTH */
+    .grid li {
+        width : 230px;
+        }
+
+    /* TOP RIGHT FEATURE BOX */
+    #showcase-content1 {
+        margin-bottom : 10px;
+        }
+
+    .feature {
+        height : 155px;
+        }
+
+    .feature-green {
+        padding : 22px 17px;
+        }
+
+    .feature-blue {
+        padding : 37px;
+        }
+
+    .feature-blue .b-light-text {
+        font-size : 26px;
+        }
+
+    .feature-blue .s-light-text {
+        font-size   : 14px;
+        font-weight : 300;
+        }
+
+    .feature-blue .m-bold-text {
+        font-size : 24px;
+        }
+
+    /* TAB */
+    .nav > li > a {
+        padding : 10px 5px;
+        }
+
+    /* MEGAMENU CAROUSEL */
+    #myCarousel a.right i {
+        top  : 23%;
+        left : -4px;
+        }
+
+    #myCarousel a.left i {
+        top  : 24%;
+        left : 3px;
+        }
+
+    /*HOME RECENT PROJECT*/
+    .portfolio-content .grid-block figure {
+        width : 30.9%;
+        }
+
+    .portfolio-content .grid-block figure:nth-child(3n+3) {
+        margin-right : 0;
+        }
+
+    }
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width : 1200px) and (max-width : 1280px) {
+
+    /* PAGE INNER WHITE BACKGROUND WRAPPER */
+    .inner-wrapper {
+        width : 99%;
+        }
+
+    }
+
+@media (min-width : 1200px) {
+    .portfolio-content .grid-block figure:nth-child(4n+4) {
+        margin-right : 0;
+        }
+    }
+

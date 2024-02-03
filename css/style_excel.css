@@ -1,0 +1,6 @@
+[ng\:cloak], [ng-cloak], .ng-cloak {
+ display: none;
+}
+td {
+ border:1px solid #aaa;
+}

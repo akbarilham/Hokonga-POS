@@ -1,0 +1,11 @@
+*.sql
+*.txt
+*.pdf
+*.xlsx
+*.csv
+img/*
+img_pos/*
+*.jpg
+*.png
+backup
+assets
