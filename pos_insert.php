@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 author : Yogi Anditia
 date : 18 April 2016
@@ -12,10 +12,10 @@ if (!$login_id OR $login_id == "" OR $login_level < "1") {
     include "config/dbconn.inc";
     
     //parameter
-    $index = $_REQUEST["index"];
-    $val   = $_REQUEST["val"]; //Hasil dari Barcode Reader
-    $qtys  = $_REQUEST["qtys"];
-    $uid   = $_REQUEST["uid"];
+    $index = mysqli_real_escape_string($dbconn, $_REQUEST["index"]);
+    $val   = mysqli_real_escape_string($dbconn, $_REQUEST["val"]); //Hasil dari Barcode Reader
+    $qtys  = mysqli_real_escape_string($dbconn, $_REQUEST["qtys"]);
+    $uid   = mysqli_real_escape_string($dbconn, $_REQUEST["uid"]);
     
     $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
     $ip       = '';
@@ -79,8 +79,7 @@ if (!$login_id OR $login_id == "" OR $login_level < "1") {
         } else {
             $qty = $qtys;
         }
-        
-       
+
         
         //cek daftar produk yang di input
         $query  = "SELECT pname,price_sale,org_pcode,dc_rate,org_barcode,stok_awal,stok_gudang,stok,dc_rate_WH,uid FROM item_masters WHERE $check";
