@@ -1,13 +1,13 @@
-<?
-include "config/common.inc";
+<?php
+include "config/common.php";
 
 if(!$login_id OR $login_id == "" OR $login_level < "1") {
 	echo ("<meta http-equiv='Refresh' content='0; URL=$home'>");
 } else {
 
-include "config/dbconn.inc";
-include "config/text_main_{$lang}.inc";
-include "config/user_functions_{$lang}.inc";
+include "config/dbconn.php";
+include "config/text_main_{$lang}.php";
+include "config/user_functions_{$lang}.php";
 
 $mmenu = "user";
 $smenu = "user_layout";
@@ -218,7 +218,7 @@ $log_visit = $row->visit;
 </html>
 
 
-<?
+<?php
 
 
 } else if($step_next == "permit_okay") {

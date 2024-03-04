@@ -1,4 +1,4 @@
-<?
+<?php
 // Front Desk Menu
 $frn1_mmenu_01 = "Barcode";
 $frn1_mmenu_02 = "Checking";
@@ -61,17 +61,19 @@ $ch_comm_dir11 = "Parish Priest"; // 담당 교역자
 $ch_comm_dir2 = "Rigion"; // 지 역
 $ch_comm_dir20 = "Rigion"; // 지역
 $ch_comm_dir21 = "Head of Rigion"; // 지역장
+$ch_comm_cug1 = "First Family (modified)";
 $ch_comm_cug2 = "New Family"; // 새가족반
+$ch_comm_cug10 = "10 Family (modified)";
 
 
 // Menu Sets - Modules
 $title_module_01 = "Purchasing"; // 구매 관리
-	$title_module_01_type1 = "Local"; // 국내
-	$title_module_01_type2 = "Overseas"; // 헤외
+$title_module_01_type1 = "Local"; // 국내
+$title_module_01_type2 = "Overseas"; // 헤외
 $title_module_0101 = "Product Search"; // 구매 상품 검색
 $title_module_0102 = "Purchase Order"; // 상품구매 주문 관리
-  $title_module_0102A = "In Process"; // 상품구매 주문 관리
-  $title_module_0102B = "Completed"; // 상품구매 주문 관리
+$title_module_0102A = "In Process"; // 상품구매 주문 관리
+$title_module_0102B = "Completed"; // 상품구매 주문 관리
 $title_module_0103 = "Purchase Approval"; // 구매 주문 승인 및 발송
 $title_module_0104 = "Physical Check"; // 상품 수령 확인
 $title_module_0105 = "Warehousing"; // 입고
@@ -95,9 +97,9 @@ $title_module_0202 = "Payment (PP)"; // 상품구매 후지불결제 (PP)
 $title_module_0203 = "Payment Confirmation"; // 구매 지불마감 관리
 
 $title_module_0204 = "Stock Output"; // 출고 관리
-$title_module_0205 = "Delivery Check"; //  화물 인도 지시 검토
-	$title_module_0206 = "Surat Jalan"; // 화물 인도 지시서
-	$title_module_0207 = "Billing Management"; // 대금 청구 관리
+$title_module_0205 = "Delivery Check"; //화물 인도 지시 검토
+$title_module_0206 = "Surat Jalan"; // 화물 인도 지시서
+$title_module_0207 = "Billing Management"; // 대금 청구 관리
 $title_module_0208 = "Return"; // 재고 반품 관리
 $title_module_0209 = "Product Pick-up"; // 상품 수령
 $title_module_0210 = "Stock Opname"; // 재고 실사
@@ -161,9 +163,9 @@ $title_module_0801 = "Customer"; // 고객 관리
 $title_module_0802 = "Distributor"; // 대리점
 $title_module_0803 = "Employee"; // 사원 관리
 $title_module_0804 = "Mailing List"; // 메일링 리스트
-	$title_module_08041 = "Mailing List (Employee)"; // 메일링 리스트 (사원)
-	$title_module_08042 = "Mailing List (Member)"; // 메일링 리스트 (회원)
-	$title_module_08043 = "Mailing List (--)"; // 메일링 리스트 (비회원)
+$title_module_08041 = "Mailing List (Employee)"; // 메일링 리스트 (사원)
+$title_module_08042 = "Mailing List (Member)"; // 메일링 리스트 (회원)
+$title_module_08043 = "Mailing List (--)"; // 메일링 리스트 (비회원)
 $title_module_0805 = "News Letter"; // 뉴스 레터
 
 $title_module_09 = "Finance"; // 재무 관리
@@ -196,229 +198,229 @@ $title_module_99 = "Insurance"; // 보험
 // Reports
 $title_report = "Reports"; // 리포트
 $title_report_08 = "Customer"; // 고객 현황
-	$title_report_0801 = "Customer List"; // 고객 리스트
-	$title_report_0802 = "Customer List Details"; // 고객 리스트 - 세부
-	$title_report_0803 = "Customer List - B2B"; // 고객 리스트 - B2B
-	$title_report_0804 = "Customer List - Direct Sales"; // 고객 리스트 - Direct Sales
-	$title_report_0805 = "Customer List - Distributor"; // 고객 리스트 - 대리점
-	$title_report_0806 = "Customer List - Branch Shop"; // 고객 리스트 - 독립 매장
-	$title_report_0811 = "Customer Stores - B2B"; // 업체별 매장 현황 - B2B
-	$title_report_0812 = "Customer Stores - Retail"; // 업체별 매장 현황 - Retail
-	$title_report_0813 = "Store Customers"; // 매장별 구매 고객 현황
-	
+$title_report_0801 = "Customer List"; // 고객 리스트
+$title_report_0802 = "Customer List Details"; // 고객 리스트 - 세부
+$title_report_0803 = "Customer List - B2B"; // 고객 리스트 - B2B
+$title_report_0804 = "Customer List - Direct Sales"; // 고객 리스트 - Direct Sales
+$title_report_0805 = "Customer List - Distributor"; // 고객 리스트 - 대리점
+$title_report_0806 = "Customer List - Branch Shop"; // 고객 리스트 - 독립 매장
+$title_report_0811 = "Customer Stores - B2B"; // 업체별 매장 현황 - B2B
+$title_report_0812 = "Customer Stores - Retail"; // 업체별 매장 현황 - Retail
+$title_report_0813 = "Store Customers"; // 매장별 구매 고객 현황
+
 $title_report_08B = "HR"; // 사원 현황
-	$title_report_08B01 = "Attendance Book"; // 직원 출퇴근 현황
-	
+$title_report_08B01 = "Attendance Book"; // 직원 출퇴근 현황
+
 $title_report_01 = "Purchasing"; // 구매 현황
-	$title_report_0101 = "Monthly Purchasing"; // 월간 구매 현황
+$title_report_0101 = "Monthly Purchasing"; // 월간 구매 현황
 
 $title_report_02 = "Inventory"; // 재고 현황
-	$title_report_0201 = "Strategy for Stock Out"; // 적정 물량 출고 기준
-	$title_report_0205 = "Stock Out into Shops"; // 물품 출고 현황
-		$title_report_020501 = "Stock Out into Shops - by Region"; // 물품 출고 현황 -지역별
-		$title_report_020502 = "Stock Out into Shops - by Shop"; // 물품 출고 현황 -영업점별
-		$title_report_020503 = "Stock Out into Shops - by Warehouse"; // 물품 출고 현황 -카테고리별
-    $title_report_020504 = "Stock Out into Shops - by Corporate"; // 물품 출고 현황 -카테고리별
+$title_report_0201 = "Strategy for Stock Out"; // 적정 물량 출고 기준
+$title_report_0205 = "Stock Out into Shops"; // 물품 출고 현황
+$title_report_020501 = "Stock Out into Shops - by Region"; // 물품 출고 현황 -지역별
+$title_report_020502 = "Stock Out into Shops - by Shop"; // 물품 출고 현황 -영업점별
+$title_report_020503 = "Stock Out into Shops - by Warehouse"; // 물품 출고 현황 -카테고리별
+$title_report_020504 = "Stock Out into Shops - by Corporate"; // 물품 출고 현황 -카테고리별
 
-	$title_report_0211 = "Stock & Display in Shops"; // 매장별 판매제품 전시 현황
-	$title_report_0221 = "Return"; // 반품 현황
-		$title_report_022101 = "Return in Departments"; // 반품 현황 - 영업부별
-		$title_report_022102 = "Return in Items"; // 반품 현황 - 아이템별
+$title_report_0211 = "Stock & Display in Shops"; // 매장별 판매제품 전시 현황
+$title_report_0221 = "Return"; // 반품 현황
+$title_report_022101 = "Return in Departments"; // 반품 현황 - 영업부별
+$title_report_022102 = "Return in Items"; // 반품 현황 - 아이템별
 
 $title_report_31 = "Marketing"; // 마케팅
-	$title_report_3101 = "Promotion Effect Evaluation"; // 제품별 프로모션 효율표
+$title_report_3101 = "Promotion Effect Evaluation"; // 제품별 프로모션 효율표
 
 $title_report_05 = "Sales Income"; // 매출 현황
-	$title_report_0501 = "Group Sales Income"; // 그룹 영업 현황
-	$title_report_0502 = "Sales Income by Branch Shop"; // 독립 매장 영업 현황
-	$title_report_0503 = "Sales Income by Department"; // 부서별 영업 현황
-	$title_report_0511 = "Monthly Sales Income"; // 월간 매출 현황
-		$title_report_051101 = "Monthly Sales Income by Branch Shop"; // 월간 매출 현황 - 독립 매장
-		$title_report_051102 = "Monthly Sales Income by Consignment Store"; // 월간 매출 현황 - 위탁 매장
-		$title_report_051103 = "Monthly Sales Income by Consignment Customer"; // 월간 매출 현황 - 독립 업체
-		$title_report_051104 = "Monthly Sales Income by Consignment Group"; // 월간 매출 현황 - 독립 그룹
-		$title_report_051105 = "Monthly Sales Income by Department"; // 월간 매출 현황 - 부서별
+$title_report_0501 = "Group Sales Income"; // 그룹 영업 현황
+$title_report_0502 = "Sales Income by Branch Shop"; // 독립 매장 영업 현황
+$title_report_0503 = "Sales Income by Department"; // 부서별 영업 현황
+$title_report_0511 = "Monthly Sales Income"; // 월간 매출 현황
+$title_report_051101 = "Monthly Sales Income by Branch Shop"; // 월간 매출 현황 - 독립 매장
+$title_report_051102 = "Monthly Sales Income by Consignment Store"; // 월간 매출 현황 - 위탁 매장
+$title_report_051103 = "Monthly Sales Income by Consignment Customer"; // 월간 매출 현황 - 독립 업체
+$title_report_051104 = "Monthly Sales Income by Consignment Group"; // 월간 매출 현황 - 독립 그룹
+$title_report_051105 = "Monthly Sales Income by Department"; // 월간 매출 현황 - 부서별
 
 $title_report_05B = "Sales Projection by Shop"; // 판매점별 매출 현황 *
 
 $title_report_04 = "Asset"; // 자산 현황
-	$title_report_0401 = "Group Asset"; // 그룹 자산 현황
-	$title_report_0402 = "Automobile"; // 차량 리즈 현황
-	
-$title_report_09 = "Finance"; // 재무 현황
-	$title_report_0901 = "Daily Financial Report"; // 일일 자금 보고
-	$title_report_0902 = "Payables"; // 미지급금 현황
-		$title_report_090201 = "Payables in Distributors"; // 미지급금 현황 - 업체별
-		$title_report_090202 = "Payables in Transactions"; // 미지급금 현황 - 거래별
-	$title_report_0903 = "Payables & Installment for Automobile"; // 차량 분할 상환 현황
-	$title_report_0904 = "Payables for Bank Loan"; // 은행 대출 상환 현황
-	$title_report_0905 = "Payables & Transactions in Distributors"; // 업체별 거래 현황 - B2B
-	$title_report_0906 = "Payables & Transactions in Consignment Stores"; // 업체별 거래 현황 - 위탁 매장
-	$title_report_0931 = "Asset & Cash Flow"; // 자산 및 자금 변동 현황
-	$title_report_0951 = "Financial Statements"; // 자금 현황
+$title_report_0401 = "Group Asset"; // 그룹 자산 현황
+$title_report_0402 = "Automobile"; // 차량 리즈 현황
 
-  $title_report_10A = "Warehouse Sales Order"; //창고 - 판매 주문
-  $title_report_10B = "Warehouse Purchasing Order"; //창고 - 판매 주문
-	
+$title_report_09 = "Finance"; // 재무 현황
+$title_report_0901 = "Daily Financial Report"; // 일일 자금 보고
+$title_report_0902 = "Payables"; // 미지급금 현황
+$title_report_090201 = "Payables in Distributors"; // 미지급금 현황 - 업체별
+$title_report_090202 = "Payables in Transactions"; // 미지급금 현황 - 거래별
+$title_report_0903 = "Payables & Installment for Automobile"; // 차량 분할 상환 현황
+$title_report_0904 = "Payables for Bank Loan"; // 은행 대출 상환 현황
+$title_report_0905 = "Payables & Transactions in Distributors"; // 업체별 거래 현황 - B2B
+$title_report_0906 = "Payables & Transactions in Consignment Stores"; // 업체별 거래 현황 - 위탁 매장
+$title_report_0931 = "Asset & Cash Flow"; // 자산 및 자금 변동 현황
+$title_report_0951 = "Financial Statements"; // 자금 현황
+
+$title_report_10A = "Warehouse Sales Order"; //창고 - 판매 주문
+$title_report_10B = "Warehouse Purchasing Order"; //창고 - 판매 주문
+
 
 
 // Menu
 $hmm_name_01 = "Home";
 $hmm_name_02 = "Sales"; // 판매 관리
-  $hsm_name_02_01 = "Sales Entry"; // 판매 입력
-  $hsm_name_02_02 = "Purchase Request"; // 주문 관리 *feelbuy Ordersheet
-  $hsm_name_02_02a = "Product Search"; // 상품 검색
-  $hsm_name_02_02b = "Request Approval"; // 주문 승인 및 화물 인도
-  $hsm_name_02_021 = "Product Pick-up"; // 상품 수령
-  $hsm_name_02_022 = "Stock Opname"; // 재고 실사
-  $hsm_name_02_03 = "Delivery"; // 배송 관리
-  $hsm_name_02_04 = "Billing Management"; // 대금 청구 관리
-  $hsm_name_02_041 = "Payment Collection"; // 수금 관리
-  $hsm_name_02_05 = "Invoices"; // 인보이스 관리
-  $hsm_name_02_09 = "Products"; // 상품 관리
-  $hsm_name_02_POS = "Point of Sales [POS]"; // 판매 관리
+$hsm_name_02_01 = "Sales Entry"; // 판매 입력
+$hsm_name_02_02 = "Purchase Request"; // 주문 관리 *feelbuy Ordersheet
+$hsm_name_02_02a = "Product Search"; // 상품 검색
+$hsm_name_02_02b = "Request Approval"; // 주문 승인 및 화물 인도
+$hsm_name_02_021 = "Product Pick-up"; // 상품 수령
+$hsm_name_02_022 = "Stock Opname"; // 재고 실사
+$hsm_name_02_03 = "Delivery"; // 배송 관리
+$hsm_name_02_04 = "Billing Management"; // 대금 청구 관리
+$hsm_name_02_041 = "Payment Collection"; // 수금 관리
+$hsm_name_02_05 = "Invoices"; // 인보이스 관리
+$hsm_name_02_09 = "Products"; // 상품 관리
+$hsm_name_02_POS = "Point of Sales [POS]"; // 판매 관리
  
 $hmm_name_03 = "";
 
 $hmm_name_03ch = "Members"; // 교적 관리
-  $hsm_name_03ch_01 = "Clergymen"; // 교역자 정보
-  $hsm_name_03ch_02 = "Individuals"; // 개인 정보
-  $hsm_name_03ch_03 = "Family Heads"; // 세대 정보
-  $hsm_name_03ch_04 = "$ch_comm_dir20";
-  $hsm_name_03ch_05 = "$ch_comm_cug1";
-  $hsm_name_03ch_06 = "$ch_comm_cug10"." Attendances";
-  $hsm_name_03ch_06t = "Attandances"; // 출결 관리
+$hsm_name_03ch_01 = "Clergymen"; // 교역자 정보
+$hsm_name_03ch_02 = "Individuals"; // 개인 정보
+$hsm_name_03ch_03 = "Family Heads"; // 세대 정보
+$hsm_name_03ch_04 = "$ch_comm_dir20";
+$hsm_name_03ch_05 = "$ch_comm_cug1";
+$hsm_name_03ch_06 = "$ch_comm_cug10"." Attendances";
+$hsm_name_03ch_06t = "Attandances"; // 출결 관리
 
 $hmm_name_04 = "Inventory"; // 구매/재고 관리 -- 상품 관리 현황
-  $hsm_name_04_01 = "Stock Input"; // 구매/입고 관리 -- 상품 등록/수정
-  $hsm_name_04_02 = "Stock Output"; // 출고 관리
-  $hsm_name_04_021 = "Product Pick-up"; // 상품 수령
-  $hsm_name_04_022 = "Stock Opname"; // 재고 실사
-  $hsm_name_04_023 = "Billing Management"; // 대금 청구 관리
-  $hsm_name_04_03 = "Inventory Confirmation"; // 재고 수정/마감 관리
-  $hsm_name_04_03_2 = "Return"; // 재고 반품 관리
-  $hsm_name_04_04 = "Payment"; // 상품구매 지불결제 관리
-  $hsm_name_04_041 = "Payment Check"; // 지불결제 확인
-  $hsm_name_04_05 = "Payment Confirmation"; // 구매 지불마감 관리
-  $hsm_name_04_06 = "Purchase Order"; // 상품구매 주문 관리
-  $hsm_name_04_061 = "Product Search"; // 구매 상품 검색
-  $hsm_name_04_062 = "Purchase Approval"; // 구매 주문 승인 및 발송
-  $hsm_name_04_07 = "Physical Check"; // 상품 수령 확인
-  $hsm_name_04_071 = "Warehousing"; // 입고
-  $hsm_name_04_072 = "Warehousing Check"; // 입고 확인
-  $hsm_name_04_08 = "Invoice"; // 인보이스
-  $hsm_name_04_21 = "Product Options"; // 상품 옵션 항목 관리
-  $hsm_name_04_22 = "Product Units"; // 상품 단위 관리
+$hsm_name_04_01 = "Stock Input"; // 구매/입고 관리 -- 상품 등록/수정
+$hsm_name_04_02 = "Stock Output"; // 출고 관리
+$hsm_name_04_021 = "Product Pick-up"; // 상품 수령
+$hsm_name_04_022 = "Stock Opname"; // 재고 실사
+$hsm_name_04_023 = "Billing Management"; // 대금 청구 관리
+$hsm_name_04_03 = "Inventory Confirmation"; // 재고 수정/마감 관리
+$hsm_name_04_03_2 = "Return"; // 재고 반품 관리
+$hsm_name_04_04 = "Payment"; // 상품구매 지불결제 관리
+$hsm_name_04_041 = "Payment Check"; // 지불결제 확인
+$hsm_name_04_05 = "Payment Confirmation"; // 구매 지불마감 관리
+$hsm_name_04_06 = "Purchase Order"; // 상품구매 주문 관리
+$hsm_name_04_061 = "Product Search"; // 구매 상품 검색
+$hsm_name_04_062 = "Purchase Approval"; // 구매 주문 승인 및 발송
+$hsm_name_04_07 = "Physical Check"; // 상품 수령 확인
+$hsm_name_04_071 = "Warehousing"; // 입고
+$hsm_name_04_072 = "Warehousing Check"; // 입고 확인
+$hsm_name_04_08 = "Invoice"; // 인보이스
+$hsm_name_04_21 = "Product Options"; // 상품 옵션 항목 관리
+$hsm_name_04_22 = "Product Units"; // 상품 단위 관리
 
 $hmm_name_041 = "Logistics"; // 물류 관리
-  $hsm_name_041_01 = "Check Surat Jalan"; // 화물 인도 지시서 확인
-  $hsm_name_041_02 = "Logistics Progress"; // 화물 인도 관리
+$hsm_name_041_01 = "Check Surat Jalan"; // 화물 인도 지시서 확인
+$hsm_name_041_02 = "Logistics Progress"; // 화물 인도 관리
 
 $hmm_name_05 = "Finance"; // 재무/회계 관리
-  $hsm_name_05_01 = "Management Cost"; // 비용 관리
-  $hsm_name_05_01_2 = "Purchasing Cost"; // 구매 비용 관리
-  $hsm_name_05_02 = "Management Income"; // 수익 관리
-  $hsm_name_05_02_2 = "Sales Income"; // "판매 수익 관리
-  
-  $hsm_name_05ch_02_2 = "Tawaran Masuk"; // 헌금 계수 관리 // ^
-  $hsm_name_05ch_offering = "Tawaran Data Entri"; // 헌금 계수
-  
-  $hsm_name_05_03 = "Lembar Keseimbangan"; // 상세 수익/비용 분석
-  $hsm_name_05_04 = "Budget & Outgoing"; // 예산 사용 현황
+$hsm_name_05_01 = "Management Cost"; // 비용 관리
+$hsm_name_05_01_2 = "Purchasing Cost"; // 구매 비용 관리
+$hsm_name_05_02 = "Management Income"; // 수익 관리
+$hsm_name_05_02_2 = "Sales Income"; // "판매 수익 관리
+
+$hsm_name_05ch_02_2 = "Tawaran Masuk"; // 헌금 계수 관리 // ^
+$hsm_name_05ch_offering = "Tawaran Data Entri"; // 헌금 계수
+
+$hsm_name_05_03 = "Lembar Keseimbangan"; // 상세 수익/비용 분석
+$hsm_name_05_04 = "Budget & Outgoing"; // 예산 사용 현황
 
 $hmm_name_06 = "Customer"; // 고객 관리
-  $hsm_name_06_01 = "Customer"; // 고객 관리
-  $hsm_name_06_010 = "Consignment Store"; // 위탁 매장
-  $hsm_name_06_011 = "Reseller (Shop)"; // 리셀러 (상점)
-  $hsm_name_06_012 = "Reseller (Individual)"; // 리셀러 (개인)
-  $hsm_name_06_013 = "Direct Sales"; // 일반 고객 (기업)
-  $hsm_name_06_014 = "Individual"; // 일반 고객 (개인)
-  $hsm_name_06_015 = "Business to Business";
-  $hsm_name_06_02 = "Distributor"; // 대리점
-  $hsm_name_06_021 = "Distributor"; // 대리점 (지역총판)
-  $hsm_name_06_022 = "Sub-distributor"; // 대리점 (지역지점)
-  $hsm_name_06_03 = "Mailing List"; // 메일링 리스트
-  $hsm_name_06_04 = "News Letter"; // 뉴스 레터
+$hsm_name_06_01 = "Customer"; // 고객 관리
+$hsm_name_06_010 = "Consignment Store"; // 위탁 매장
+$hsm_name_06_011 = "Reseller (Shop)"; // 리셀러 (상점)
+$hsm_name_06_012 = "Reseller (Individual)"; // 리셀러 (개인)
+$hsm_name_06_013 = "Direct Sales"; // 일반 고객 (기업)
+$hsm_name_06_014 = "Individual"; // 일반 고객 (개인)
+$hsm_name_06_015 = "Business to Business";
+$hsm_name_06_02 = "Distributor"; // 대리점
+$hsm_name_06_021 = "Distributor"; // 대리점 (지역총판)
+$hsm_name_06_022 = "Sub-distributor"; // 대리점 (지역지점)
+$hsm_name_06_03 = "Mailing List"; // 메일링 리스트
+$hsm_name_06_04 = "News Letter"; // 뉴스 레터
 
 $hmm_name_07 = "HR"; // 인력 관리
-  $hsm_name_07_01 = "Employee"; // 사원 관리
-  $hsm_name_07_02 = "Contractor (SA)"; // 용역 (SA) 관리
+$hsm_name_07_01 = "Employee"; // 사원 관리
+$hsm_name_07_02 = "Contractor (SA)"; // 용역 (SA) 관리
 
 $hmm_name_08 = "Website"; // 홈페이지 관리
-  $hsm_name_08_01 = "Menu Editor"; // 메뉴 관리
-  $hsm_name_08_02 = "Contents Editor"; // 콘텐츠 편집
-  $hsm_name_08_03 = "Banner Manager"; // 배너 관리
-  $hsm_name_08_031 = "Banner Files"; // 배너 파일 관리
-  $hsm_name_08_032 = "Banner Display"; // 배너 게시 관리
-  $hsm_name_08_04 = "Page Stuff"; // 기타 페이지 편집
-  $hsm_name_08_05 = "Mailing List"; // 메일링 리스트
-  $hsm_name_08_05A = "Mailing List (Member)"; // 메일링 리스트 A (회원)
-  $hsm_name_08_05B = "Mailing List (Non-member)"; // 메일링 리스트 B (비회원)
-  $hsm_name_08_06 = "News Letter"; // 뉴스 레터
-  $hsm_name_08_09 = "Website Layout"; // 홈페이지 레이아웃
-  $hsm_name_08_10 = "Online Shop Layout"; // 쇼핑몰 레이아웃
-  $hsm_name_08_goto = "Go to the website"; // 홈페이지 바로가기
-  
+$hsm_name_08_01 = "Menu Editor"; // 메뉴 관리
+$hsm_name_08_02 = "Contents Editor"; // 콘텐츠 편집
+$hsm_name_08_03 = "Banner Manager"; // 배너 관리
+$hsm_name_08_031 = "Banner Files"; // 배너 파일 관리
+$hsm_name_08_032 = "Banner Display"; // 배너 게시 관리
+$hsm_name_08_04 = "Page Stuff"; // 기타 페이지 편집
+$hsm_name_08_05 = "Mailing List"; // 메일링 리스트
+$hsm_name_08_05A = "Mailing List (Member)"; // 메일링 리스트 A (회원)
+$hsm_name_08_05B = "Mailing List (Non-member)"; // 메일링 리스트 B (비회원)
+$hsm_name_08_06 = "News Letter"; // 뉴스 레터
+$hsm_name_08_09 = "Website Layout"; // 홈페이지 레이아웃
+$hsm_name_08_10 = "Online Shop Layout"; // 쇼핑몰 레이아웃
+$hsm_name_08_goto = "Go to the website"; // 홈페이지 바로가기
+
 $hmm_name_09 = "System Settings"; // 시스템 관리
-  $hsm_name_09_01 = "Systems"; // 시스템 관리
-  $hsm_name_09_02 = "System Managers"; // 시스템 Manager 관리
-  $hsm_name_09_01d = "Departments"; // 부서 관리
-  $hsm_name_09_031 = "Shops"; // 매장 관리
-  $hsm_name_09_032 = "Shop Managers"; // 매장 Manager 관리
-  $hsm_name_09_03C = "Currency"; // Currency
-  $hsm_name_09_04 = "Suppliers"; // 공급자 관리
-  $hsm_name_09_04A = "Brands"; // 브랜드
-  $hsm_name_09_05 = "Product Category"; // 상품 카테고리 관리
-  $hsm_name_09_06 = "Mileage Settings"; // 마일리지
-  $hsm_name_09_07 = "Discount Rates"; // 리셀러 할인율
-  $hsm_name_09_08 = "Vouchers"; // 바우처 발행관리
-  $hsm_name_09_081 = "YARNEN"; // YARNEN 관리
-  $hsm_name_09_09 = "Special Pricing"; // 특별 행사가
-  $hsm_name_09_10 = "Initial Cash"; // 현금시제 초기값
-  $hsm_name_09_11 = "Bank Accounts"; // 결제은행 계좌관리
-  $hsm_name_09_12 = "Card Switchings"; // 신용카드 결제기 관리
-  $hsm_name_09_12a = "Insurance Agents"; // 보험사 관리
-  $hsm_name_09_13 = "Accounting Codes"; // 계정항목 관리
-  $hsm_name_09_132 = "Cost"; // 부서별 지출항목
-  $hsm_name_09_133 = "Budget"; // 부서별 예산
-  $hsm_name_09_14 = "Bank Loans"; // 은행대출
-  $hsm_name_09_20 = "Foreign Exchange"; // 환율 관리
-  $hsm_name_09_15 = "Regions"; // 지역 관리
-  $hsm_name_09_16 = "Ports"; // 선적항
-  $hsm_name_09_17 = "Warehouses"; // 창고 관리
-		$hsm_name_09_1701 = "Location Category"; // 적재소 카테고리
-		$hsm_name_09_1702 = "Location Management"; // 적재소 관리
-  $hsm_name_09_18 = "Consignment Group"; // 위탁판매 그룹 관리
-  $hsm_name_09_21 = "Client DB Merge"; // 연동 Client DB 계정
-  $hsm_name_09_22 = "Coporates"; // 회사 계정
-  $hsm_name_09_23 = "Loan Providers"; // 펀드 제공은행
-  $hsm_name_09_34 = "Training/Activity"; // 훈련/활동 과정 관리
-  $hsm_name_09_341 = "Training Category"; // 훈련/활동 카테고리
-  $hsm_name_09_342 = "Training Course"; // 훈련/활동 과정
-  $hsm_name_09_41 = "Job Class"; // 직급 코드
-  $hsm_name_09_42 = "Salary Class"; // 호봉
-  $hsm_name_09_43 = "Yearly Payroll Baseline"; // 연간 임금기준표
-  
-  $hsm_name_09ch_31 = "Group Category"; // 그룹 카테고리
-  $hsm_name_09ch_311 = "Districts"; // 교구와 지역 구분
-  $hsm_name_09ch_312 = "Departments"; // 부 서
-  $hsm_name_09ch_313 = "Missionaries"; // 선교회
-  $hsm_name_09ch_32 = "$ch_comm_cug1";
-  $hsm_name_09ch_33 = "Avocation"; // 직위 및 직분
-  $hsm_name_09ch_331 = "Position"; // 직 위
-  $hsm_name_09ch_332 = "Post"; // 직 분
-  $hsm_name_09ch_333 = "Occupation"; // 직 업
-  $hsm_name_09ch_34 = "Training/Activity"; // 훈련/활동 과정 관리
-  $hsm_name_09ch_341 = "Training Category"; // 훈련/활동 카테고리
-  $hsm_name_09ch_342 = "Training Course"; // 훈련/활동 과정
+$hsm_name_09_01 = "Systems"; // 시스템 관리
+$hsm_name_09_02 = "System Managers"; // 시스템 Manager 관리
+$hsm_name_09_01d = "Departments"; // 부서 관리
+$hsm_name_09_031 = "Shops"; // 매장 관리
+$hsm_name_09_032 = "Shop Managers"; // 매장 Manager 관리
+$hsm_name_09_03C = "Currency"; // Currency
+$hsm_name_09_04 = "Suppliers"; // 공급자 관리
+$hsm_name_09_04A = "Brands"; // 브랜드
+$hsm_name_09_05 = "Product Category"; // 상품 카테고리 관리
+$hsm_name_09_06 = "Mileage Settings"; // 마일리지
+$hsm_name_09_07 = "Discount Rates"; // 리셀러 할인율
+$hsm_name_09_08 = "Vouchers"; // 바우처 발행관리
+$hsm_name_09_081 = "YARNEN"; // YARNEN 관리
+$hsm_name_09_09 = "Special Pricing"; // 특별 행사가
+$hsm_name_09_10 = "Initial Cash"; // 현금시제 초기값
+$hsm_name_09_11 = "Bank Accounts"; // 결제은행 계좌관리
+$hsm_name_09_12 = "Card Switchings"; // 신용카드 결제기 관리
+$hsm_name_09_12a = "Insurance Agents"; // 보험사 관리
+$hsm_name_09_13 = "Accounting Codes"; // 계정항목 관리
+$hsm_name_09_132 = "Cost"; // 부서별 지출항목
+$hsm_name_09_133 = "Budget"; // 부서별 예산
+$hsm_name_09_14 = "Bank Loans"; // 은행대출
+$hsm_name_09_20 = "Foreign Exchange"; // 환율 관리
+$hsm_name_09_15 = "Regions"; // 지역 관리
+$hsm_name_09_16 = "Ports"; // 선적항
+$hsm_name_09_17 = "Warehouses"; // 창고 관리
+$hsm_name_09_1701 = "Location Category"; // 적재소 카테고리
+$hsm_name_09_1702 = "Location Management"; // 적재소 관리
+$hsm_name_09_18 = "Consignment Group"; // 위탁판매 그룹 관리
+$hsm_name_09_21 = "Client DB Merge"; // 연동 Client DB 계정
+$hsm_name_09_22 = "Coporates"; // 회사 계정
+$hsm_name_09_23 = "Loan Providers"; // 펀드 제공은행
+$hsm_name_09_34 = "Training/Activity"; // 훈련/활동 과정 관리
+$hsm_name_09_341 = "Training Category"; // 훈련/활동 카테고리
+$hsm_name_09_342 = "Training Course"; // 훈련/활동 과정
+$hsm_name_09_41 = "Job Class"; // 직급 코드
+$hsm_name_09_42 = "Salary Class"; // 호봉
+$hsm_name_09_43 = "Yearly Payroll Baseline"; // 연간 임금기준표
+
+$hsm_name_09ch_31 = "Group Category"; // 그룹 카테고리
+$hsm_name_09ch_311 = "Districts"; // 교구와 지역 구분
+$hsm_name_09ch_312 = "Departments"; // 부 서
+$hsm_name_09ch_313 = "Missionaries"; // 선교회
+$hsm_name_09ch_32 = "$ch_comm_cug1";
+$hsm_name_09ch_33 = "Avocation"; // 직위 및 직분
+$hsm_name_09ch_331 = "Position"; // 직 위
+$hsm_name_09ch_332 = "Post"; // 직 분
+$hsm_name_09ch_333 = "Occupation"; // 직 업
+$hsm_name_09ch_34 = "Training/Activity"; // 훈련/활동 과정 관리
+$hsm_name_09ch_341 = "Training Category"; // 훈련/활동 카테고리
+$hsm_name_09ch_342 = "Training Course"; // 훈련/활동 과정
 
 $hmm_name_10 = "Settings"; // user // 환경 설정
-  $hsm_name_10_01 = "Language"; // 언어선택
-  $hsm_name_10_02 = "Profile"; // 계정정보 변경
-  $hsm_name_10_03 = "Change Your Password"; // 비밀번호 변경
-  $hsm_name_10_04 = "Sign Up"; // 사용자 등록
-  $hsm_name_10_05 = "Log In"; // 로그인
-  $hsm_name_10_06 = "Log Out"; // 로그아웃
+$hsm_name_10_01 = "Language"; // 언어선택
+$hsm_name_10_02 = "Profile"; // 계정정보 변경
+$hsm_name_10_03 = "Change Your Password"; // 비밀번호 변경
+$hsm_name_10_04 = "Sign Up"; // 사용자 등록
+$hsm_name_10_05 = "Log In"; // 로그인
+$hsm_name_10_06 = "Log Out"; // 로그아웃
 
 
 // 입출력 폼 - 공통
@@ -1107,7 +1109,6 @@ $txt_tab_hr_member_chk02 = "Please input Name"; // 아래에 이름을 직접 �
 $txt_tab_hr_member_chk03 = "Do you want to finish calculating?"; // 계수를 완료하시겠습니까?
 $txt_tab_hr_member_chk04 = "Do you want to delete this?"; // 삭제하시겠습니까?
 
-
 // hr > work attitudes
 $txt_hr_work_01 = "Work Attitudes"; // 근태 관리
 $txt_hr_work_011 = "Attendance Book"; // 직원 출근부
@@ -1123,7 +1124,7 @@ $txt_hr_work_10 = "Erl Out"; // 조기 퇴근
 $txt_hr_work_11 = "Overwork"; // 잔업
 $txt_hr_work_12 = "Work Hours"; // 근무 시간
 $txt_hr_work_13 = "Explanation"; // 증명서
-$txt_hr_work_14 = "Total Work"; //  총 근무
+$txt_hr_work_14 = "Total Work"; //총 근무
 $txt_hr_work_15 = "Days"; // 일
 $txt_hr_work_16 = "DUTY"; // 근무여부
 $txt_hr_work_161 = "ON"; // 근무
@@ -1148,7 +1149,6 @@ $txt_hr_work_19 = "Erlier Outing Allowed"; // 조퇴
 $txt_hr_work_20 = "Warning"; // 경고
 $txt_hr_work_21 = "Permitted"; // 허가
 
-
 // chmember > group, district
 $txt_ch_group_01 = "$ch_comm_cug10"." List"; // 구역 리스트
 $txt_ch_group_02 = "Add "."$ch_comm_cug10"; // 구역 등록
@@ -1160,7 +1160,6 @@ $txt_ch_group_07 = "About"; // 간략 소개
 $txt_ch_group_08 = "Details"; // 상세 소개
 $txt_ch_group_09 = "Activation"; // 활성화
 $txt_ch_group_31 = "$ch_comm_dir20"." List"; // 지역 리스트
-
 
 // chmember > member (basic)
 $txt_ch_member_01 = "Members"; // 성도 리스트
@@ -1239,9 +1238,7 @@ $txt_ch_member_631 = "by Head"; // 조치사항
 $txt_ch_member_632 = "by Pastor"; // 담당 교역자 조치사항
 $txt_ch_member_64 = "Prayer"; // 기도 제목
 $txt_ch_member_65 = "Submit"; // 전 송
-
 $txt_ch_member_chk01 = "Please select System."; // 시스템을 선택하세요.
-
 
 // chmember > member (detail)
 $txt_tab_member_01 = "General"; // 일 반
@@ -1420,7 +1417,6 @@ $txt_stf_member_57 = "D. Level"; // 대리점 등급
 $txt_stf_member_60 = "Bank Name (Branch)"; // 결제 은행(지점)
 $txt_stf_member_61 = "Account Name"; // 예금주
 $txt_stf_member_62 = "Account No."; // 계좌 번호
-
 $txt_stf_member_chk01 = "Please select System."; // System을 선택하세요.
 
 // member > staff
@@ -1507,7 +1503,6 @@ $txt_sys_client_chk08 = "Please enter Email address."; // E-mail 주소를 입�
 $txt_sys_client_chk09 = "The email address you entered is invalid."; // E-mail 주소의 형식이 틀렸습니다.
 $txt_sys_client_chk10 = "Please input the temporary pin code."; // 인증번호를 입력하세요.
 
-
 // system > user
 $txt_sys_user_01 = "System Managers"; // Shop Manager 리스트
 $txt_sys_user_02 = "Add System Manager"; // Shop Manager 등록하기
@@ -1521,7 +1516,6 @@ $txt_sys_user_09 = "Last Login"; // 지난 로그인
 $txt_sys_user_10 = "Visit"; // 방문수
 $txt_sys_user_11 = "Language"; // 사용 언어
 $txt_sys_user_12 = "No Login"; // 로그인 기록 없음
-
 $txt_sys_user_chk01 = "Please enter System Manager Name."; // Shop Manager 이름을 입력하세요.
 $txt_sys_user_chk02 = "";
 $txt_sys_user_chk03 = "Your password is not valid."; // 입력하신 두 비밀번호가 일치하지 않습니다.
@@ -1539,7 +1533,6 @@ $txt_sys_chjob_033 = "Occupation Jame"; // 직업 이름
 $txt_sys_chjob_04 = "Add New Code"; // 코드 등록하기
 $txt_sys_chjob_05 = "Update Code"; // 코드 수정하기
 $txt_sys_chjob_06 = "Remove Code"; // 코드 삭제하기
-
 $txt_sys_chjob_chk01 = "Please enter Code."; // 코드를 입력하세요.
 $txt_sys_chjob_chk02 = "Please enter Nomination."; // 분류명을 입력하세요.
 $txt_sys_chjob_chk03 = "Your submittion already exists."; // 동일한 코드가 존재합니다.
@@ -1569,9 +1562,7 @@ $txt_sys_tcourse_1504 = "Knowledge"; // 지 식
 $txt_sys_tcourse_1505 = "Test"; // 시 험
 $txt_sys_tcourse_1506 = "Assignment"; // 과제물
 $txt_sys_tcourse_16 = "Tuition"; // 수강료
-
 $txt_sys_tcourse_chk01 = "Please select Course Category."; // 카테고리를 선택하셔야 합니다.
-
 
 // system > train_course [church]
 $txt_sys_chcourse_1501 = "Attendance"; // 출 석
@@ -1580,7 +1571,6 @@ $txt_sys_chcourse_1503 = "Q.T."; // 큐 티
 $txt_sys_chcourse_1504 = "Bible"; // 성경지식
 $txt_sys_chcourse_1505 = "Test"; // 시 험
 $txt_sys_chcourse_1506 = "Assignment"; // 과제물
-
 
 // system > shop
 $txt_sys_shop_01 = "Shops"; // 매장 리스트
@@ -1614,7 +1604,6 @@ $txt_sys_shop_chk03 = "The first letter of Shop Code should be an alpahbet."; //
 $txt_sys_shop_chk04 = "No spce permitted."; // 공백이 허용되지 않습니다.
 $txt_sys_shop_chk05 = "Please enter Shop Name."; // 매장 이름을 입력하세요.
 
-
 // system > user2
 $txt_sys_user2_01 = "Shop Managers"; // Shop Manager 리스트
 $txt_sys_user2_02 = "Add Shop Manager"; // Shop Manager 등록하기
@@ -1628,11 +1617,9 @@ $txt_sys_user2_09 = "Last Login"; // 지난 로그인
 $txt_sys_user2_10 = "Visit"; // 방문수
 $txt_sys_user2_11 = "Language"; // 사용 언어
 $txt_sys_user2_12 = "No Login"; // 로그인 기록 없음
-
 $txt_sys_user2_chk01 = "Please enter Shop Manager Name."; // Shop Manager 이름을 입력하세요.
 $txt_sys_user2_chk02 = "";
 $txt_sys_user2_chk03 = "Your password is not valid."; // 입력하신 두 비밀번호가 일치하지 않습니다.
-
 
 // system > warehouse location
 $txt_sys_wloc_01 = "Location Management"; // 적재소 관리
@@ -1646,9 +1633,7 @@ $txt_sys_wloc_08 = "Location Options"; // 적재소 옵션
 $txt_sys_wloc_09 = "PIC"; // 담당자
 $txt_sys_wloc_10 = "Date of Regis."; // 등록일
 $txt_sys_wloc_11 = "Date of Update"; // 변경일
-
 $txt_sys_wloc_chk01 = "Please enter Location Name."; // 적재소 이름을 입력하셔야 합니다.
-
 
 // system > supplier
 $txt_sys_supplier_01 = "Suppliers"; // 공급자 리스트
@@ -1667,9 +1652,7 @@ $txt_sys_supplier_11 = "Activ."; // 거래
 $txt_sys_supplier_12 = "Select Supplier"; // 공급자 선택
 $txt_sys_supplier_13 = "Please select Supplier."; // 공급자를 선택하세요.
 $txt_sys_supplier_14 = "Supplier"; // 공급자
-
 $txt_sys_supplier_chk01 = "Please enter Supplier Name."; // 공급자 이름을 입력하세요.
-
 
 // system > brand
 $txt_sys_brand_01 = "Brands"; // 브랜드 리스트
@@ -1683,9 +1666,7 @@ $txt_sys_brand_09 = "Show"; // 상태
 $txt_sys_brand_12 = "Select Brand"; // 브랜드 선택
 $txt_sys_brand_13 = "Please select Brand."; // 브랜드를 선택하세요.
 $txt_sys_brand_14 = "Brand"; // 브랜드
-
 $txt_sys_brand_chk01 = "Please enter Brand Name."; // 브랜드 이름을 입력하세요.
-
 
 // system > consign
 $txt_sys_consign_01 = "Consignment Groups"; // 위탁판매 그룹 리스트
@@ -2087,7 +2068,7 @@ $txt_web_mailing_03 = "Selected"; // 선택한 메일 수
 $txt_web_mailing_04 = "Add All"; // 모두 등록하기
 $txt_web_mailing_05 = "Remove All"; // 모두 해제하기
 $txt_web_mailing_06 = "Select News Letter"; // 뉴스 레터를 선택하세요
-$txt_web_mailing_07 = "Add to Mailing List"; //  메일링 리스트에 등록하기
+$txt_web_mailing_07 = "Add to Mailing List"; //메일링 리스트에 등록하기
 $txt_web_mailing_08 = "Sent Date"; // 발송일
 $txt_web_mailing_08s = "Sent"; // 발송일
 $txt_web_mailing_09 = "Count"; // 발송수
@@ -2126,168 +2107,168 @@ $txt_web_layout_02 = "Create Website Layout Table"; // 홈페이지 레이아웃
 
 // BBS
 
-	// 인사말
-	$bbstxt_01 = "Introduction1";
-	$bbstxt_02 = "Introduction2";
+// 인사말
+$bbstxt_01 = "Introduction1";
+$bbstxt_02 = "Introduction2";
 
-	// My Members
-	$mbdtxt_01 = "Member List";
-	$mbdtxt_02 = "Gender";
-	$mbdtxt_03 = "Location";
-	$mbdtxt_04 = "Message";
-	$mbdtxt_05 = "Status";
-	$mbdtxt_06 = "Action";
-	$mbdtxt_07 = "Male";
-	$mbdtxt_08 = "Female";
-	$mbdtxt_09 = "Listed";
-	$mbdtxt_10 = "Unlisted";
-	$mbdtxt_11 = "Address Book";
+// My Members
+$mbdtxt_01 = "Member List";
+$mbdtxt_02 = "Gender";
+$mbdtxt_03 = "Location";
+$mbdtxt_04 = "Message";
+$mbdtxt_05 = "Status";
+$mbdtxt_06 = "Action";
+$mbdtxt_07 = "Male";
+$mbdtxt_08 = "Female";
+$mbdtxt_09 = "Listed";
+$mbdtxt_10 = "Unlisted";
+$mbdtxt_11 = "Address Book";
 
-	// Bulletin
-	$bdtxt_01 = "No.";
-	$bdtxt_02 = "Subject";
-	$bdtxt_03 = "Name";
-	$bdtxt_04 = "Date";
-	$bdtxt_05 = "Hit";
-	$bdtxt_06 = "Select";
-	$bdtxt_07 = "Name";
-	$bdtxt_08 = "Comment";
-	$bdtxt_09 = "Post Article";
-	$bdtxt_10 = "Website";
-	$bdtxt_11 = "Password";
-	$bdtxt_12 = "(At least 4~8 letters)";
-	$bdtxt_13 = "Give a Reply Comment";
-	$bdtxt_14 = "Edit Article";
-	$bdtxt_151 = "Delete Article";
+// Bulletin
+$bdtxt_01 = "No.";
+$bdtxt_02 = "Subject";
+$bdtxt_03 = "Name";
+$bdtxt_04 = "Date";
+$bdtxt_05 = "Hit";
+$bdtxt_06 = "Select";
+$bdtxt_07 = "Name";
+$bdtxt_08 = "Comment";
+$bdtxt_09 = "Post Article";
+$bdtxt_10 = "Website";
+$bdtxt_11 = "Password";
+$bdtxt_12 = "(At least 4~8 letters)";
+$bdtxt_13 = "Give a Reply Comment";
+$bdtxt_14 = "Edit Article";
+$bdtxt_151 = "Delete Article";
 
-	// PDS
-	$bdtxt_15 = "FILE";
-	$bdtxt_16 = "Description";
-	$bdtxt_17 = "Download";
-	$bdtxt_18 = " has posted.";
-	$bdtxt_19 = "Testimonial";
-	$bdtxt_20 = "Imoticon";
-	$bdtxt_21 = "You Comment !";
-	$bdtxt_22 = "Delete your FILE";
-	$bdtxt_23 = "Pick FILE";
-	
-	$bdtxt_24 = "IP";
+// PDS
+$bdtxt_15 = "FILE";
+$bdtxt_16 = "Description";
+$bdtxt_17 = "Download";
+$bdtxt_18 = " has posted.";
+$bdtxt_19 = "Testimonial";
+$bdtxt_20 = "Imoticon";
+$bdtxt_21 = "You Comment !";
+$bdtxt_22 = "Delete your FILE";
+$bdtxt_23 = "Pick FILE";
 
-	$bdtxt_31 = "Order of Contents";
-	$bdtxt_32 = "Ascending Order";
-	$bdtxt_33 = "Descending Order";
-	$bdtxt_34 = "Insert Image";
-	$bdtxt_35 = "No Image";
-	$bdtxt_36 = "GIF";
-	$bdtxt_37 = "JPG";
-	$bdtxt_38 = "SWF(Flash Movie Clip)";
-	$bdtxt_39 = "Image Alignment";
-	$bdtxt_40 = "Vertical Alignment - Top";
-	$bdtxt_41 = "Vertical Alignment - Bottom";
-	$bdtxt_42 = "Vertical Alignment - Middle";
-	$bdtxt_43 = "Align Left";
-	$bdtxt_44 = "Align Center";
-	$bdtxt_45 = "Align Right";
+$bdtxt_24 = "IP";
 
-	$bdtxt_51 = "Image Size";
-	$bdtxt_52 = "Landscape";
-	$bdtxt_53 = "Portrait";
-	$bdtxt_54 = "Square";
+$bdtxt_31 = "Order of Contents";
+$bdtxt_32 = "Ascending Order";
+$bdtxt_33 = "Descending Order";
+$bdtxt_34 = "Insert Image";
+$bdtxt_35 = "No Image";
+$bdtxt_36 = "GIF";
+$bdtxt_37 = "JPG";
+$bdtxt_38 = "SWF(Flash Movie Clip)";
+$bdtxt_39 = "Image Alignment";
+$bdtxt_40 = "Vertical Alignment - Top";
+$bdtxt_41 = "Vertical Alignment - Bottom";
+$bdtxt_42 = "Vertical Alignment - Middle";
+$bdtxt_43 = "Align Left";
+$bdtxt_44 = "Align Center";
+$bdtxt_45 = "Align Right";
 
-	$bdtxt_91 = "Pin Key";
-	$bdtxt_92 = "Please put the words below in the blank.";
-	$bdtxt_93 = "Search";
-	$bdtxt_94 = "This is Confidential Content."; // 비밀글입니다.
-	$bdtxt_95 = "Confidential"; // 비밀댓글
-	$bdtxt_96 = "Post"; // 댓글쓰기
-	$bdtxt_97 = "This is Confidential Foot note."; // 비밀댓글입니다.
-	$bdtxt_98 = "Please insert your comment."; // 댓글을 입력하셔야 합니다.
-	$bdtxt_99 = "Maximum 200 letters are vailable here."; // 글자수는 한글 100자, 영문 200자로 제한됩니다.
-	$bdtxt_901 = "This article has been saved in your library."; // My Library에 저장되었습니다.
-	$bdtxt_902 = "This article was already saved in your library"; // 이미 My Library에 저장하셨습니다.
-	$bdtxt_903 = "Nick Name"; // 닉네임
-	$bdtxt_904 = "Sale"; // 매매
-	$bdtxt_905 = "Rent"; // 임대
-	$bdtxt_906 = "Lease"; // 재임대
-	$bdtxt_907 = "Subtitle"; // 부제목
-	$bdtxt_908 = "New line breaks"; // 줄바꿔 쓰기
-	$bdtxt_909 = "Non-disclosure"; // 비밀글
-	$bdtxt_910 = "Advertising"; // 광고 신청
-	$bdtxt_911 = "Box"; // 박스광고
-	$bdtxt_912 = "Line"; // 줄광고
-	$bdtxt_913 = "No, thanks."; // 신청 않음
-	$bdtxt_914 = "Replace Attached File"; // 첨부파일 변경
-	$bdtxt_915 = "Cancel"; // 광고 해제
+$bdtxt_51 = "Image Size";
+$bdtxt_52 = "Landscape";
+$bdtxt_53 = "Portrait";
+$bdtxt_54 = "Square";
+
+$bdtxt_91 = "Pin Key";
+$bdtxt_92 = "Please put the words below in the blank.";
+$bdtxt_93 = "Search";
+$bdtxt_94 = "This is Confidential Content."; // 비밀글입니다.
+$bdtxt_95 = "Confidential"; // 비밀댓글
+$bdtxt_96 = "Post"; // 댓글쓰기
+$bdtxt_97 = "This is Confidential Foot note."; // 비밀댓글입니다.
+$bdtxt_98 = "Please insert your comment."; // 댓글을 입력하셔야 합니다.
+$bdtxt_99 = "Maximum 200 letters are vailable here."; // 글자수는 한글 100자, 영문 200자로 제한됩니다.
+$bdtxt_901 = "This article has been saved in your library."; // My Library에 저장되었습니다.
+$bdtxt_902 = "This article was already saved in your library"; // 이미 My Library에 저장하셨습니다.
+$bdtxt_903 = "Nick Name"; // 닉네임
+$bdtxt_904 = "Sale"; // 매매
+$bdtxt_905 = "Rent"; // 임대
+$bdtxt_906 = "Lease"; // 재임대
+$bdtxt_907 = "Subtitle"; // 부제목
+$bdtxt_908 = "New line breaks"; // 줄바꿔 쓰기
+$bdtxt_909 = "Non-disclosure"; // 비밀글
+$bdtxt_910 = "Advertising"; // 광고 신청
+$bdtxt_911 = "Box"; // 박스광고
+$bdtxt_912 = "Line"; // 줄광고
+$bdtxt_913 = "No, thanks."; // 신청 않음
+$bdtxt_914 = "Replace Attached File"; // 첨부파일 변경
+$bdtxt_915 = "Cancel"; // 광고 해제
 
 
-	// 방명록
-	$buktxt_01 = "Guest Book";
-	$buktxt_02 = "There is no writing posted on the Guest Book now.";
-	$buktxt_03 = "Modify";
-	$buktxt_04 = "Delete";
-	$buktxt_05 = "Comment";
-	$buktxt_06 = "";
-	$buktxt_07 = "";
-	$buktxt_08 = "";
-	$buktxt_09 = "";
-	$buktxt_10 = "";
+// 방명록
+$buktxt_01 = "Guest Book";
+$buktxt_02 = "There is no writing posted on the Guest Book now.";
+$buktxt_03 = "Modify";
+$buktxt_04 = "Delete";
+$buktxt_05 = "Comment";
+$buktxt_06 = "";
+$buktxt_07 = "";
+$buktxt_08 = "";
+$buktxt_09 = "";
+$buktxt_10 = "";
 
-	// Trade
-	$trdtxt_01 = "Title";
-	$trdtxt_02 = "Item";
-	$trdtxt_03 = "Introduction";
-	$trdtxt_04 = "Description";
-	$trdtxt_05 = "Condition";
-	$trdtxt_06 = "Contact Info";
-	$trdtxt_07 = "Image1";
-	$trdtxt_08 = "Image2";
-	$trdtxt_09 = "No Image";
-	$trdtxt_10 = "Attached File";
-	$trdtxt_11 = "No Attached File";
-	$trdtxt_12 = "File Size";
-	$trdtxt_13 = "At most 100 strings available";
-	$trdtxt_14 = "Pixel";
-	$trdtxt_15 = "Replace Image";
-	$trdtxt_16 = "Replace File";
-	$trdtxt_17 = "Attach File";
-	$trdtxt_18 = "Please enter the Introduction.";
-	$trdtxt_19 = "";
-	$trdtxt_20 = "";
+// Trade
+$trdtxt_01 = "Title";
+$trdtxt_02 = "Item";
+$trdtxt_03 = "Introduction";
+$trdtxt_04 = "Description";
+$trdtxt_05 = "Condition";
+$trdtxt_06 = "Contact Info";
+$trdtxt_07 = "Image1";
+$trdtxt_08 = "Image2";
+$trdtxt_09 = "No Image";
+$trdtxt_10 = "Attached File";
+$trdtxt_11 = "No Attached File";
+$trdtxt_12 = "File Size";
+$trdtxt_13 = "At most 100 strings available";
+$trdtxt_14 = "Pixel";
+$trdtxt_15 = "Replace Image";
+$trdtxt_16 = "Replace File";
+$trdtxt_17 = "Attach File";
+$trdtxt_18 = "Please enter the Introduction.";
+$trdtxt_19 = "";
+$trdtxt_20 = "";
 
-	// 북마크
-	$bmktxt_01 = "Website Name";
-	$bmktxt_02 = "Website URL";
-	$bmktxt_03 = "Bookmark";
-	$bmktxt_04 = "Please enter the Website Name.";
-	$bmktxt_05 = "Please enter the Website URL.";
+// 북마크
+$bmktxt_01 = "Website Name";
+$bmktxt_02 = "Website URL";
+$bmktxt_03 = "Bookmark";
+$bmktxt_04 = "Please enter the Website Name.";
+$bmktxt_05 = "Please enter the Website URL.";
 
-  // 폼메일
-  $fmltxt_01 = "Send";
-  $fmltxt_02 = "Reset";
-  $fmltxt_03 = "Your mail has been delivered successfully ..^^*";
-  $fmltxt_04 = "Please enter your name.";
-  $fmltxt_05 = "Please enter your Email address.";
-  $fmltxt_06 = "Please enter the title.";
-  $fmltxt_07 = "Please enter your message.";
-  $fmltxt_08 = "Online Order Form";
-  $fmltxt_09 = "Product";
-  $fmltxt_10 = "";
+// 폼메일
+$fmltxt_01 = "Send";
+$fmltxt_02 = "Reset";
+$fmltxt_03 = "Your mail has been delivered successfully ..^^*";
+$fmltxt_04 = "Please enter your name.";
+$fmltxt_05 = "Please enter your Email address.";
+$fmltxt_06 = "Please enter the title.";
+$fmltxt_07 = "Please enter your message.";
+$fmltxt_08 = "Online Order Form";
+$fmltxt_09 = "Product";
+$fmltxt_10 = "";
 
-  $fmltxt_21 = "Invalid Email Adress.";
-  $fmltxt_22 = "Please enter a password.";
-  $fmltxt_23 = "Please enter the pin key.";
-  $fmltxt_24 = "Post";
-  $fmltxt_25 = "Reset";
-  $fmltxt_26 = "Update";
-  $fmltxt_27 = "Delete";
-  $fmltxt_28 = "Cancel";
-  $fmltxt_29 = "";
+$fmltxt_21 = "Invalid Email Adress.";
+$fmltxt_22 = "Please enter a password.";
+$fmltxt_23 = "Please enter the pin key.";
+$fmltxt_24 = "Post";
+$fmltxt_25 = "Reset";
+$fmltxt_26 = "Update";
+$fmltxt_27 = "Delete";
+$fmltxt_28 = "Cancel";
+$fmltxt_29 = "";
 
-	// 마켓플레이스/구인구직 등
-	$bmrtxt_01 = "Select";
-	$bmrtxt_11 = "Sell";
-	$bmrtxt_12 = "Buy";
-	$bmrtxt_21 = "Wanted";
-	$bmrtxt_22 = "Job Opportunity";
+// 마켓플레이스/구인구직 등
+$bmrtxt_01 = "Select";
+$bmrtxt_11 = "Sell";
+$bmrtxt_12 = "Buy";
+$bmrtxt_21 = "Wanted";
+$bmrtxt_22 = "Job Opportunity";
 ?>
 

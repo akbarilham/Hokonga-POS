@@ -81,14 +81,14 @@ document.showimage.visibility="hide"
 </script>
 
 
-<?
+<?php
 $m_ip = getenv('REMOTE_ADDR');
 $signdate = time();
 
 $today_full_set = date("Ymd",$signdate);
-	$today_full_set2 = date("Y-m-d",$signdate);
+$today_full_set2 = date("Y-m-d",$signdate);
 $today_month_set = date("Ym",$signdate);
-	$today_month_set2 = date("Y-m",$signdate);
+$today_month_set2 = date("Y-m",$signdate);
 $today_6d = date("ymd",$signdate);
 $today_8d = date("ymdH",$signdate);
 $today_time = date("ymdHis",$signdate);
@@ -104,29 +104,25 @@ if($lang == "ko") {
 	$today_date_set_txt = date("d-M-Y",$signdate);
 }
 
-
 // User Website URL
+$website_id = 1; //modified
 $user_website_url = "index.php?gate=$website_id&lang=$lang";
-
 
 // Modules
 $query_logbr2 = "SELECT web_flag,module_03,module_05,module_07 FROM client WHERE client_id = '$login_gate' AND branch_code = '$login_branch'";
-$result_logbr2 = mysql_query($query_logbr2);
-   if(!$result_logbr2) { error("QUERY_ERROR"); exit; }
-   $row_logbr2 = mysql_fetch_object($result_logbr2);
-
-  $login_web_flag = $row_logbr2->web_flag;
-  $login_module_03 = $row_logbr2->module_03; // Church Members
-  $login_module_05 = $row_logbr2->module_05; // Offering
-  $login_module_07 = $row_logbr2->module_07; // Attendance
-
+$result_logbr2 = mysqli_query($dbconn, $query_logbr2);
+if(!$result_logbr2) { error("QUERY_ERROR"); exit; }
+$row_logbr2 = mysqli_fetch_object($result_logbr2);
+$login_web_flag = $row_logbr2->web_flag;
+$login_module_03 = $row_logbr2->module_03; // Church Members
+$login_module_05 = $row_logbr2->module_05; // Offering
+$login_module_07 = $row_logbr2->module_07; // Attendance
 
 // Logo
 $query_logo = "SELECT img1 FROM client_branch WHERE branch_code = '$login_branch'";
-$result_logo = mysql_query($query_logo);
+$result_logo = mysqli_query($dbconn, $query_logo);
 if(!$result_logo) { error("QUERY_ERROR"); exit; }
-   $row_logo = mysql_fetch_array($result_logo);
-
+$row_logo = mysqli_fetch_array($result_logo);
 $logo_file = $row_logo["img1"];
 
 if($logo_file != "") {
@@ -139,72 +135,69 @@ if($logo_file != "") {
 		$logo_img_file = "img/logo/logo_host.png";
 }
 
-
 // Login Data
 if($login_ip) {
-$query_log = "SELECT visit,log_in,default_lang,user_level FROM admin_user WHERE user_id = '$login_id' AND branch_code = '$login_branch'";
-$result_log = mysql_query($query_log);
-   if(!$result_log) { error("QUERY_ERROR"); exit; }
-   $row_log = mysql_fetch_array($result_log);
-
-  $last_visit = $row_log['visit'];
-  $last_login = $row_log['log_in'];
+	$query_log = "SELECT visit,log_in,default_lang,user_level FROM admin_user WHERE user_id = '$login_id' AND branch_code = '$login_branch'";
+	$result_log = mysqli_query($dbconn, $query_log);
+	if(!$result_log) { error("QUERY_ERROR"); exit; }
+	$row_log = mysqli_fetch_array($result_log);
+	$last_visit = $row_log['visit'];
+	$last_login = $row_log['log_in'];
   //$last_lang = $row_log->last_lang;
-  $last_level = $row_log['user_level'];
+	$last_level = $row_log['user_level'];
 
-  if($lang == "ko") {
-    $last_login1 = date("Y/m/d",$last_login);
-  } else {
-    $last_login1 = date("d-M-Y",$last_login);
-  }
-  $last_login2 = date("H:i:s (D)",$last_login);
-  if($lang == "ko") {
-    $last_login_full = date("Y/m/d,H:i:s",$last_login);
-  } else {
-    $last_login_full = date("d-m-Y, H:i:s",$last_login);
-  }
+	if($lang == "ko") {
+		$last_login1 = date("Y/m/d",$last_login);
+	} else {
+		$last_login1 = date("d-M-Y",$last_login);
+	}
 
-  $last_login_txt = "$txt_sys_user_09: "."$last_login_full";
+	$last_login2 = date("H:i:s (D)",$last_login);
+	if($lang == "ko") {
+		$last_login_full = date("Y/m/d,H:i:s",$last_login);
+	} else {
+		$last_login_full = date("d-m-Y, H:i:s",$last_login);
+	}
+
+	$last_login_txt = "$txt_sys_user_09: "."$last_login_full";
 
 } else {
-  $last_login_txt = "Local Login";
+	$last_login_txt = "Local Login";
 }
 
-
 // User Profile
-$query_foto = "SELECT name,gender,photo1 FROM member_staff WHERE id = '$login_id'";
-$result_foto = mysql_query($query_foto);
-    if (!$result_foto) { error("QUERY_ERROR"); exit; }
-$login_name2 = @mysql_result($result_foto,0,0);
-	if(!$login_name2) {
-		$login_name2 = $login_name;
-	}
-$login_gender = @mysql_result($result_foto,0,1);
-	if(!$login_gender) {
-		$login_gender = "M";
-	}
-$login_photo1 = @mysql_result($result_foto,0,2);
-	if($login_photo1 == "none" OR $login_photo1 == "") {
-		$login_photo_img1 = "img/User_Photo_"."$login_gender".".png";
-	} else {
-		$login_photo_img1 = "user_file/$login_photo1";
-	}
+// $query_foto = "SELECT name,gender,photo1 FROM member_staff WHERE id = '$login_id'";
+$query_foto = "SELECT name,gender,photo1 FROM member_staff WHERE id = 'akbar10'"; // modified
+$result_foto = mysqli_query($dbconn, $query_foto);
+if (!$result_foto) { error("QUERY_ERROR"); exit; }
+$login_name2 = @mysqli_result($result_foto,0,0);
+if(!$login_name2) {
+	$login_name2 = $login_name;
+}
+$login_gender = @mysqli_result($result_foto,0,1);
+if(!$login_gender) {
+	$login_gender = "M";
+}
+$login_photo1 = @mysqli_result($result_foto,0,2);
+if($login_photo1 == "none" OR $login_photo1 == "") {
+	$login_photo_img1 = "img/User_Photo_"."$login_gender".".png";
+} else {
+	$login_photo_img1 = "user_file/$login_photo1";
+}
 
 // Privileges POS Monitoring
 $query_0509 = "SELECT uid,gate,module_05 FROM admin_user WHERE user_id = '$login_id'";
-$fetch_0509 = mysql_query($query_0509);
-$smode_0509_K3 = @mysql_result($fetch_0509,0,2);
+$fetch_0509 = mysqli_query($dbconn, $query_0509);
+$smode_0509_K3 = @mysqli_result($fetch_0509,0,2);
 $module_0509 = substr($smode_0509_K3,8,1);
 
 // Dashboard (Home)
 
-//$hmmenu_01 = "index.php?lang=$last_lang";
-
 // 01. Purchasing
 $link_module_0101 = "inventory_stock1D.php"; // Product Search
 $link_module_0102 = "inventory_purchase.php"; // Purchase Order
-  $link_module_0102A = "inventory_purchase.php?otype=A"; // Purchase Order A (In Process)
-  $link_module_0102B = "inventory_purchase.php?otype=B"; // Purchase Order A (Completed)
+$link_module_0102A = "inventory_purchase.php?otype=A"; // Purchase Order A (In Process)
+$link_module_0102B = "inventory_purchase.php?otype=B"; // Purchase Order A (Completed)
 $link_module_0103 = "inventory_purchase1.php"; // Purchase Approval
 $link_module_0104 = "inventory_stock2.php"; // Physical Check ////
 $link_module_0105 = "inventory_purchase2.php"; // Warehousing
@@ -222,18 +215,18 @@ $link_module_01C03 = "wms_do.php"; // Delivery Order (WMS)
 
 // 02. Inventory (SCO)
 $link_module_0201 = "inventory_stock_in.php"; // Stock Input
-	$link_module_0201A = "inventory_stock_data1.php"; // Stock Data - by item
-	$link_module_0201B = "inventory_stock_data2.php"; // Stock Data - by warehouse
-	$link_module_0201C = "inventory_stock_data3.php"; // Stock Data - by branch shop
-	$link_module_0201D = "inventory_stock_data4.php"; // Stock Data - by store
+$link_module_0201A = "inventory_stock_data1.php"; // Stock Data - by item
+$link_module_0201B = "inventory_stock_data2.php"; // Stock Data - by warehouse
+$link_module_0201C = "inventory_stock_data3.php"; // Stock Data - by branch shop
+$link_module_0201D = "inventory_stock_data4.php"; // Stock Data - by store
 $link_module_0201on = "inventory_stock_online.php"; // Stock Online
 
 $link_module_0202 = "inventory_payment.php"; // Payment (PP)
 $link_module_0203 = "inventory_payment2.php"; // Payment Confirmation
 $link_module_0204 = "inventory_stock_out.php"; // Stock Output
 $link_module_0205 = "inventory_delivery.php"; // Delivery Check
-  $link_module_0206 = "inventory_delivery2.php"; // Surat Jalan
-  $link_module_0207 = "inventory_billing.php"; // Billing Management
+$link_module_0206 = "inventory_delivery2.php"; // Surat Jalan
+$link_module_0207 = "inventory_billing.php"; // Billing Management
 $link_module_0208 = "inventory_return.php"; // Return
 $link_module_0209 = "inventory_pickup.php"; // Product Pick-up
 $link_module_0210 = "inventory_opname_dir.php"; // Stock Opname - Directory
@@ -284,8 +277,8 @@ $link_module_0509 = "pos_admin.php"; // Admin POS
 
 // 06. Sales (Associate Store)
 $link_module_0601 = "sales_order3.php"; // Sales Entry
-	$link_module_0601A = "sales_order3A.php"; // Sales Entry (Blank)
-	$link_module_0601B = "sales_order3B.php"; // Sales Entry (Grid)
+$link_module_0601A = "sales_order3A.php"; // Sales Entry (Blank)
+$link_module_0601B = "sales_order3B.php"; // Sales Entry (Grid)
 $link_module_0602 = "sales_collection.php"; // Payment Collection
 $link_module_0603 = "sales_pr_search.php"; // Product Search
 $link_module_0604 = "sales_pr_order.php"; // Product Request
@@ -304,48 +297,48 @@ $link_module_0707 = "inventory_opnameD.php"; // Stock Opname
 
 // 08. CRM/HR
 $link_module_0801 = "crm_member.php"; // Customer
-	$link_module_08010 = "crm_member.php?mb_level=3&mb_type=2"; // 위탁 매장
-	$link_module_08011 = "crm_member.php?mb_level=2&mb_type=2"; // 리셀러 (상점)
-	$link_module_08012 = "crm_member.php?mb_level=2&mb_type=0"; // 리셀러 (개인)
-	$link_module_08013 = "crm_member.php?mb_level=1&mb_type=3"; // 일반 고객 (기업)
-	$link_module_08014 = "crm_member.php?mb_level=1&mb_type=0"; // (개인)
-	$link_module_08015 = "crm_member.php?mb_level=4&mb_type=3"; // (개인)
+$link_module_08010 = "crm_member.php?mb_level=3&mb_type=2"; // 위탁 매장
+$link_module_08011 = "crm_member.php?mb_level=2&mb_type=2"; // 리셀러 (상점)
+$link_module_08012 = "crm_member.php?mb_level=2&mb_type=0"; // 리셀러 (개인)
+$link_module_08013 = "crm_member.php?mb_level=1&mb_type=3"; // 일반 고객 (기업)
+$link_module_08014 = "crm_member.php?mb_level=1&mb_type=0"; // (개인)
+$link_module_08015 = "crm_member.php?mb_level=4&mb_type=3"; // (개인)
 $link_module_0802 = "crm_member2.php"; // Distributor
-	$link_module_08021 = "crm_member2.php?mb_level=7"; // 대리점 (지역총판)
-	$link_module_08022 = "crm_member2.php?mb_level=6"; // 대리점 (지역지점)
+$link_module_08021 = "crm_member2.php?mb_level=7"; // 대리점 (지역총판)
+$link_module_08022 = "crm_member2.php?mb_level=6"; // 대리점 (지역지점)
 $link_module_0803 = "hr_member.php"; // Employee
-	$link_module_08031 = "hr_member.php?hr_type=1"; // Regular
-		$link_module_08031x = "hr_member.php?hr_type=1&hr_retire=1"; // Regular - Retired
-	$link_module_08032 = "hr_member.php?hr_type=2"; // Non-regular (SA)
-		$link_module_08032x = "hr_member.php?hr_type=2&hr_retire=1"; // Non-regular (SA) - Retired
-	$link_module_08033 = "hr_member.php?hr_type=3&hr_temp=1"; // Temporary
+$link_module_08031 = "hr_member.php?hr_type=1"; // Regular
+$link_module_08031x = "hr_member.php?hr_type=1&hr_retire=1"; // Regular - Retired
+$link_module_08032 = "hr_member.php?hr_type=2"; // Non-regular (SA)
+$link_module_08032x = "hr_member.php?hr_type=2&hr_retire=1"; // Non-regular (SA) - Retired
+$link_module_08033 = "hr_member.php?hr_type=3&hr_temp=1"; // Temporary
 
-	// Work Attitudes
-	$link_module_08031w = "hr_member_work.php";
-	$link_module_08031w0 = "hr_member_history.php";
-	$link_module_08031w1 = "hr_member_work.php?hr_type=1"; // Regular
-	$link_module_08031w2 = "hr_member_work.php?hr_type=2"; // 용역 (SA) 관리
+// Work Attitudes
+$link_module_08031w = "hr_member_work.php";
+$link_module_08031w0 = "hr_member_history.php";
+$link_module_08031w1 = "hr_member_work.php?hr_type=1"; // Regular
+$link_module_08031w2 = "hr_member_work.php?hr_type=2"; // 용역 (SA) 관리
 
-	// Incentive
-	$link_module_080321 = "hr_incentive_sa.php"; // SA - Reseller
-	$link_module_080322 = "hr_incentive_spc.php";
-	$link_module_080323 = "hr_incentive_sms.php";
-	$link_module_080324 = "hr_incentive_fbs.php";
-	$link_module_080325 = "hr_incentive_driver.php";
-	$link_module_080326 = "hr_incentive_office.php";
+// Incentive
+$link_module_080321 = "hr_incentive_sa.php"; // SA - Reseller
+$link_module_080322 = "hr_incentive_spc.php";
+$link_module_080323 = "hr_incentive_sms.php";
+$link_module_080324 = "hr_incentive_fbs.php";
+$link_module_080325 = "hr_incentive_driver.php";
+$link_module_080326 = "hr_incentive_office.php";
 
-	// Wages
-	$link_module_080331 = "hr_wage_sa.php"; // SA - Reseller
-	$link_module_080332 = "hr_wage_spc.php";
-	$link_module_080333 = "hr_wage_sms.php";
-	$link_module_080334 = "hr_wage_fbs.php";
-	$link_module_080335 = "hr_wage_driver.php";
-	$link_module_080336 = "hr_wage_office.php";
+// Wages
+$link_module_080331 = "hr_wage_sa.php"; // SA - Reseller
+$link_module_080332 = "hr_wage_spc.php";
+$link_module_080333 = "hr_wage_sms.php";
+$link_module_080334 = "hr_wage_fbs.php";
+$link_module_080335 = "hr_wage_driver.php";
+$link_module_080336 = "hr_wage_office.php";
 
 $link_module_0804 = "crm_mailing2.php"; // Mailing List
-	$link_module_08041 = "crm_mailing1.php"; // Mailing List (Employee)
-	$link_module_08042 = "crm_mailing2.php"; // Mailing List (Customer)
-	$link_module_08043 = "crm_mailing3.php"; // Mailing List (Non-member)
+$link_module_08041 = "crm_mailing1.php"; // Mailing List (Employee)
+$link_module_08042 = "crm_mailing2.php"; // Mailing List (Customer)
+$link_module_08043 = "crm_mailing3.php"; // Mailing List (Non-member)
 $link_module_0805 = "crm_newsletter.php"; // News Letter
 
 
@@ -380,8 +373,8 @@ $link_module_2101 = "system_client.php"; // Client(창고) 계정관리
 $link_module_2102 = "system_user.php"; // 사용자(창고) 계정관리
 $link_module_2101d = "system_department.php"; // 부서 관리
 $link_module_2117 = "system_warehouse.php"; // Warehouse
-	$link_module_211701 = "system_wloc_catg.php"; // Warehouse Location Category
-	$link_module_211702 = "system_wloc_list.php"; // Warehouse Location List
+$link_module_211701 = "system_wloc_catg.php"; // Warehouse Location Category
+$link_module_211702 = "system_wloc_list.php"; // Warehouse Location List
 $link_module_2104A = "system_brand.php"; // 브랜드
 $link_module_2105 = "system_category.php"; // 상품 카테고리 관리
 $link_module_2118 = "system_consign.php"; // 위탁판매 그룹 관리
@@ -468,29 +461,30 @@ $hsmenu_10_04 = "user_join.php";
 $hsmenu_10_05 = "user_login.php";
 $hsmenu_10_06 = "user_logout.php";
 
-
+$grpBrc = $login_branch; //modified
 
 // Branch & Shop Name
 if($grpBrc) {
 	$query_name1 = "SELECT branch_name FROM client_branch WHERE branch_code = '$grpBrc'";
-	$result_name1 = mysql_query($query_name1);
+	$result_name1 = mysqli_query($dbconn, $query_name1);
 		if (!$result_name1) { error("QUERY_ERROR"); exit; }
-	$rp_title1 = @mysql_result($result_name1,0,0);
+	$rp_title1 = @mysqli_result($result_name1,0,0);
 }
 
-
+$grpShp = 'A0373'; //modified
+// A0373
 if($grpShp) {
 	$query_name2 = "SELECT shop_name,associate FROM client_shop WHERE shop_code = '$grpShp'";
-	$result_name2 = mysql_query($query_name2);
+	$result_name2 = mysqli_query($dbconn, $query_name2);
 		if (!$result_name2) { error("QUERY_ERROR"); exit; }
-	$rp_title2 = @mysql_result($result_name2,0,0);
+	$rp_title2 = @mysqli_result($result_name2,0,0);
 		$rp_title2_txt = "($rp_title2)";
 		$rp_title2_full = "$rp_title1"." &gt; "."$rp_title2";
-	$rp_asso_type = @mysql_result($result_name2,0,1);
+	$rp_asso_type = @mysqli_result($result_name2,0,1);
 } else {
 	$rp_title2_txt = "";
 	$rp_title2_full = $rp_title1;
-	$rp_title2 = @mysql_result($result_name2,0,0);
+	$rp_title2 = @mysqli_result($result_name2,0,0);
 	$rp_asso_type = "0";
 }
 
@@ -504,10 +498,12 @@ if($login_level > "7") {
 } else {
 	$query_tcnt = "SELECT sum(stock) FROM shop_product_list_qty WHERE flag = 'out' AND shop_code2 = '$login_shop' AND branch_code2 = '$login_branch'";
 }
-$result_tcnt = mysql_query($query_tcnt);
-    if (!$result_tcnt) { error("QUERY_ERROR"); exit; }
-$lfprd_tcnt = @mysql_result($result_tcnt,0,0);
-$lfprd_tcnt_K = number_format($lfprd_tcnt);
+// var_dump($query_tcnt); die();
+$result_tcnt = mysqli_query($dbconn, $query_tcnt);
+if (!$result_tcnt) { error("QUERY_ERROR"); exit; }
+$lfprd_tcnt = @mysqli_result($result_tcnt,0,0);
+// $lfprd_tcnt_K = number_format($lfprd_tcnt);
+$lfprd_tcnt_K = 0;
 
 if($login_level > "7") {
 	$query_tcnt2 = "SELECT sum(stock) FROM shop_product_list_qty WHERE flag = 'out'";
@@ -516,21 +512,22 @@ if($login_level > "7") {
 } else {
 	$query_tcnt2 = "SELECT sum(stock) FROM shop_product_list_qty WHERE flag = 'in' AND shop_code2 = '$login_shop' AND branch_code2 = '$login_branch'";
 }
-$result_tcnt2 = mysql_query($query_tcnt2);
+$result_tcnt2 = mysqli_query($dbconn, $query_tcnt2);
     if (!$result_tcnt2) { error("QUERY_ERROR"); exit; }
-$lfprd_tcnt2 = @mysql_result($result_tcnt2,0,0);
-$lfprd_tcnt2_K = number_format($lfprd_tcnt2);
+$lfprd_tcnt2 = @mysqli_result($result_tcnt2,0,0);
+// $lfprd_tcnt2_K = number_format($lfprd_tcnt2);
+$lfprd_tcnt2_K = 0;
 
 
 // Photo
 $query_foto = "SELECT gender,photo1 FROM member_staff WHERE id = '$login_id'";
-$result_foto = mysql_query($query_foto);
+$result_foto = mysqli_query($dbconn, $query_foto);
     if (!$result_foto) { error("QUERY_ERROR"); exit; }
-$gender = @mysql_result($result_foto,0,0);
+$gender = @mysqli_result($result_foto,0,0);
 	if(!$gender) {
 		$gender = "M";
 	}
-$photo1 = @mysql_result($result_foto,0,1);
+$photo1 = @mysqli_result($result_foto,0,1);
 
 if($photo1 == "none" OR $photo1 == "") {
     $photo_img1 = "img/User_Photo_"."$gender".".png";
@@ -539,18 +536,12 @@ if($photo1 == "none" OR $photo1 == "") {
 }
 
 //query temporary
-$query_tempo_c = "SELECT count(uid) FROM member_staff WHERE DATEDIFF( CURDATE( ) , DATE_ADD( regis_date, INTERVAL 90
-				 DAY ) ) <=14 AND ctr_sa = '2' OR temp = '1'";
-$result_tempo_c = mysql_query($query_tempo_c);
+$query_tempo_c = "SELECT count(uid) FROM member_staff WHERE DATEDIFF( CURDATE( ) , DATE_ADD( regis_date, INTERVAL 90 DAY ) ) <=14 AND ctr_sa = '2' OR temp = '1'";
+$result_tempo_c = mysqli_query($dbconn, $query_tempo_c);
 if (!$result_tempo_c) { error("QUERY_ERROR"); exit; }
-$uid_total = @mysql_result($result_tempo_c,0,0);
-
-
-
+$uid_total = @mysqli_result($result_tempo_c,0,0);
 
 ?>
-
-
 
 <!--header start-->
       <header class="header white-bg">
@@ -718,7 +709,7 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
                     <!-- inbox dropdown end -->
 
                     <!-- notification dropdown start-->
-					<? if ($last_level >= 8) {?>
+					<?php if ($last_level >= 8) {?>
                     <li id="header_notification_bar" class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <i class="fa fa-bell-o"></i>
@@ -738,10 +729,10 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
 													<=14 AND ctr_sa = '2' OR temp = '1'";
 									$result_tempo = mysql_query($query_tempo);
 										if (!$result_tempo) { error("QUERY_ERROR"); exit; }
-											$employee_name = @mysql_result($result_tempo,$i,0);
-											$employee_title = @mysql_result($result_tempo,$i,1);
-											$regis_dates = @mysql_result($result_tempo,$i,2);
-											$uid = @mysql_result($result_tempo,$i,3);
+											$employee_name = @mysqli_result($result_tempo,$i,0);
+											$employee_title = @mysqli_result($result_tempo,$i,1);
+											$regis_dates = @mysqli_result($result_tempo,$i,2);
+											$uid = @mysqli_result($result_tempo,$i,3);
 											$name = explode(' ',$employee_name);
 											$signdate = time();
 											  $post_year = date("Y",$signdate);
@@ -762,10 +753,10 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
 									<li>
 										<a href='hr_member_upd.php?keyfield=&key=&page=1&uid=<?=$uid?>&hr_type=3&hr_temp=1'>
 											<span class="label label-danger"><i class="fa fa-bolt"></i></span>
-											<span class="small"><?=$name[0]?>[<?=$employee_title?>] - <?=$selisih?> hari</span>
+											<span class="small"><?=$name[0]?>[<?=$employee_title?>] - <?php echo $selisih?> hari</span>
 										</a>
 									</li>
-									<?
+									<?php
 
 								}
 							?>
@@ -804,7 +795,7 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
 							-->
                         </ul>
                     </li>
-					<?}?>
+					<?php } ?>
                     <!-- notification dropdown end -->
                 </ul>
                 <!--  notification end -->
@@ -831,14 +822,14 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img alt="" src="<?=$photo_img1?>" style="height: 30px">
-                            <span class="username"><?=$login_user_name?></span>
+                            <img alt="" src="<?php echo $photo_img1?>" style="height: 30px">
+                            <span class="username"><?php echo $login_user_name?></span>
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu extended logout">
                             <div class="log-arrow-up"></div>
-                            <li><a href="<?echo("$hsmenu_10_01")?>"><i class="fa fa-cog"></i> <?echo("$hsm_name_10_01")?></a></li>
-                            <li><a href="<?echo("$hsmenu_10_02")?>"><i class="fa fa-suitcase"></i> <?echo("$hsm_name_10_02")?></a></li>
+                            <li><a href="<?php echo("$hsmenu_10_01")?>"><i class="fa fa-cog"></i> <?php echo("$hsm_name_10_01")?></a></li>
+                            <li><a href="<?php echo("$hsmenu_10_02")?>"><i class="fa fa-suitcase"></i> <?php echo("$hsm_name_10_02")?></a></li>
 							<li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
                             <li><a href="user_logout.php"><i class="fa fa-key"></i> Log Out</a></li>
                         </ul>
@@ -857,11 +848,11 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
-				  <? if(!$mmenu OR $mmenu == "main") { ?>
+				  <?php if(!$mmenu OR $mmenu == "main") { ?>
                   <li><a class="active" href="index.php"> <i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-				  <? } else { ?>
+				  <?php } else { ?>
 				  <li><a href="index.php"> <i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-				  <? } ?>
+				  <?php } ?>
 
 				  <!--
                   <li class="sub-menu">
@@ -878,910 +869,910 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
 
 
 
-				  <? if($mmodule_05_act == "1") { ?>
+				  <?php if($mmodule_05_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "sales") { ?>
-                      <a href="javascript:;" class="active"> <i class="fa fa-tags"></i> <span><?echo("$title_module_05")?></span></a>
-					  <? } else { ?>
+					  <?php if($mmenu == "sales") { ?>
+                      	<a href="javascript:;" class="active"> <i class="fa fa-tags"></i> <span><?php echo("$title_module_05")?></span></a>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-tags"></i> <span><?echo("$title_module_05")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-					    <? if(($now_group_admin == "1" AND $smodule_0501 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_order2") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0501 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_order2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0501")?>"><?echo("$title_module_0501")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0501")?>"><?echo("$title_module_0501")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0501 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_collection") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0501 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_collection") { ?>
 						<li class="active"><a href="<?echo("$link_module_0502")?>"><?echo("$title_module_0502")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0502")?>"><?echo("$title_module_0502")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_0501 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_pos") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0501 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_pos") { ?>
 						<li class="active"><a href="<?echo("$link_module_0508")?>"><?echo("$title_module_0508")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0508")?>"><?echo("$title_module_0508")?></a></li>
-						<? } ?>
-						<? if($now_group_admin == "1" AND $smodule_0509 == "1") { ?>
+						<?php } ?>
+						<?php if($now_group_admin == "1" AND $smodule_0509 == "1") { ?>
 						<li><a href="<?echo("$link_module_0509")?>"><?echo("$title_module_0509")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
-				  <? if($mmodule_06_act == "1") { ?>
+				  <?php if($mmodule_06_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "sales") { ?>
+					  <?php if($mmenu == "sales") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-tags"></i> <span><?echo("$title_module_06")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-tags"></i> <span><?echo("$title_module_06")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-					    <? if(($now_group_admin == "1" AND $smodule_0601 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_order3") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0601 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_order3") { ?>
 						<li class="active"><a href="<?echo("$link_module_0601")?>"><?echo("$title_module_0601")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0601")?>"><?echo("$title_module_0601")?></a></li>
-						<? } ?>
-						<? if($smenu == "sales_order3A") { ?>
+						<?php } ?>
+						<?php if($smenu == "sales_order3A") { ?>
 						<li class="active"><a href="<?echo("$link_module_0601A")?>">+ <?echo("$title_module_0601")?> (Blank)</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0601A")?>">+ <?echo("$title_module_0601")?> (Blank)</a></li>
-						<? } ?>
-						<? if($smenu == "sales_order3B") { ?>
+						<?php } ?>
+						<?php if($smenu == "sales_order3B") { ?>
 						<li class="active"><a href="<?echo("$link_module_0601B")?>">+ <?echo("$title_module_0601")?> (Grid)</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0601B")?>">+ <?echo("$title_module_0601")?> (Grid)</a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0602 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_collection") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0602 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_collection") { ?>
 						<li class="active"><a href="<?echo("$link_module_0602")?>"><?echo("$title_module_0602")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0602")?>"><?echo("$title_module_0602")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
-				  <? if($mmodule_07_act == "1") { ?>
+				  <?php if($mmodule_07_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "sales") { ?>
+					  <?php if($mmenu == "sales") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-tags"></i> <span><?echo("$title_module_07")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-tags"></i> <span><?echo("$title_module_07")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-					    <? if(($now_group_admin == "1" AND $smodule_0701 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_order1") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0701 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_order1") { ?>
 						<li class="active"><a href="<?echo("$link_module_0701")?>"><?echo("$title_module_0701")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0701")?>"><?echo("$title_module_0701")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0702 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_collection") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0702 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_collection") { ?>
 						<li class="active"><a href="<?echo("$link_module_0702")?>"><?echo("$title_module_0702")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0702")?>"><?echo("$title_module_0702")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
-				  <? if($mmodule_01_act == "1") { ?>
+				  <?php if($mmodule_01_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "purchase") { ?>
+					  <?php if($mmenu == "purchase") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-anchor"></i> <span><?echo("$title_module_01")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-anchor"></i> <span><?echo("$title_module_01")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-					    <? if(($now_group_admin == "1" AND $smodule_0101 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_stock1") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0101 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_stock1") { ?>
 						<li class="active"><a href="<?echo("$link_module_0101")?>"><?echo("$title_module_0101")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0101")?>"><?echo("$title_module_0101")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-					    <? if(($now_group_admin == "1" AND $smodule_0102 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_purchase") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0102 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_purchase") { ?>
 						<li class="active"><a href="<?echo("$link_module_0102")?>"><?echo("$title_module_0102")?></a></li>
-							<? if($otype == "A") { ?>
+							<?php if($otype == "A") { ?>
 							<li class="active"><a href="<?echo("$link_module_0102A")?>">+ <?=$title_module_0102A?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 							<li><a href="<?echo("$link_module_0102A")?>">+ <?=$title_module_0102A?></a></li>
-							<? } ?>
-							<? if($otype == "B") { ?>
+							<?php } ?>
+							<?php if($otype == "B") { ?>
 							<li class="active"><a href="<?echo("$link_module_0102B")?>">+ <?=$title_module_0102B?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 							<li><a href="<?echo("$link_module_0102B")?>">+ <?=$title_module_0102B?></a></li>
-							<? } ?>
-						<? } else { ?>
+							<?php } ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0102")?>"><?echo("$title_module_0102")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-					    <? if(($now_group_admin == "1" AND $smodule_0103 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_purchase1") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0103 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_purchase1") { ?>
 						<li class="active"><a href="<?echo("$link_module_0103")?>"><?echo("$title_module_0103")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0103")?>"><?echo("$title_module_0103")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0104 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_stock2") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0104 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_stock2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0104")?>"><?echo("$title_module_0104")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0104")?>"><?echo("$title_module_0104")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0105 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_purchase2") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0105 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_purchase2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0105")?>"><?echo("$title_module_0105")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0105")?>"><?echo("$title_module_0105")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0106 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_purchase3") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0106 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_purchase3") { ?>
 						<li class="active"><a href="<?echo("$link_module_0106")?>"><?echo("$title_module_0106")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0106")?>"><?echo("$title_module_0106")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
-				  <? if($mmodule_01B_act == "1") { ?>
+				  <?php if($mmodule_01B_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "purchaseB") { ?>
+					  <?php if($mmenu == "purchaseB") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-anchor"></i> <span><?echo("$title_module_01B")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-anchor"></i> <span><?echo("$title_module_01B")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-						<? if(($now_group_admin == "1" AND $smodule_01B01 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_pr_search") { ?>
+						<?php if(($now_group_admin == "1" AND $smodule_01B01 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_pr_search") { ?>
 						<li class="active"><a href="<?echo("$link_module_01B01")?>"><?echo("$title_module_01B01")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_01B01")?>"><?echo("$title_module_01B01")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_01B02 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_pr_order") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_01B02 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_pr_order") { ?>
 						<li class="active"><a href="<?echo("$link_module_01B02")?>"><?echo("$title_module_01B02")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_01B02")?>"><?echo("$title_module_01B02")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_01B03 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "sales_pr_confirm") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_01B03 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "sales_pr_confirm") { ?>
 						<li class="active"><a href="<?echo("$link_module_01B03")?>"><?echo("$title_module_01B03")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_01B03")?>"><?echo("$title_module_01B03")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
 
                   <li class="sub-menu">
-					  <? if($mmenu == "warehouse") { ?>
+					  <?php if($mmenu == "warehouse") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-square"></i> <span><?echo("$title_module_01C")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-square"></i> <span><?echo("$title_module_01C")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-						<? if(($now_group_admin == "1" AND $smodule_01B02 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "wms_po") { ?>
+						<?php if(($now_group_admin == "1" AND $smodule_01B02 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "wms_po") { ?>
 						<li class="active"><a href="<?echo("$link_module_01C02")?>"><?echo("$title_module_01C02")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_01C02")?>"><?echo("$title_module_01C02")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_01B01 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "wms_so") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_01B01 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "wms_so") { ?>
 						<li class="active"><a href="<?echo("$link_module_01C01")?>"><?echo("$title_module_01C01")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_01C01")?>"><?echo("$title_module_01C01")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_01B03 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "wms_do") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_01B03 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "wms_do") { ?>
 						<li class="active"><a href="<?echo("$link_module_01C03")?>"><?echo("$title_module_01C03")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_01C03")?>"><?echo("$title_module_01C03")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
-				  <? if($login_level > "7" OR $mmodule_02_act == "1") { ?>
+				  <?php if($login_level > "7" OR $mmodule_02_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "inventory") { ?>
+					  <?php if($mmenu == "inventory") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-archive"></i> <span><?echo("$title_module_02")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-archive"></i> <span><?echo("$title_module_02")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
 
-					    <? if(($now_group_admin == "1" AND $smodule_0201 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_stock_in") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0201 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_stock_in") { ?>
 						<li class="active"><a href="<?echo("$link_module_0201")?>"><?echo("$title_module_0201")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0201")?>"><?echo("$title_module_0201")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "inventory_stock_data1") { ?>
+						<?php if($smenu == "inventory_stock_data1") { ?>
 						<li class="active"><a href="<?echo("$link_module_0201A")?>"> + by item</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0201A")?>"> + by item</a></li>
-						<? } ?>
-						<? if($smenu == "inventory_stock_data2") { ?>
+						<?php } ?>
+						<?php if($smenu == "inventory_stock_data2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0201B")?>"> + <?=$txt_sys_shop_079?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0201B")?>"> + <?=$txt_sys_shop_079?></a></li>
-						<? } ?>
-						<? if($smenu == "inventory_stock_data3") { ?>
+						<?php } ?>
+						<?php if($smenu == "inventory_stock_data3") { ?>
 						<li class="active"><a href="<?echo("$link_module_0201C")?>"> + <?=$txt_sys_shop_071?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0201C")?>"> + <?=$txt_sys_shop_071?></a></li>
-						<? } ?>
-						<? if($smenu == "inventory_stock_data4") { ?>
+						<?php } ?>
+						<?php if($smenu == "inventory_stock_data4") { ?>
 						<li class="active"><a href="<?echo("$link_module_0201D")?>"> + <?=$txt_sys_shop_072?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0201D")?>"> + <?=$txt_sys_shop_072?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "inventory_stock_online") { ?>
+						<?php if($smenu == "inventory_stock_online") { ?>
 						<li class="active"><a href="<?echo("$link_module_0201on")?>"><?echo("$title_module_0201on")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0201on")?>"><?echo("$title_module_0201on")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
 
-					    <? if(($now_group_admin == "1" AND $smodule_0202 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_payment") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0202 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_payment") { ?>
 						<li class="active"><a href="<?echo("$link_module_0202")?>"><i class="fa fa-thumb-tack"></i> <?echo("$title_module_0202")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0202")?>"><i class="fa fa-thumb-tack"></i> <?echo("$title_module_0202")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0203 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_payment2") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0203 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_payment2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0203")?>"><i class="fa fa-thumb-tack"></i> <?echo("$title_module_0203")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0203")?>"><i class="fa fa-thumb-tack"></i> <?echo("$title_module_0203")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-						<? if(($now_group_admin == "1" AND $smodule_0204 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_stock_out") { ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0204 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_stock_out") { ?>
 						<li class="active"><a href="<?echo("$link_module_0204")?>"><?echo("$title_module_0204")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0204")?>"><?echo("$title_module_0204")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0205 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_delivery") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0205 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_delivery") { ?>
 						<li class="active"><a href="<?echo("$link_module_0205")?>"><?echo("$title_module_0205")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0205")?>"><?echo("$title_module_0205")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0206 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_delivery2") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0206 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_delivery2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0206")?>"><?echo("$title_module_0206")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0206")?>"><?echo("$title_module_0206")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_0208 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_return") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0208 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_return") { ?>
 						<li class="active"><a href="<?echo("$link_module_0208")?>"><i class="fa fa-thumb-tack"></i> <?echo("$title_module_0208")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0208")?>"><i class="fa fa-thumb-tack"></i> <?echo("$title_module_0208")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-					    <? if(($now_group_admin == "1" AND $smodule_0207 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_billing") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0207 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_billing") { ?>
 						<li class="active"><a href="<?echo("$link_module_0207")?>"><?echo("$title_module_0207")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0207")?>"><?echo("$title_module_0207")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-					    <? if(($now_group_admin == "1" AND $smodule_0209 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_pickup") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0209 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_pickup") { ?>
 						<li class="active"><a href="<?echo("$link_module_0209")?>"><?echo("$title_module_0209")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0209")?>"><?echo("$title_module_0209")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
 						<!--
-					    <? if(($now_group_admin == "1" AND $smodule_0210 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "inventory_opname") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0210 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "inventory_opname") { ?>
 						<li class="active"><a href="<?echo("$link_module_0210")?>"><?echo("$title_module_0210")?> (WH)</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0210")?>"><?echo("$title_module_0210")?>  (WH)</a></li>
-						<? } ?>
+						<?php } ?>
 						-->
 
-						<? if($smenu == "inventory_opname_ini1" OR $smenu == "inventory_opname_ini2" OR $smenu == "inventory_opname_set") { ?>
+						<?php if($smenu == "inventory_opname_ini1" OR $smenu == "inventory_opname_ini2" OR $smenu == "inventory_opname_set") { ?>
 						<li class="active"><a href="<?echo("$link_module_0210_set")?>"><?echo("$title_module_0210")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0210_set")?>"><?echo("$title_module_0210")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "inventory_opname_ini1") { ?>
+						<?php if($smenu == "inventory_opname_ini1") { ?>
 						<li class="active"><a href="<?echo("$link_module_0210_ini1")?>">+ <?=$txt_sys_shop_079?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0210_ini1")?>">+ <?=$txt_sys_shop_079?></a></li>
-						<? } ?>
-						<? if($smenu == "inventory_opname_ini2") { ?>
+						<?php } ?>
+						<?php if($smenu == "inventory_opname_ini2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0210_ini2")?>">+ <?=$txt_sys_shop_071?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0210_ini2")?>">+ <?=$txt_sys_shop_071?></a></li>
-						<? } ?>
-						<? if($smenu == "inventory_opname_ini3") { ?>
+						<?php } ?>
+						<?php if($smenu == "inventory_opname_ini3") { ?>
 						<li class="active"><a href="<?echo("$link_module_0210_ini3")?>">+ <?=$txt_sys_shop_072?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0210_ini3")?>">+ <?=$txt_sys_shop_072?></a></li>
-						<? } ?>
+						<?php } ?>
 						<!-- Inventory opname check -->
-						<? if($smenu == "inventory_closing_check") { ?>
+						<?php if($smenu == "inventory_closing_check") { ?>
 						<li class="active"><a href="<?echo("$link_module_0221")?>">Stock Closing Check</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0221")?>">Stock Closing Check</a></li>
-						<? } ?>
+						<?php } ?>
 						<!-- Inventory opname check -->
-						<? if($smenu == "inventory_opname_close") { ?>
+						<?php if($smenu == "inventory_opname_close") { ?>
 						<li class="active"><a href="<?echo("$link_module_0220")?>"><?echo("$title_module_0220")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0220")?>"><?echo("$title_module_0220")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "inventory_update_cbm") { ?>
+						<?php if($smenu == "inventory_update_cbm") { ?>
 						<li class="active"><a href="<?echo("$link_module_0213")?>"><i class="fa fa-wrench"></i> <?echo("$title_module_0213")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0213")?>"><i class="fa fa-wrench"></i> <?echo("$title_module_0213")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "inventory_update_price") { ?>
+						<?php if($smenu == "inventory_update_price") { ?>
 						<li class="active"><a href="<?echo("$link_module_0214")?>"><i class="fa fa-wrench"></i> <?echo("$title_module_0214")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0214")?>"><i class="fa fa-wrench"></i> <?echo("$title_module_0214")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-					    <? } ?>
+					    <?php } ?>
 
-						<? if($login_level > "7") { ?>
+						<?php if($login_level > "7") { ?>
 
-						<? if($smenu == "inventory_option") { ?>
+						<?php if($smenu == "inventory_option") { ?>
 						<li class="active"><a href="<?echo("$link_module_0211")?>"><i class="fa fa-wrench"></i> <?echo("$title_module_0211")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0211")?>"><i class="fa fa-wrench"></i> <?echo("$title_module_0211")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "inventory_unit") { ?>
+						<?php if($smenu == "inventory_unit") { ?>
 						<li class="active"><a href="<?echo("$link_module_0212")?>"><i class="fa fa-wrench"></i> <?echo("$title_module_0212")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0212")?>"><i class="fa fa-wrench"></i> <?echo("$title_module_0212")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? } ?>
+						<?php } ?>
                       </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
-				  <? if($mmodule_03_act == "1") { ?>
+				  <?php if($mmodule_03_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "logistic") { ?>
+					  <?php if($mmenu == "logistic") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-truck"></i> <span><?echo("$title_module_03")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-truck"></i> <span><?echo("$title_module_03")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-					    <? if(($now_group_admin == "1" AND $smodule_0301 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "logistic_docheck") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0301 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "logistic_docheck") { ?>
 						<li class="active"><a href="<?echo("$link_module_0301")?>"><?echo("$title_module_0301")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0301")?>"><?echo("$title_module_0301")?></a></li>
-						<? } ?>
-					    <? } ?>
-					    <? if(($now_group_admin == "1" AND $smodule_0302 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "logistic_progress") { ?>
+						<?php } ?>
+					    <?php } ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0302 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "logistic_progress") { ?>
 						<li class="active"><a href="<?echo("$link_module_0302")?>"><?echo("$title_module_0302")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0302")?>"><?echo("$title_module_0302")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
-				  <? if($mmodule_04_act == "1") { ?>
+				  <?php if($mmodule_04_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "asset") { ?>
+					  <?php if($mmenu == "asset") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-trophy"></i> <span><?echo("$title_module_04")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-trophy"></i> <span><?echo("$title_module_04")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-					    <? if(($now_group_admin == "1" AND $smodule_0401 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_asset" OR $smenu == "finance_asset_vehicle") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0401 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_asset" OR $smenu == "finance_asset_vehicle") { ?>
 						<li class="active"><a href="<?echo("$link_module_0401")?>"><?echo("$title_module_0401")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0401")?>"><?echo("$title_module_0401")?></a></li>
-						<? } ?>
-					    <? } ?>
-                        <? if($smenu == "finance_asset_vehicle") { ?>
+						<?php } ?>
+					    <?php } ?>
+                        <?php if($smenu == "finance_asset_vehicle") { ?>
 						<li class="active"><a href="<?echo("$link_module_04012")?>"><?echo("$title_module_04012")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_04012")?>"><?echo("$title_module_04012")?></a></li>
-					    <? } ?>
+					    <?php } ?>
 
-					    <? if(($now_group_admin == "1" AND $smodule_0402 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_deprec") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0402 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_deprec") { ?>
 						<li class="active"><a href="<?echo("$link_module_0402")?>"><?echo("$title_module_0402")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0402")?>"><?echo("$title_module_0402")?></a></li>
-						<? } ?>
-                        <? if($smenu == "finance_amort") { ?>
+						<?php } ?>
+                        <?php if($smenu == "finance_amort") { ?>
 						<li class="active"><a href="<?echo("$link_module_0404")?>"><?echo("$title_module_0404")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0404")?>"><?echo("$title_module_0404")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-						<? if(($now_group_admin == "1" AND $smodule_0403 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_cogs") { ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0403 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_cogs") { ?>
 						<li class="active"><a href="<?echo("$link_module_0403")?>"><?echo("$title_module_0403")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0403")?>"><?echo("$title_module_0403")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
 
-				  <? if($mmodule_08_act == "1") { ?>
+				  <?php if($mmodule_08_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "crm" OR $mmenu == "hr") { ?>
+					  <?php if($mmenu == "crm" OR $mmenu == "hr") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-user"></i> <span><?echo("$title_module_08")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-user"></i> <span><?echo("$title_module_08")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
 
-					    <? if(($now_group_admin == "1" AND $smodule_0801 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "crm_member" OR $smenu == "crm_memberA" OR $smenu == "crm_memberB") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0801 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "crm_member" OR $smenu == "crm_memberA" OR $smenu == "crm_memberB") { ?>
 						<li class="active"><a href="<?echo("$link_module_0801")?>"><?echo("$title_module_0801")?></a></li>
 
-							<? if($mb_level == "3" AND $mb_type == "2") { ?>
+							<?php if($mb_level == "3" AND $mb_type == "2") { ?>
 								<li class="active"><a href="<?echo("$link_module_08010")?>">+ <?echo("$hsm_name_06_010")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08010")?>">+ <?echo("$hsm_name_06_010")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-							<? if($mb_level == "2" AND $mb_type == "2") { ?>
+							<?php if($mb_level == "2" AND $mb_type == "2") { ?>
 								<li class="active"><a href="<?echo("$link_module_08011")?>">+ <?echo("$hsm_name_06_011")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08011")?>">+ <?echo("$hsm_name_06_011")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-							<? if($mb_level == "2" AND $mb_type == "0") { ?>
+							<?php if($mb_level == "2" AND $mb_type == "0") { ?>
 								<li class="active"><a href="<?echo("$link_module_08012")?>">+ <?echo("$hsm_name_06_012")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08012")?>">+ <?echo("$hsm_name_06_012")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-							<? if($mb_level == "1" AND $mb_type == "3") { ?>
+							<?php if($mb_level == "1" AND $mb_type == "3") { ?>
 								<li class="active"><a href="<?echo("$link_module_08013")?>">+ <?echo("$hsm_name_06_013")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08013")?>">+ <?echo("$hsm_name_06_013")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-							<? if($mb_level == "4" AND $mb_type == "3") { ?>
+							<?php if($mb_level == "4" AND $mb_type == "3") { ?>
 								<li class="active"><a href="<?echo("$link_module_08015")?>">+ <?echo("$hsm_name_06_015")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08015")?>">+ <?echo("$hsm_name_06_015")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-							<? if($mb_level == "1" AND $mb_type == "0") { ?>
+							<?php if($mb_level == "1" AND $mb_type == "0") { ?>
 								<li class="active"><a href="<?echo("$link_module_08014")?>">+ <?echo("$hsm_name_06_014")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08014")?>">+ <?echo("$hsm_name_06_014")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0801")?>"><?echo("$title_module_0801")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-						<? if(($now_group_admin == "1" AND $smodule_0802 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "crm_member2") { ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0802 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "crm_member2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0802")?>"><?echo("$title_module_0802")?></a></li>
 
-							<? if($mb_level == "7") { ?>
+							<?php if($mb_level == "7") { ?>
 								<li class="active"><a href="<?echo("$link_module_08021")?>">+ <?echo("$hsm_name_06_021")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08021")?>">+ <?echo("$hsm_name_06_021")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-							<? if($mb_level == "6") { ?>
+							<?php if($mb_level == "6") { ?>
 								<li class="active"><a href="<?echo("$link_module_08022")?>">+ <?echo("$hsm_name_06_022")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08022")?>">+ <?echo("$hsm_name_06_022")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0802")?>"><?echo("$title_module_0802")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-						<? if(($now_group_admin == "1" AND $smodule_0803 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "hr_member" OR $smenu == "hr_member_work" OR $smenu == "hr_member_history") { ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0803 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "hr_member" OR $smenu == "hr_member_work" OR $smenu == "hr_member_history") { ?>
 						<li class="active"><a href="<?echo("$link_module_0803")?>"><?echo("$title_module_0803")?></a></li>
 
-							<? if($smenu == "hr_member" AND $hr_type == "1" AND $hr_retire != "1") { ?>
+							<?php if($smenu == "hr_member" AND $hr_type == "1" AND $hr_retire != "1") { ?>
 								<li class="active"><a href="<?echo("$link_module_08031")?>">- <?echo("$txt_hr_member_382")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08031")?>">- <?echo("$txt_hr_member_382")?></a></li>
-							<? } ?>
-							<? if($smenu == "hr_member" AND $hr_type == "1" AND $hr_retire == "1") { ?>
+							<?php } ?>
+							<?php if($smenu == "hr_member" AND $hr_type == "1" AND $hr_retire == "1") { ?>
 								<li class="active"><a href="<?echo("$link_module_08031x")?>">&nbsp;&nbsp;&nbsp; &gt; <?echo("$txt_hr_member_380")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08031x")?>">&nbsp;&nbsp;&nbsp; &gt; <?echo("$txt_hr_member_380")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-							<? if($smenu == "hr_member" AND $hr_type == "2" AND $hr_retire != "1") { ?>
+							<?php if($smenu == "hr_member" AND $hr_type == "2" AND $hr_retire != "1") { ?>
 								<li class="active"><a href="<?echo("$link_module_08032")?>">- <?echo("$txt_hr_member_381")?> (SA)</a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08032")?>">- <?echo("$txt_hr_member_381")?> (SA)</a></li>
-							<? } ?>
-							<? if($smenu == "hr_member" AND $hr_type == "2" AND $hr_retire == "1") { ?>
+							<?php } ?>
+							<?php if($smenu == "hr_member" AND $hr_type == "2" AND $hr_retire == "1") { ?>
 								<li class="active"><a href="<?echo("$link_module_08032x")?>">&nbsp;&nbsp;&nbsp; &gt; <?echo("$txt_hr_member_380")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08032x")?>">&nbsp;&nbsp;&nbsp; &gt; <?echo("$txt_hr_member_380")?></a></li>
-							<? } ?>
-							<? if($smenu == "hr_member" AND $hr_type == "3" AND $hr_retire != "1") { ?>
+							<?php } ?>
+							<?php if($smenu == "hr_member" AND $hr_type == "3" AND $hr_retire != "1") { ?>
 								<li class="active"><a href="<?echo("$link_module_08033")?>">- <?echo("$txt_hr_member_383")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08033")?>">- <?echo("$txt_hr_member_383")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-						<? if($smenu == "hr_member_work") { ?>
+						<?php if($smenu == "hr_member_work") { ?>
 						<li class="active"><a href="<?echo("$link_module_08031w")?>"><?echo("$txt_hr_work_011")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_08031w")?>"><?echo("$txt_hr_work_011")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "hr_member_history") { ?>
+						<?php if($smenu == "hr_member_history") { ?>
 						<li class="active"><a href="<?echo("$link_module_08031w0")?>">Attendance Book NEW</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_08031w0")?>">Attendance Book NEW</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "hr_member_work" AND $hr_type == "1") { ?>
+						<?php if($smenu == "hr_member_work" AND $hr_type == "1") { ?>
 						<li class="active"><a href="<?echo("$link_module_08031w1")?>">- <?echo("$txt_hr_member_382")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_08031w1")?>">- <?echo("$txt_hr_member_382")?></a></li>
-						<? } ?>
-						<? if($smenu == "hr_member_work" AND $hr_type == "2") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_member_work" AND $hr_type == "2") { ?>
 						<li class="active"><a href="<?echo("$link_module_08031w2")?>">- <?echo("$txt_hr_member_381")?> (SA)</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_08031w2")?>">- <?echo("$txt_hr_member_381")?> (SA)</a></li>
-						<? } ?>
+						<?php } ?>
 
 
 
-						<? if($login_level > "8") { ?>
+						<?php if($login_level > "8") { ?>
 
-						<? if($smenu == "hr_incentive_sa" OR $smenu == "hr_incentive_spc" OR $smenu == "hr_incentive_sms"
+						<?php if($smenu == "hr_incentive_sa" OR $smenu == "hr_incentive_spc" OR $smenu == "hr_incentive_sms"
 							 OR $smenu == "hr_incentive_fbs" OR $smenu == "hr_incentive_driver" OR $smenu == "hr_incentive_office") { ?>
 						<li class="active"><a href="#">Incentives</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="#">Incentive</a></li>
-						<? } ?>
-						<? if($smenu == "hr_incentive_sa") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_incentive_sa") { ?>
 						<li class="active"><a href="<?echo("$link_module_080321")?>">- Incentive - SA</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080321")?>">- Incentive - SA</a></li>
-						<? } ?>
-						<? if($smenu == "hr_incentive_spc") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_incentive_spc") { ?>
 						<li class="active"><a href="<?echo("$link_module_080322")?>">- Incentive - SPC</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080322")?>">- Incentive - SPC</a></li>
-						<? } ?>
-						<? if($smenu == "hr_incentive_sms") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_incentive_sms") { ?>
 						<li class="active"><a href="<?echo("$link_module_080323")?>">- Incentive - SMS</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080323")?>">- Incentive - SMS</a></li>
-						<? } ?>
-						<? if($smenu == "hr_incentive_fbs") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_incentive_fbs") { ?>
 						<li class="active"><a href="<?echo("$link_module_080324")?>">- Incentive - FBS</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080324")?>">- Incentive - FBS</a></li>
-						<? } ?>
+						<?php } ?>
 						<!--
-						<? if($smenu == "hr_incentive_driver") { ?>
+						<?php if($smenu == "hr_incentive_driver") { ?>
 						<li class="active"><a href="<?echo("$link_module_080325")?>">- Incentive - Driver</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080325")?>">- Incentive - Driver</a></li>
-						<? } ?>
-						<? if($smenu == "hr_incentive_office") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_incentive_office") { ?>
 						<li class="active"><a href="<?echo("$link_module_080326")?>">- Incentive - Office</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080326")?>">- Incentive - Office</a></li>
-						<? } ?>
+						<?php } ?>
 						-->
 
-						<? if($smenu == "hr_wage_sa" OR $smenu == "hr_wage_spc" OR $smenu == "hr_wage_sms"
+						<?php if($smenu == "hr_wage_sa" OR $smenu == "hr_wage_spc" OR $smenu == "hr_wage_sms"
 							 OR $smenu == "hr_wage_fbs" OR $smenu == "hr_wage_driver" OR $smenu == "hr_wage_office") { ?>
 						<li class="active"><a href="#">Wages</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="#">Wage</a></li>
-						<? } ?>
-						<? if($smenu == "hr_wage_sa") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_wage_sa") { ?>
 						<li class="active"><a href="<?echo("$link_module_080331")?>">- Wage - SA</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080331")?>">- Wage - SA</a></li>
-						<? } ?>
-						<? if($smenu == "hr_wage_spc") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_wage_spc") { ?>
 						<li class="active"><a href="<?echo("$link_module_080332")?>">- Wage - SPC</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080332")?>">- Wage - SPC</a></li>
-						<? } ?>
-						<? if($smenu == "hr_wage_sms") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_wage_sms") { ?>
 						<li class="active"><a href="<?echo("$link_module_080333")?>">- Wage - SMS</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080333")?>">- Wage - SMS</a></li>
-						<? } ?>
-						<? if($smenu == "hr_wage_fbs") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_wage_fbs") { ?>
 						<li class="active"><a href="<?echo("$link_module_080334")?>">- Wage - FBS</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080334")?>">- Wage - FBS</a></li>
-						<? } ?>
-						<? if($smenu == "hr_wage_driver") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_wage_driver") { ?>
 						<li class="active"><a href="<?echo("$link_module_080335")?>">- Wage - Driver</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080335")?>">- Wage - Driver</a></li>
-						<? } ?>
-						<? if($smenu == "hr_wage_office") { ?>
+						<?php } ?>
+						<?php if($smenu == "hr_wage_office") { ?>
 						<li class="active"><a href="<?echo("$link_module_080336")?>">- Wage - Office</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_080336")?>">- Wage - Office</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? } ?>
+						<?php } ?>
 
 
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0803")?>"><?echo("$title_module_0803")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-						<? if(($now_group_admin == "1" AND $smodule_0804 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "crm_mailing" OR $smenu == "crm_mailing1" OR $smenu == "crm_mailing2" OR $smenu == "crm_mailing3") { ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0804 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "crm_mailing" OR $smenu == "crm_mailing1" OR $smenu == "crm_mailing2" OR $smenu == "crm_mailing3") { ?>
 						<li class="active"><a href="<?echo("$link_module_08042")?>"><?echo("$title_module_0804")?></a></li>
 
-							<? if($smenu == "crm_mailing1") { ?>
+							<?php if($smenu == "crm_mailing1") { ?>
 								<li class="active"><a href="<?echo("$link_module_08041")?>">- <?echo("$title_module_08041")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08041")?>">- <?echo("$title_module_08041")?></a></li>
-							<? } ?>
-							<? if($smenu == "crm_mailing2") { ?>
+							<?php } ?>
+							<?php if($smenu == "crm_mailing2") { ?>
 								<li class="active"><a href="<?echo("$link_module_08042")?>">- <?echo("$title_module_08042")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08042")?>">- <?echo("$title_module_08042")?></a></li>
-							<? } ?>
-							<? if($smenu == "crm_mailing3") { ?>
+							<?php } ?>
+							<?php if($smenu == "crm_mailing3") { ?>
 								<li class="active"><a href="<?echo("$link_module_08043")?>">- <?echo("$title_module_08043")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_08043")?>">- <?echo("$title_module_08043")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_08042")?>"><?echo("$title_module_0804")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 
-					    <? if(($now_group_admin == "1" AND $smodule_0805 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "crm_newsletter") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0805 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "crm_newsletter") { ?>
 						<li class="active"><a href="<?echo("$link_module_0805")?>"><?echo("$title_module_0805")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0805")?>"><?echo("$title_module_0805")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
-				  <? if($mmodule_09_act == "1") { ?>
+				  <?php if($mmodule_09_act == "1") { ?>
                   <li class="sub-menu">
-					  <? if($mmenu == "finance") { ?>
+					  <?php if($mmenu == "finance") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-money"></i> <span><?echo("$title_module_09")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-money"></i> <span><?echo("$title_module_09")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-					    <? if(($now_group_admin == "1" AND $smodule_0901 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_cost") { ?>
+					    <?php if(($now_group_admin == "1" AND $smodule_0901 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_cost") { ?>
 						<li class="active"><a href="<?echo("$link_module_0901")?>"><?echo("$title_module_0901")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0901")?>"><?echo("$title_module_0901")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_0902 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_cost2") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0902 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_cost2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0902")?>"><?echo("$title_module_0902")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0902")?>"><?echo("$title_module_0902")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_0903 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_income") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0903 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_income") { ?>
 						<li class="active"><a href="<?echo("$link_module_0903")?>"><?echo("$title_module_0903")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0903")?>"><?echo("$title_module_0903")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_0904 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_income2") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0904 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_income2") { ?>
 						<li class="active"><a href="<?echo("$link_module_0904")?>"><?echo("$title_module_0904")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0904")?>"><?echo("$title_module_0904")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_0905 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_invoice") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0905 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_invoice") { ?>
 						<li class="active"><a href="<?echo("$link_module_0905")?>"><?echo("$title_module_0905")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_0905")?>"><?echo("$title_module_0905")?></a></li>
-						<? } ?>
-					    <? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_0906 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "finance_balance") { ?>
+						<?php } ?>
+					    <?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0906 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "finance_balance") { ?>
 						<li class="active"><a href="<?echo("$link_module_0906")?>"><?echo("$title_module_0906")?></a></li>
-						<? } else { global $title_module_0906; ?>
+						<?php } else { global $title_module_0906; ?>
 						<li><a href="<?echo("$link_module_0906")?>"><?echo("$title_module_0906")?></a></li>
-						<? } ?>
-						<? } ?>
-						<? if(($now_group_admin == "1" AND $smodule_0907 == "1") OR $now_group_admin == "0") { ?>
-                        <? if($smenu == "currency_balance") { ?>
+						<?php } ?>
+						<?php } ?>
+						<?php if(($now_group_admin == "1" AND $smodule_0907 == "1") OR $now_group_admin == "0") { ?>
+                        <?php if($smenu == "currency_balance") { ?>
 						<li class="active"><a href="<?echo("$link_module_0907")?>"><?echo("$title_module_0907")?></a></li>
-						<? } else { global $title_module_0907; ?>
+						<?php } else { global $title_module_0907; ?>
 						<li><a href="<?echo("$link_module_0907")?>"><?echo("$title_module_0907")?></a></li>
-						<? } ?>
-					    <? } ?>
+						<?php } ?>
+					    <?php } ?>
 					  </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
 
 
 
-				  <? // if($mmodule_11_act == "1") { ?>
+				  <?php // if($mmodule_11_act == "1") { ?>
 				  <li class="sub-menu">
-					  <? if($mmenu == "website") { ?>
+					  <?php if($mmenu == "website") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-globe"></i> <span><?echo("$title_module_11")?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-globe"></i> <span><?echo("$title_module_11")?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-                        <? if($smenu == "website_menu") { ?>
+                        <?php if($smenu == "website_menu") { ?>
                         <li class="active"><a href="<?echo("$link_module_1101")?>"><?echo("$title_module_1101")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_1101")?>"><?echo("$title_module_1101")?></a></li>
-						<? } ?>
-						<? if($smenu == "website_content") { ?>
+						<?php } ?>
+						<?php if($smenu == "website_content") { ?>
                         <li class="active"><a href="<?echo("$link_module_1102")?>"><?echo("$title_module_1102")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_1102")?>"><?echo("$title_module_1102")?></a></li>
-						<? } ?>
-						<? if($smenu == "website_banner1") { ?>
+						<?php } ?>
+						<?php if($smenu == "website_banner1") { ?>
                         <li class="active"><a href="<?echo("$link_module_1103")?>"><?echo("$title_module_1103")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_1103")?>"><?echo("$title_module_1103")?></a></li>
-						<? } ?>
-						<? if($smenu == "website_banner2") { ?>
+						<?php } ?>
+						<?php if($smenu == "website_banner2") { ?>
                         <li class="active"><a href="<?echo("$link_module_1104")?>"><?echo("$title_module_1104")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_1104")?>"><?echo("$title_module_1104")?></a></li>
-						<? } ?>
-						<? if($smenu == "website_stuff") { ?>
+						<?php } ?>
+						<?php if($smenu == "website_stuff") { ?>
                         <li class="active"><a href="<?echo("$link_module_1105")?>"><?echo("$title_module_1105")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_1105")?>"><?echo("$title_module_1105")?></a></li>
-						<? } ?>
-						<? if($smenu == "website_layout") { ?>
+						<?php } ?>
+						<?php if($smenu == "website_layout") { ?>
                         <li class="active"><a href="<?echo("$link_module_1106")?>"><?echo("$title_module_1106")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_1106")?>"><?echo("$title_module_1106")?></a></li>
-						<? } ?>
+						<?php } ?>
                       </ul>
                   </li>
-				  <? // } ?>
+				  <?php // } ?>
 
 
 
 				  <li class="sub-menu">
-					  <? if($mmenu == "table") { ?>
+					  <?php if($mmenu == "table") { ?>
                       <a href="javascript:;" class="active"><i class="fa fa-signal"></i> <span><?=$title_report?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"><i class="fa fa-signal"></i> <span><?=$title_report?></span></a>
-					  <? } ?>
+					  <?php } ?>
                       <ul class="sub">
-						<? if($smenu == "table_report_08") { ?>
+						<?php if($smenu == "table_report_08") { ?>
                         <li class="active"><a href="<?=$link_report_08?>"><?=$title_report_08?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_08?>"><?=$title_report_08?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_08B") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_08B") { ?>
                         <li class="active"><a href="<?=$link_report_08B?>">- <?=$title_report_08B?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_08B?>">- <?=$title_report_08B?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_01") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_01") { ?>
                         <li class="active"><a href="<?=$link_report_01?>"><?=$title_report_01?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_01?>"><?=$title_report_01?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_02") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_02") { ?>
                         <li class="active"><a href="<?=$link_report_02?>"><?=$title_report_02?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_02?>"><?=$title_report_02?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_31") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_31") { ?>
                         <li class="active"><a href="<?=$link_report_31?>"><?=$title_report_31?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_31?>"><?=$title_report_31?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_05") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_05") { ?>
                         <li class="active"><a href="<?=$link_report_05?>"><?=$title_report_05?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_05?>"><?=$title_report_05?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report") { ?>
                         <li class="active"><a href="<?=$link_report_05B?>">- <?=$title_report_05B?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_05B?>">- <?=$title_report_05B?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_04") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_04") { ?>
                         <li class="active"><a href="<?=$link_report_04?>"><?=$title_report_04?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_04?>"><?=$title_report_04?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_09") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_09") { ?>
                         <li class="active"><a href="<?=$link_report_09?>"><?=$title_report_09?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_09?>"><?=$title_report_09?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_10A") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_10A") { ?>
                         <li class="active"><a href="<?=$link_report_10A?>">- <?=$title_report_10A?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_10A?>">- <?=$title_report_10A?></a></li>
-						<? } ?>
-						<? if($smenu == "table_report_10B") { ?>
+						<?php } ?>
+						<?php if($smenu == "table_report_10B") { ?>
                         <li class="active"><a href="<?=$link_report_10B?>">- <?=$title_report_10B?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?=$link_report_10B?>">- <?=$title_report_10B?></a></li>
-						<? } ?>
+						<?php } ?>
                       </ul>
                   </li>
 
@@ -1809,7 +1800,7 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
                       </ul>
                   </li>
 
-				  <? if($login_level > "5") { ?>
+				  <?php if($login_level > "5") { ?>
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-shopping-cart"></i>
@@ -1829,7 +1820,7 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
                       </a>
                   </li>
 				  -->
-				  <? } ?>
+				  <?php } ?>
 
                   <li class="sub-menu">
                       <a href="javascript:;">
@@ -1843,457 +1834,457 @@ $uid_total = @mysql_result($result_tempo_c,0,0);
                   </li>
 
 
-				  <? if($login_level > "7") { ?>
+				  <?php if($login_level > "7") { ?>
 				  <li class="sub-menu">
-					  <? if($mmenu == "system") { ?>
+					  <?php if($mmenu == "system") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-wrench"></i> <span><?=$hmm_name_09?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-wrench"></i> <span><?=$hmm_name_09?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-                        <? if($smenu == "system_client") { ?>
+                        <?php if($smenu == "system_client") { ?>
                         <li class="active"><a href="<?echo("$link_module_2101")?>"><?echo("$hsm_name_09_01")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2101")?>"><?echo("$hsm_name_09_01")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_user") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_user") { ?>
 						<li class="active"><a href="<?echo("$link_module_2102")?>"><?echo("$hsm_name_09_02")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2102")?>"><?echo("$hsm_name_09_02")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_department") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_department") { ?>
                         <li class="active"><a href="<?echo("$link_module_2101d")?>"><?echo("$hsm_name_09_01d")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2101d")?>"><?echo("$hsm_name_09_01d")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "system_warehouse") { ?>
+						<?php if($smenu == "system_warehouse") { ?>
 						<li class="active"><a href="<?echo("$link_module_2117")?>"><?echo("$hsm_name_09_17")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2117")?>"><?echo("$hsm_name_09_17")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-							<? if($smenu == "system_wloc_catg") { ?>
+							<?php if($smenu == "system_wloc_catg") { ?>
 							<li class="active"><a href="<?echo("$link_module_211701")?>">- <?echo("$hsm_name_09_1701")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 							<li><a href="<?echo("$link_module_211701")?>">- <?echo("$hsm_name_09_1701")?></a></li>
-							<? } ?>
-							<? if($smenu == "system_wloc_list") { ?>
+							<?php } ?>
+							<?php if($smenu == "system_wloc_list") { ?>
 							<li class="active"><a href="<?echo("$link_module_211702")?>">- <?echo("$hsm_name_09_1702")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 							<li><a href="<?echo("$link_module_211702")?>">- <?echo("$hsm_name_09_1702")?></a></li>
-							<? } ?>
+							<?php } ?>
 
 
-						<? if($smenu == "system_brand") { ?>
+						<?php if($smenu == "system_brand") { ?>
 						<li class="active"><a href="<?echo("$link_module_2104A")?>"><?echo("$hsm_name_09_04A")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2104A")?>"><?echo("$hsm_name_09_04A")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_category") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_category") { ?>
 						<li class="active"><a href="<?echo("$link_module_2105")?>"><?echo("$hsm_name_09_05")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2105")?>"><?echo("$hsm_name_09_05")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_consign") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_consign") { ?>
 						<li class="active"><a href="<?echo("$link_module_2118")?>"><?echo("$hsm_name_09_18")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2118")?>"><?echo("$hsm_name_09_18")?></a></li>
-						<? } ?>
-						<? if($smenu == "check_code") { ?>
+						<?php } ?>
+						<?php if($smenu == "check_code") { ?>
 						<li class="active"><a href="<?echo("$link_check_shop_code")?>">
 						Check Client Shop Code</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_check_shop_code")?>">Check Client Shop Code</a>
 						</li>
-						<? } ?>
-						<? if($smenu == "shop_code") { ?>
+						<?php } ?>
+						<?php if($smenu == "shop_code") { ?>
 						<li class="active"><a href="<?echo("$link_shop_code")?>">
 						All Shop Codes</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_shop_code")?>">All Shop Codes</a>
 						</li>
-						<? } ?>
-                        <? if($smenu == "check_code_cvj") { ?>
+						<?php } ?>
+                        <?php if($smenu == "check_code_cvj") { ?>
                         <li class="active"><a href="<?echo("$link_check_shop_cvj")?>">
                         Table Store Name CVJ</a></li>
-                        <? } else { ?>
+                        <?php } else { ?>
                         <li><a href="<?echo("$link_check_shop_cvj")?>">Table Store Name CVJ</a>
                         </li>
-                        <? } ?>
+                        <?php } ?>
 
 
 
-						<? if($smenu == "system_shop" OR $smenu == "system_shop2") { ?>
+						<?php if($smenu == "system_shop" OR $smenu == "system_shop2") { ?>
 						<li class="active"><a href="<?echo("$link_module_21031")?>"><?echo("$hsm_name_09_031")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21031")?>"><?echo("$hsm_name_09_031")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-							<? if($smenu == "system_shop" AND $asso_type == "A") { ?>
+							<?php if($smenu == "system_shop" AND $asso_type == "A") { ?>
 								<li class="active"><a href="<?echo("$link_module_21031A")?>">- <?echo("$txt_sys_shop_072")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_21031A")?>">- <?echo("$txt_sys_shop_072")?></a></li>
-							<? } ?>
-							<? if($smenu == "system_shop2") { ?>
+							<?php } ?>
+							<?php if($smenu == "system_shop2") { ?>
 								<li class="active"><a href="<?echo("$link_module_21031A2")?>"> &nbsp;&nbsp; by Customer</a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_21031A2")?>"> &nbsp;&nbsp; by Customer</a></li>
-							<? } ?>
-							<? if($smenu == "system_shop" AND $asso_type == "B") { ?>
+							<?php } ?>
+							<?php if($smenu == "system_shop" AND $asso_type == "B") { ?>
 								<li class="active"><a href="<?echo("$link_module_21031B")?>">- <?echo("$txt_sys_shop_071")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_21031B")?>">- <?echo("$txt_sys_shop_071")?></a></li>
-							<? } ?>
-							<? if($smenu == "system_shop" AND $asso_type == "E") { ?>
+							<?php } ?>
+							<?php if($smenu == "system_shop" AND $asso_type == "E") { ?>
 								<li class="active"><a href="<?echo("$link_module_21031E")?>">- <?echo("$txt_sys_shop_074")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_21031E")?>">- <?echo("$txt_sys_shop_074")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-						<? if($smenu == "system_user2") { ?>
+						<?php if($smenu == "system_user2") { ?>
 						<li class="active"><a href="<?echo("$link_module_21032")?>"><?echo("$hsm_name_09_032")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21032")?>"><?echo("$hsm_name_09_032")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-							<? if($smenu == "system_user2" AND $shop_flag == "1") { ?>
+							<?php if($smenu == "system_user2" AND $shop_flag == "1") { ?>
 								<li class="active"><a href="<?echo("$link_module_21032A")?>">- <?echo("$txt_sys_shop_073")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_21032A")?>">- <?echo("$txt_sys_shop_073")?></a></li>
-							<? } ?>
-							<? if($smenu == "system_user2" AND $shop_flag == "2") { ?>
+							<?php } ?>
+							<?php if($smenu == "system_user2" AND $shop_flag == "2") { ?>
 								<li class="active"><a href="<?echo("$link_module_21032B")?>">- <?echo("$txt_sys_shop_071")?></a></li>
-							<? } else { ?>
+							<?php } else { ?>
 								<li><a href="<?echo("$link_module_21032B")?>">- <?echo("$txt_sys_shop_071")?></a></li>
-							<? } ?>
+							<?php } ?>
 
-						<? if($smenu == "system_supplier") { ?>
+						<?php if($smenu == "system_supplier") { ?>
 						<li class="active"><a href="<?echo("$link_module_2104")?>"><?echo("$hsm_name_09_04")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2104")?>"><?echo("$hsm_name_09_04")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_mileage") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_mileage") { ?>
 						<li class="active"><a href="<?echo("$link_module_2106")?>"><?echo("$hsm_name_09_06")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2106")?>"><?echo("$hsm_name_09_06")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_discount") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_discount") { ?>
 						<li class="active"><a href="<?echo("$link_module_2107")?>"><?echo("$hsm_name_09_07")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2107")?>"><?echo("$hsm_name_09_07")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_voucher") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_voucher") { ?>
 						<li class="active"><a href="<?echo("$link_module_2108")?>"><?echo("$hsm_name_09_08")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2108")?>"><?echo("$hsm_name_09_08")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_discount2") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_discount2") { ?>
 						<li class="active"><a href="<?echo("$link_module_2109")?>"><?echo("$hsm_name_09_09")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2109")?>"><?echo("$hsm_name_09_09")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "system_currency") { ?>
+						<?php if($smenu == "system_currency") { ?>
 						<li class="active"><a href="<?echo("$link_module_2103C")?>"><?echo("$hsm_name_09_03C")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2103C")?>"><?echo("$hsm_name_09_03C")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_cash") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_cash") { ?>
 						<li class="active"><a href="<?echo("$link_module_2110")?>"><?echo("$hsm_name_09_10")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2110")?>"><?echo("$hsm_name_09_10")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_bank") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_bank") { ?>
 						<li class="active"><a href="<?echo("$link_module_2111")?>"><?echo("$hsm_name_09_11")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2111")?>"><?echo("$hsm_name_09_11")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_card") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_card") { ?>
 						<li class="active"><a href="<?echo("$link_module_2112")?>"><?echo("$hsm_name_09_12")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2112")?>"><?echo("$hsm_name_09_12")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_insurance") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_insurance") { ?>
 						<li class="active"><a href="<?echo("$link_module_2112a")?>"><?echo("$hsm_name_09_12a")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2112a")?>"><?echo("$hsm_name_09_12a")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "system_account") { ?>
+						<?php if($smenu == "system_account") { ?>
 						<li class="active"><a href="<?echo("$link_module_2113")?>"><?echo("$hsm_name_09_13")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2113")?>"><?echo("$hsm_name_09_13")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_account2") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_account2") { ?>
 						<li class="active"><a href="<?echo("$link_module_21132")?>"><?echo("$hsm_name_09_132")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21132")?>"><?echo("$hsm_name_09_132")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_budget") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_budget") { ?>
 						<li class="active"><a href="<?echo("$link_module_21133")?>"><?echo("$hsm_name_09_133")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21133")?>"><?echo("$hsm_name_09_133")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "system_xchange") { ?>
+						<?php if($smenu == "system_xchange") { ?>
 						<li class="active"><a href="<?echo("$link_module_2120")?>"><?echo("$hsm_name_09_20")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2120")?>"><?echo("$hsm_name_09_20")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "system_tdir") { ?>
+						<?php if($smenu == "system_tdir") { ?>
 						<li class="active"><a href="<?echo("$link_module_21341")?>"><?echo("$hsm_name_09_341")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21341")?>"><?echo("$hsm_name_09_341")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_tcourse") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_tcourse") { ?>
 						<li class="active"><a href="<?echo("$link_module_21342")?>"><?echo("$hsm_name_09_342")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21342")?>"><?echo("$hsm_name_09_342")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($login_level > "8") { ?>
+						<?php if($login_level > "8") { ?>
 
-						<? if($smenu == "system_region") { ?>
+						<?php if($smenu == "system_region") { ?>
 						<li class="active"><a href="<?echo("$link_module_2115")?>"><?echo("$hsm_name_09_15")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2115")?>"><?echo("$hsm_name_09_15")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_port") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_port") { ?>
 						<li class="active"><a href="<?echo("$link_module_2116")?>"><?echo("$hsm_name_09_16")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2116")?>"><?echo("$hsm_name_09_16")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_jobclass") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_jobclass") { ?>
 						<li class="active"><a href="<?echo("$link_module_2141")?>"><?echo("$hsm_name_09_41")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2141")?>"><?echo("$hsm_name_09_41")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_payclass") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_payclass") { ?>
 						<li class="active"><a href="<?echo("$link_module_2142")?>"><?echo("$hsm_name_09_42")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2142")?>"><?echo("$hsm_name_09_42")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_paybase") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_paybase") { ?>
 						<li class="active"><a href="<?echo("$link_module_2143")?>"><?echo("$hsm_name_09_43")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2143")?>"><?echo("$hsm_name_09_43")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "system_incentive_sa" OR $smenu == "system_incentive_spc" OR $smenu == "system_incentive_sms"
+						<?php if($smenu == "system_incentive_sa" OR $smenu == "system_incentive_spc" OR $smenu == "system_incentive_sms"
 							 OR $smenu == "system_incentive_fbs" OR $smenu == "system_incentive_driver" OR $smenu == "system_incentive_office") { ?>
 						<li class="active"><a href="#">Incentive</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="#">Incentive</a></li>
-						<? } ?>
-						<? if($smenu == "system_incentive_sa") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_incentive_sa") { ?>
 						<li class="active"><a href="<?echo("$link_module_2151")?>">- Incentive - SA</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2151")?>">- Incentive - SA</a></li>
-						<? } ?>
+						<?php } ?>
 						<!--
-						<? if($smenu == "system_incentive_spc") { ?>
+						<?php if($smenu == "system_incentive_spc") { ?>
 						<li class="active"><a href="<?echo("$link_module_2152")?>">- Incentive - SPC</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2152")?>">- Incentive - SPC</a></li>
-						<? } ?>
-						<? if($smenu == "system_incentive_sms") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_incentive_sms") { ?>
 						<li class="active"><a href="<?echo("$link_module_2153")?>">- Incentive - SMS</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2153")?>">- Incentive - SMS</a></li>
-						<? } ?>
+						<?php } ?>
 						-->
-						<? if($smenu == "system_incentive_fbs") { ?>
+						<?php if($smenu == "system_incentive_fbs") { ?>
 						<li class="active"><a href="<?echo("$link_module_2154")?>">- Incentive - FBS</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2154")?>">- Incentive - FBS</a></li>
-						<? } ?>
-						<? if($smenu == "system_incentive_fbs_cost") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_incentive_fbs_cost") { ?>
 						<li class="active"><a href="<?echo("$link_module_21541")?>">&nbsp;&nbsp; - FBS Costs</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21541")?>">&nbsp;&nbsp; - FBS Costs</a></li>
-						<? } ?>
+						<?php } ?>
 						<!--
-						<? if($smenu == "system_incentive_driver") { ?>
+						<?php if($smenu == "system_incentive_driver") { ?>
 						<li class="active"><a href="<?echo("$link_module_2155")?>">- Incentive - Driver</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2155")?>">- Incentive - Driver</a></li>
-						<? } ?>
-						<? if($smenu == "system_incentive_office") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_incentive_office") { ?>
 						<li class="active"><a href="<?echo("$link_module_2156")?>">- Incentive - Office</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2156")?>">- Incentive - Office</a></li>
-						<? } ?>
+						<?php } ?>
 						-->
 
 
-						<? if($smenu == "system_zone_acccatg") { ?>
+						<?php if($smenu == "system_zone_acccatg") { ?>
 						<li class="active"><a href="<?echo("$link_module_21241")?>">Accounting Category</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21241")?>">Accounting Category</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "system_zone_acclist") { ?>
+						<?php if($smenu == "system_zone_acclist") { ?>
 						<li class="active"><a href="<?echo("$link_module_21242")?>">Accounting Codes</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_21242")?>">Accounting Codes</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "system_zdblink") { ?>
+						<?php if($smenu == "system_zdblink") { ?>
 						<li class="active"><a href="<?echo("$link_module_2121")?>"><?echo("$hsm_name_09_21")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2121")?>"><?echo("$hsm_name_09_21")?></a></li>
-						<? } ?>
-						<? if($smenu == "system_zcorp") { ?>
+						<?php } ?>
+						<?php if($smenu == "system_zcorp") { ?>
 						<li class="active"><a href="<?echo("$link_module_2122")?>"><?echo("$hsm_name_09_22")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$link_module_2122")?>"><?echo("$hsm_name_09_22")?></a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? } ?>
+						<?php } ?>
                       </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
                   <li class="sub-menu">
-					  <? if($mmenu == "user") { ?>
+					  <?php if($mmenu == "user") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-cog"></i> <span><?=$hmm_name_10?></span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-cog"></i> <span><?=$hmm_name_10?></span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-                        <? if($login_level > "0" AND $login_id != "") { ?>
-						<? if($smenu == "user_layout") { ?>
+                        <?php if($login_level > "0" AND $login_id != "") { ?>
+						<?php if($smenu == "user_layout") { ?>
                         <li class="active"><a href="<?echo("$hsmenu_10_01")?>"><?echo("$hsm_name_10_01")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$hsmenu_10_01")?>"><?echo("$hsm_name_10_01")?></a></li>
-						<? } ?>
-						<? if($smenu == "user_update") { ?>
+						<?php } ?>
+						<?php if($smenu == "user_update") { ?>
 						<li class="active"><a href="<?echo("$hsmenu_10_02")?>"><?echo("$hsm_name_10_02")?></a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="<?echo("$hsmenu_10_02")?>"><?echo("$hsm_name_10_02")?></a></li>
-						<? } ?>
+						<?php } ?>
 						<li><a href="<?echo("$hsmenu_10_06")?>"><?echo("$hsm_name_10_06")?></a></li>
-						<? } ?>
+						<?php } ?>
                       </ul>
                   </li>
 
-				  <? if($login_level > "8") { ?>
+				  <?php if($login_level > "8") { ?>
 				  <li class="sub-menu">
-					  <? if($mmenu == "restore") { ?>
+					  <?php if($mmenu == "restore") { ?>
                       <a href="javascript:;" class="active"> <i class="fa fa-refresh"></i> <span>Data Mining</span></a>
-					  <? } else { ?>
+					  <?php } else { ?>
 					  <a href="javascript:;"> <i class="fa fa-refresh"></i> <span>Data Mining</span></a>
-					  <? } ?>
+					  <?php } ?>
 					  <ul class="sub">
-						<? if($smenu == "restore_category") { ?>
+						<?php if($smenu == "restore_category") { ?>
                         <li class="active"><a href="restore_category.php">Category</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_category.php">Category</a></li>
-						<? } ?>
-                        <? if($smenu == "restore_item_list") { ?>
+						<?php } ?>
+                        <?php if($smenu == "restore_item_list") { ?>
                         <li class="active"><a href="restore_item_list.php">Items & Categories</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_item_list.php">Items & Categories</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "restore_item") { ?>
+						<?php if($smenu == "restore_item") { ?>
                         <li class="active"><a href="restore_item.php">&nbsp;&nbsp; &gt; Restore now</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_item.php">&nbsp;&nbsp; &gt; Restore now</a></li>
-						<? } ?>
-						<? if($smenu == "restore_item_store_list") { ?>
+						<?php } ?>
+						<?php if($smenu == "restore_item_store_list") { ?>
                         <li class="active"><a href="restore_item_store_list.php">Stores & Warehouses</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_item_store_list.php">Stores & Warehouses</a></li>
-						<? } ?>
-						<? if($smenu == "restore_item_store") { ?>
+						<?php } ?>
+						<?php if($smenu == "restore_item_store") { ?>
                         <li class="active"><a href="restore_item_store.php">&nbsp;&nbsp; &gt; Restore now</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_item_store.php">&nbsp;&nbsp; &gt; Restore now</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "restore_item_unit_list") { ?>
+						<?php if($smenu == "restore_item_unit_list") { ?>
                         <li class="active"><a href="restore_item_unit_list.php">Items & Bulk Qty / CBM</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_item_unit_list.php">Items & Bulk Qty / CBM</a></li>
-						<? } ?>
-						<? if($smenu == "restore_item_unit") { ?>
+						<?php } ?>
+						<?php if($smenu == "restore_item_unit") { ?>
                         <li class="active"><a href="restore_item_unit.php">&nbsp;&nbsp; &gt; Restore now</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_item_unit.php">&nbsp;&nbsp; &gt; Restore now</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "restore_stock_opname_list") { ?>
+						<?php if($smenu == "restore_stock_opname_list") { ?>
                         <li class="active"><a href="restore_stock_opname_list.php">Initial Stock Opname</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_stock_opname_list.php">Initial Stock Opname</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "restore_stock_opname") { ?>
+						<?php if($smenu == "restore_stock_opname") { ?>
                         <li class="active"><a href="restore_stock_opname.php">&nbsp;&nbsp; &gt; Restore now</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_stock_opname.php">&nbsp;&nbsp; &gt; Restore now</a></li>
-						<? } ?>
+						<?php } ?>
 
-						<? if($smenu == "restore_stock_opname_month") { ?>
+						<?php if($smenu == "restore_stock_opname_month") { ?>
                         <li class="active"><a href="restore_stock_opname_month2.php">Monthly Stock - CVJ</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_stock_opname_month2.php">Monthly Stock - CVJ</a></li>
-						<? } ?>
-						<? if($smenu == "yearly_stock_cvj") { ?>
+						<?php } ?>
+						<?php if($smenu == "yearly_stock_cvj") { ?>
                         <li class="active"><a href="yearly_stock_cvj.php">Summary CVJ</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="yearly_stock_cvj.php">Summary CVJ</a></li>
-						<? } ?>
-						<? if($smenu == "restore_stock_opname_cvj") { ?>
+						<?php } ?>
+						<?php if($smenu == "restore_stock_opname_cvj") { ?>
                         <li class="active"><a href="restore_stock_opname_cvj.php">&nbsp;&nbsp; &gt; Restore now CVJ</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_stock_opname_cvj.php">&nbsp;&nbsp; &gt; Restore now CVJ</a></li>
-						<? } ?>
+						<?php } ?>
 
 
-                        <? if($smenu == "restore_stock_opname_monthjsi") { ?>
+                        <?php if($smenu == "restore_stock_opname_monthjsi") { ?>
                         <li class="active"><a href="restore_stock_opname_monthjsi.php">Monthly Stock - JSI</a></li>
-                        <? } else { ?>
+                        <?php } else { ?>
                         <li><a href="restore_stock_opname_monthjsi.php">Monthly Stock - JSI</a></li>
-                        <? } ?>
-                        <? if($smenu == "restore_stock_opname_jsi") { ?>
+                        <?php } ?>
+                        <?php if($smenu == "restore_stock_opname_jsi") { ?>
                         <li class="active"><a href="restore_stock_opname_jsi.php">&nbsp;&nbsp; &gt; Restore now JSI</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_stock_opname_jsi.php">&nbsp;&nbsp; &gt; Restore now JSI
 						</a></li>
-						<? } ?>
+						<?php } ?>
 
-                        <? if($smenu == "restore_stock_opname_monthlnl") { ?>
+                        <?php if($smenu == "restore_stock_opname_monthlnl") { ?>
 						<li class="active"><a href="restore_stock_opname_monthlnl.php">Monthly Stock - L&L</a></li>
-                        <? } else { ?>
+                        <?php } else { ?>
                         <li><a href="restore_stock_opname_monthlnl.php">Monthly Stock - L&L</a></li>
-                        <? } ?>
-                        <? if($smenu == "restore_stock_opname_lnl") { ?>
+                        <?php } ?>
+                        <?php if($smenu == "restore_stock_opname_lnl") { ?>
                         <li class="active"><a href="restore_stock_opname_lnl.php">&nbsp;&nbsp; &gt; Restore now Lock & Lock</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_stock_opname_lnl.php">&nbsp;&nbsp; &gt; Restore now Lock & Lock
 						</a></li>
-						<? } ?>
+						<?php } ?>
 
-                        <? if($smenu == "restore_stock_opname_monthfb") { ?>
+                        <?php if($smenu == "restore_stock_opname_monthfb") { ?>
                         <li class="active"><a href="restore_stock_opname_monthfb.php">Monthly Stock - Feelbuy</a></li>
-                        <? } else { ?>
+                        <?php } else { ?>
                         <li><a href="restore_stock_opname_monthfb.php">Monthly Stock - Feelbuy</a></li>
-                        <? } ?>
-						<? if($smenu == "restore_stock_opname_fb") { ?>
+                        <?php } ?>
+						<?php if($smenu == "restore_stock_opname_fb") { ?>
                         <li class="active"><a href="restore_stock_opname_fb.php">&nbsp;&nbsp; &gt; Restore now Feelbuy</a></li>
-						<? } else { ?>
+						<?php } else { ?>
 						<li><a href="restore_stock_opname_fb.php">&nbsp;&nbsp; &gt; Restore now Feelbuy
 						</a></li>
-						<? } ?>
+						<?php } ?>
 
 
                       </ul>
                   </li>
-				  <? } ?>
+				  <?php } ?>
 
 
               </ul>

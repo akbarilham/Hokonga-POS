@@ -1,4 +1,4 @@
-<?
+<?php
 function print_title_image($code) {
    $img_title = $code . ".gif";
    echo("<img src=\"$img_title\" border=0><p>");

@@ -1,10 +1,4 @@
-<?
-/*
-@author : YOGI ANDITIA;
-@update : Cihuy;
-@version : 3.0
-
-*/
+<?php
 
 include "config/common.inc";
 include "config/dbconn.inc";
@@ -237,7 +231,7 @@ $( "#main" ).mouseover(function() {
             $.ajax(
             {
                  type: "GET",
-                 url: "pos_edit_row.php"+data,
+                 url: "pos_security_row.php"+data,
                  data: {qty:'qty',gross:'gross'},
                  cache: false,
 

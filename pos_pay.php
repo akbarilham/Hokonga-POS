@@ -45,7 +45,7 @@ $card_type = $_POST['type'];
 $cash_remain = $_GET['change'];
 $credit_card = $_GET['cardcre'];
 $debit_card = $_GET['carddeb'];
-$hold = $_POST['hold'];
+$hold = $_POST['hold'] ?? 0;
 $detail_J = $_GET['detail'];
 $pos_client_id = $_GET['lid'];
 // --------------------------------------------------------------- //

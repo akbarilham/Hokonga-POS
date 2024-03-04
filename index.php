@@ -1,16 +1,17 @@
-<?
-include "config/common.inc";
-include "config/dbconn.inc";
-include "config/text_main_{$lang}.inc";
-require "config/user_functions_{$lang}.inc";
+<?php
+include "config/common.php";
+include "config/dbconn.php";
+include "config/text_main_en.php";
+require "config/user_functions_en.php";
+require "func/mysqli_result.php";
 
 $mmenu = "main";
 $smenu = "dashboard";
 
-if(!$login_id OR $login_level < "1") {
+// if (!$login_id && $login_level < "1") {
+if ($login_level < 1) {
 
 	echo ("<meta http-equiv='Refresh' content='0; URL=user_login.php'>");
-	#echo ("<meta http-equiv='Refresh' content='0; URL=pos_login.php'>");
 
 } else {
 
@@ -20,15 +21,13 @@ $this_year = date("Y");
 $this_month = date("m");
 $this_yearmonth = date("ym");
 
-if(!$p_year) { $p_year = date("Y",$signdate); }
-if(!$p_yearmonth) { $p_yearmonth = date("Ym",$signdate); }
-if(!$p_date_set) { $p_date_set = date("Ymd",$signdate); }
+$p_year = $p_year ?? $p_year = date("Y",$signdate);
+$p_yearmonth = $p_yearmonth ?? $p_yearmonth = date("Ym",$signdate);
+$p_date_set = $p_date_set ?? $p_date_set = date("Ymd",$signdate);
 
 $rs_year = substr($report_start_date,0,4);
 $rs_month = substr($report_start_date,4,2);
 $rs_date = substr($report_start_date,6,2);
-
-
 
 // Previous 12 Months
 $p_y12 = $this_year;
@@ -74,75 +73,75 @@ $p_m12 = sprintf("%02d", $p_m12); $p_m12_txt = "txt_comm_mon_"."$p_m12"; $p_ym12
 
 // Earning
 $query_idx_mb01 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym01f'";
-$result_idx_mb01 = mysql_query($query_idx_mb01);
+$result_idx_mb01 = mysqli_query($dbconn, $query_idx_mb01);
 	if (!$result_idx_mb01) { error("QUERY_ERROR"); exit; }
-$idx_mb01 = @mysql_result($result_idx_mb01,0,0);
+$idx_mb01 = @mysqli_result($result_idx_mb01,0,0);
 $idx_mb01d = $idx_mb01 / 10; if($idx_mb01d > 100) { $idx_mb01d = 100; }
 
 $query_idx_mb02 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym02f'";
-$result_idx_mb02 = mysql_query($query_idx_mb02);
+$result_idx_mb02 = mysqli_query($dbconn, $query_idx_mb02);
 	if (!$result_idx_mb02) { error("QUERY_ERROR"); exit; }
-$idx_mb02 = @mysql_result($result_idx_mb02,0,0);
+$idx_mb02 = @mysqli_result($result_idx_mb02,0,0);
 $idx_mb02d = $idx_mb02 / 10; if($idx_mb02d > 100) { $idx_mb02d = 100; }
 
 $query_idx_mb03 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym03f'";
-$result_idx_mb03 = mysql_query($query_idx_mb03);
+$result_idx_mb03 = mysqli_query($dbconn, $query_idx_mb03);
 	if (!$result_idx_mb03) { error("QUERY_ERROR"); exit; }
-$idx_mb03 = @mysql_result($result_idx_mb01,0,0);
+$idx_mb03 = @mysqli_result($result_idx_mb01,0,0);
 $idx_mb03d = $idx_mb03 / 10; if($idx_mb03d > 100) { $idx_mb03d = 100; }
 
 $query_idx_mb04 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym04f'";
-$result_idx_mb04 = mysql_query($query_idx_mb04);
+$result_idx_mb04 = mysqli_query($dbconn, $query_idx_mb04);
 	if (!$result_idx_mb04) { error("QUERY_ERROR"); exit; }
-$idx_mb04 = @mysql_result($result_idx_mb04,0,0);
+$idx_mb04 = @mysqli_result($result_idx_mb04,0,0);
 $idx_mb04d = $idx_mb04 / 10; if($idx_mb04d > 100) { $idx_mb04d = 100; }
 
 $query_idx_mb05 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym05f'";
-$result_idx_mb05 = mysql_query($query_idx_mb05);
+$result_idx_mb05 = mysqli_query($dbconn, $query_idx_mb05);
 	if (!$result_idx_mb05) { error("QUERY_ERROR"); exit; }
-$idx_mb05 = @mysql_result($result_idx_mb05,0,0);
+$idx_mb05 = @mysqli_result($result_idx_mb05,0,0);
 $idx_mb05d = $idx_mb05 / 10; if($idx_mb05d > 100) { $idx_mb05d = 100; }
 
 $query_idx_mb06 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym06f'";
-$result_idx_mb06 = mysql_query($query_idx_mb06);
+$result_idx_mb06 = mysqli_query($dbconn, $query_idx_mb06);
 	if (!$result_idx_mb06) { error("QUERY_ERROR"); exit; }
-$idx_mb06 = @mysql_result($result_idx_mb06,0,0);
+$idx_mb06 = @mysqli_result($result_idx_mb06,0,0);
 $idx_mb06d = $idx_mb06 / 10; if($idx_mb06d > 100) { $idx_mb06d = 100; }
 
 $query_idx_mb07 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym07f'";
-$result_idx_mb07 = mysql_query($query_idx_mb07);
+$result_idx_mb07 = mysqli_query($dbconn, $query_idx_mb07);
 	if (!$result_idx_mb07) { error("QUERY_ERROR"); exit; }
-$idx_mb07 = @mysql_result($result_idx_mb07,0,0);
+$idx_mb07 = @mysqli_result($result_idx_mb07,0,0);
 $idx_mb07d = $idx_mb07 / 10; if($idx_mb07d > 100) { $idx_mb07d = 100; }
 
 $query_idx_mb08 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym08f'";
-$result_idx_mb08 = mysql_query($query_idx_mb08);
+$result_idx_mb08 = mysqli_query($dbconn, $query_idx_mb08);
 	if (!$result_idx_mb08) { error("QUERY_ERROR"); exit; }
-$idx_mb08 = @mysql_result($result_idx_mb08,0,0);
+$idx_mb08 = @mysqli_result($result_idx_mb08,0,0);
 $idx_mb08d = $idx_mb08 / 10; if($idx_mb08d > 100) { $idx_mb08d = 100; }
 
 $query_idx_mb09 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym09f'";
-$result_idx_mb09 = mysql_query($query_idx_mb09);
+$result_idx_mb09 = mysqli_query($dbconn, $query_idx_mb09);
 	if (!$result_idx_mb09) { error("QUERY_ERROR"); exit; }
-$idx_mb09 = @mysql_result($result_idx_mb09,0,0);
+$idx_mb09 = @mysqli_result($result_idx_mb09,0,0);
 $idx_mb09d = $idx_mb09 / 10; if($idx_mb09d > 100) { $idx_mb09d = 100; }
 
 $query_idx_mb10 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym10f'";
-$result_idx_mb10 = mysql_query($query_idx_mb10);
+$result_idx_mb10 = mysqli_query($dbconn, $query_idx_mb10);
 	if (!$result_idx_mb10) { error("QUERY_ERROR"); exit; }
-$idx_mb10 = @mysql_result($result_idx_mb10,0,0);
+$idx_mb10 = @mysqli_result($result_idx_mb10,0,0);
 $idx_mb10d = $idx_mb10 / 10; if($idx_mb10d > 100) { $idx_mb10d = 100; }
 
 $query_idx_mb11 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym11f'";
-$result_idx_mb11 = mysql_query($query_idx_mb11);
+$result_idx_mb11 = mysqli_query($dbconn, $query_idx_mb11);
 	if (!$result_idx_mb11) { error("QUERY_ERROR"); exit; }
-$idx_mb11 = @mysql_result($result_idx_mb01,0,0);
+$idx_mb11 = @mysqli_result($result_idx_mb01,0,0);
 $idx_mb11d = $idx_mb11 / 10; if($idx_mb11d > 100) { $idx_mb11d = 100; }
 
 $query_idx_mb12 = "SELECT count(code) FROM member_main WHERE branch_code = '$login_branch' AND userlevel > '1' AND regis_date < '$p_ym12f'";
-$result_idx_mb12 = mysql_query($query_idx_mb12);
+$result_idx_mb12 = mysqli_query($dbconn, $query_idx_mb12);
 	if (!$result_idx_mb12) { error("QUERY_ERROR"); exit; }
-$idx_mb12 = @mysql_result($result_idx_mb12,0,0);
+$idx_mb12 = @mysqli_result($result_idx_mb12,0,0);
 $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
 ?>
 
@@ -156,7 +155,7 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
     <meta name="keyword" content="FEEL BUY, ikbiz, Bootstrap, Responsive, Youngkay">
     <link rel="shortcut icon" href="img/favicon.ico">
 
-    <title><?=$web_erp_name?></title>
+    <title><?php echo $web_erp_name?></title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -187,7 +186,7 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
 
   <section id="container" >
 
-	  <? include "header.inc"; ?>
+	  <?php require "header.php"; ?>
 
 
       <!--main content start-->
@@ -318,71 +317,70 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
                   </div>
                   <div class="col-lg-4">
                       <!--new earning start-->
-
-						<?
-            $p_currency = $_GET['p_currency']?$_GET['p_currency']:'';
+						<?php
+                        $p_currency = $_GET['p_currency'] ?? null;
 						if(!$p_currency) { $p_currency = $now_currency1; }
 
 						$query_sum_01 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms01%'";
-						$result_sum_01 = mysql_query($query_sum_01);
-							if (!$result_sum_01) { error("QUERY_ERROR"); exit; }
-						$oamount_01 = @mysql_result($result_sum_01,0,0);
+						$result_sum_01 = mysqli_query($dbconn, $query_sum_01);
+						if (!$result_sum_01) { error("QUERY_ERROR"); exit; }
+						$oamount_01 = @mysqli_result($result_sum_01,0,0);
 
 						$query_sum_02 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms02%'";
-						$result_sum_02 = mysql_query($query_sum_02);
-							if (!$result_sum_02) { error("QUERY_ERROR"); exit; }
-						$oamount_02 = @mysql_result($result_sum_02,0,0);
+						$result_sum_02 = mysqli_query($dbconn, $query_sum_02);
+						if (!$result_sum_02) { error("QUERY_ERROR"); exit; }
+						$oamount_02 = @mysqli_result($result_sum_02,0,0);
 
 						$query_sum_03 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms03%'";
-						$result_sum_03 = mysql_query($query_sum_03);
-							if (!$result_sum_03) { error("QUERY_ERROR"); exit; }
-						$oamount_03 = @mysql_result($result_sum_03,0,0);
+						$result_sum_03 = mysqli_query($dbconn, $query_sum_03);
+						if (!$result_sum_03) { error("QUERY_ERROR"); exit; }
+						$oamount_03 = @mysqli_result($result_sum_03,0,0);
 
 						$query_sum_04 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms04%'";
-						$result_sum_04 = mysql_query($query_sum_04);
-							if (!$result_sum_04) { error("QUERY_ERROR"); exit; }
-						$oamount_04 = @mysql_result($result_sum_04,0,0);
+						$result_sum_04 = mysqli_query($dbconn, $query_sum_04);
+						if (!$result_sum_04) { error("QUERY_ERROR"); exit; }
+						$oamount_04 = @mysqli_result($result_sum_04,0,0);
 
 						$query_sum_05 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms05%'";
-						$result_sum_05 = mysql_query($query_sum_05);
-							if (!$result_sum_05) { error("QUERY_ERROR"); exit; }
-						$oamount_05 = @mysql_result($result_sum_05,0,0);
+						$result_sum_05 = mysqli_query($dbconn, $query_sum_05);
+						if (!$result_sum_05) { error("QUERY_ERROR"); exit; }
+						$oamount_05 = @mysqli_result($result_sum_05,0,0);
 
 						$query_sum_06 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms06%'";
-						$result_sum_06 = mysql_query($query_sum_06);
-							if (!$result_sum_06) { error("QUERY_ERROR"); exit; }
-						$oamount_06 = @mysql_result($result_sum_06,0,0);
+						$result_sum_06 = mysqli_query($dbconn, $query_sum_06);
+						if (!$result_sum_06) { error("QUERY_ERROR"); exit; }
+						$oamount_06 = @mysqli_result($result_sum_06,0,0);
 
 						$query_sum_07 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms07%'";
-						$result_sum_07 = mysql_query($query_sum_07);
-							if (!$result_sum_07) { error("QUERY_ERROR"); exit; }
-						$oamount_07 = @mysql_result($result_sum_07,0,0);
+						$result_sum_07 = mysqli_query($dbconn, $query_sum_07);
+						if (!$result_sum_07) { error("QUERY_ERROR"); exit; }
+						$oamount_07 = @mysqli_result($result_sum_07,0,0);
 
 						$query_sum_08 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms08%'";
-						$result_sum_08 = mysql_query($query_sum_08);
-							if (!$result_sum_08) { error("QUERY_ERROR"); exit; }
-						$oamount_08 = @mysql_result($result_sum_08,0,0);
+						$result_sum_08 = mysqli_query($dbconn, $query_sum_08);
+						if (!$result_sum_08) { error("QUERY_ERROR"); exit; }
+						$oamount_08 = @mysqli_result($result_sum_08,0,0);
 
 						$query_sum_09 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms09%'";
-						$result_sum_09 = mysql_query($query_sum_09);
-							if (!$result_sum_09) { error("QUERY_ERROR"); exit; }
-						$oamount_09 = @mysql_result($result_sum_09,0,0);
+						$result_sum_09 = mysqli_query($dbconn, $query_sum_09);
+						if (!$result_sum_09) { error("QUERY_ERROR"); exit; }
+						$oamount_09 = @mysqli_result($result_sum_09,0,0);
 
 						$query_sum_10 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms10%'";
-						$result_sum_10 = mysql_query($query_sum_10);
-							if (!$result_sum_10) { error("QUERY_ERROR"); exit; }
-						$oamount_10 = @mysql_result($result_sum_10,0,0);
+						$result_sum_10 = mysqli_query($dbconn, $query_sum_10);
+						if (!$result_sum_10) { error("QUERY_ERROR"); exit; }
+						$oamount_10 = @mysqli_result($result_sum_10,0,0);
 
 						$query_sum_11 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms11%'";
-						$result_sum_11 = mysql_query($query_sum_11);
-							if (!$result_sum_11) { error("QUERY_ERROR"); exit; }
-						$oamount_11 = @mysql_result($result_sum_11,0,0);
+						$result_sum_11 = mysqli_query($dbconn, $query_sum_11);
+						if (!$result_sum_11) { error("QUERY_ERROR"); exit; }
+						$oamount_11 = @mysqli_result($result_sum_11,0,0);
 
 						$query_sum_12 = "SELECT sum(amount) FROM finance WHERE currency = '$p_currency' AND process = '2' AND pay_date LIKE '$p_yms12%'";
-						$result_sum_12 = mysql_query($query_sum_12);
-							if (!$result_sum_12) { error("QUERY_ERROR"); exit; }
-						$oamount_12 = @mysql_result($result_sum_12,0,0);
-							$oamount_12_k = number_format($oamount_12);
+						$result_sum_12 = mysqli_query($dbconn, $query_sum_12);
+						if (!$result_sum_12) { error("QUERY_ERROR"); exit; }
+						$oamount_12 = @mysqli_result($result_sum_12,0,0);
+						// $oamount_12_k = number_format($oamount_12);
 
 						if($p_currency == "IDR") {
 							$p_currency_tag = "Rp.";
@@ -395,25 +393,27 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
                           <div class="panel-body chart-texture">
                               <div class="chart">
                                   <div class="heading">
-                                      <span><?=$today_month_set_txt?></span>
-                                      <strong><?=$p_currency_tag?> <?=$oamount_12_k?></strong>
+                                      <span><?php $today_month_set_txt?></span>
+                                      <strong><?php $p_currency_tag?> <?php $oamount_12?></strong>
                                   </div>
                                   <div class="sparkline" data-type="line" data-resize="true" data-height="75" data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4" data-data="[<?=$oamount_01?>,<?=$oamount_02?>,<?=$oamount_03?>,<?=$oamount_04?>,<?=$oamount_05?>,<?=$oamount_06?>,<?=$oamount_07?>,<?=$oamount_08?>,<?=$oamount_09?>,<?=$oamount_10?>,<?=$oamount_11?>]"></div>
                               </div>
                           </div>
                           <div class="chart-tittle">
-                              <span class="title"><?=$frn1_mmenu_052?></span>
+                              <span class="title"><?php $frn1_mmenu_052?></span>
                               <span class="value">
-									<?
+									<?php
 									if($p_currency == $now_currency1) {
 										echo ("<a href='index.php?p_year=$p_year&p_currency=$now_currency1' class='active'>$now_currency1</a> |&nbsp;");
 									} else {
-										echo ("<a href='index.php?p_year=$p_year&p_currency=$now_currency1'>$now_currency1</a> |&nbsp;");
+										// echo ("<a href='index.php?p_year=$p_year&p_currency=$now_currency1'>$now_currency1</a> |&nbsp;");
+                                        echo "<a href='index.php?p_year=$p_year&p_currency=$now_currency1'> Data not found</a>";
 									}
 									if($p_currency == $now_currency2) {
 										echo ("<a href='index.php?p_year=$p_year&p_currency=$now_currency2' class='active'>$now_currency2</a>");
 									} else {
-										echo ("<a href='index.php?p_year=$p_year&p_currency=$now_currency2'>$now_currency2</a>");
+										// echo ("<a href='index.php?p_year=$p_year&p_currency=$now_currency2'>$now_currency2</a>");
+                                        echo "<a href='index.php?p_year=$p_year&p_currency=$now_currency1'> Data not found</a>";
 									}
 									?>
                               </span>
@@ -446,11 +446,11 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
                       <section class="panel">
                           <div class="panel-body">
                               <a href="#" class="task-thumb">
-                                  <img src="<?=$login_photo_img1?>" style="width: 80px" alt="">
+                                  <img src="<?php $login_photo_img1?>" style="width: 80px" alt="">
                               </a>
                               <div class="task-thumb-details">
-                                  <h1><a href="#"><?=$login_name2?></a></h1>
-                                  <p><?=$last_login_txt?></p>
+                                  <h1><a href="#"><?php $login_name2?></a></h1>
+                                  <p><?php $last_login_txt?></p>
                               </div>
                           </div>
                           <table class="table table-hover personal-task">
@@ -481,7 +481,7 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
                                         <i class=" fa fa-bell-o"></i>
                                     </td>
                                     <td>New Notification</td>
-                                    <td><?=$uid_total?></td>
+                                    <td><?php $uid_total?></td>
                                 </tr>
                               </tbody>
                           </table>
@@ -494,7 +494,7 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
                           <div class="panel-body progress-panel">
                               <div class="task-progress">
                                   <h1>Work Progress</h1>
-                                  <p><?=$login_name2?></p>
+                                  <p><?php $login_name2?></p>
                               </div>
                               <div class="task-option">
                                   <select class="styled">
@@ -981,51 +981,52 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
     <script src="js/sparkline-chart.js"></script>
     <script src="js/easy-pie-chart.js"></script>
 
-	<?
+	<?php
 	// Counter 1 - Member
 	// $query_count1 = "SELECT count(uid) FROM member_main WHERE branch_code = '$login_branch'";
 	$query_count1 = "SELECT count(uid) FROM member_main";
-	$result_count1 = mysql_query($query_count1,$dbconn);
+	$result_count1 = mysqli_query($dbconn, $query_count1);
 		if (!$result_count1) { error("QUERY_ERROR"); exit; }
-	$zcount1 = @mysql_result($result_count1,0,0);
+	$zcount1 = @mysqli_result($result_count1,0,0);
 
 	// Counter 2 - Sales
 	// $query_count2 = "SELECT count(uid) FROM finance WHERE f_class = 'in' AND branch_code = '$login_branch'";
 	$query_count2 = "SELECT count(uid) FROM finance WHERE f_class = 'in'";
-	$result_count2 = mysql_query($query_count2,$dbconn);
+	$result_count2 = mysqli_query($dbconn, $query_count2);
 		if (!$result_count2) { error("QUERY_ERROR"); exit; }
-	// $zcount2 = @mysql_result($result_count2,0,0);
+	// $zcount2 = @mysqli_result($result_count2,0,0);
 	$zcount2 = 927;
 
 	// Counter 3 - Order
 	// $query_count3 = "SELECT count(uid) FROM finance WHERE f_class = 'in' AND branch_code = '$login_branch'";
 	$query_count3 = "SELECT count(uid) FROM finance WHERE f_class = 'in'";
-	$result_count3 = mysql_query($query_count3,$dbconn);
+	$result_count3 = mysqli_query($dbconn, $query_count3);
 		if (!$result_count3) { error("QUERY_ERROR"); exit; }
-	// $zcount3 = @mysql_result($result_count3,0,0);
+	// $zcount3 = @mysqli_result($result_count3,0,0);
 	$zcount3 = 815;
 
 	// Counter 4 - Income
 	// $query_count4 = "SELECT sum(amount) FROM finance WHERE f_class = 'in' AND currency = '$now_currency1' AND branch_code = '$login_branch'";
 	$query_count4 = "SELECT sum(amount) FROM finance WHERE f_class = 'in' AND currency = '$now_currency1'";
-	$result_count4 = mysql_query($query_count4,$dbconn);
+	$result_count4 = mysqli_query($dbconn, $query_count4);
 		if (!$result_count4) { error("QUERY_ERROR"); exit; }
-	$zcount4pre = @mysql_result($result_count4,0,0);
+	$zcount4pre = @mysqli_result($result_count4,0,0);
 	// $zcount4 = $zcount4pre / 1000;
 	$zcount4 = 10328;
 
 	// Counter 5 - Delivery
 	$query_count5a = "SELECT count(uid) FROM shop_product_list_qty WHERE flag = 'out'";
-	$result_count5a = mysql_query($query_count5a,$dbconn);
+	$result_count5a = mysqli_query($dbconn, $query_count5a);
 		if (!$result_count5a) { error("QUERY_ERROR"); exit; }
-	$zcount5a = @mysql_result($result_count5a,0,0);
+	$zcount5a = @mysqli_result($result_count5a,0,0);
 
 	$query_count5 = "SELECT count(uid) FROM shop_product_list_qty WHERE flag = 'out' AND do_status > '0'";
-	$result_count5 = mysql_query($query_count5,$dbconn);
+	$result_count5 = mysqli_query($dbconn, $query_count5);
 		if (!$result_count5) { error("QUERY_ERROR"); exit; }
-	$zcount5b = @mysql_result($result_count5,0,0);
+	$zcount5b = @mysqli_result($result_count5,0,0);
 
-	$ratio_zcount5_pre = ( $zcount5b / $zcount5a ) * 100;
+	// $ratio_zcount5_pre = ( $zcount5b / $zcount5a ) * 100;
+    $ratio_zcount5_pre = ( $zcount5b / 1 ) * 100;
 	$zcount5 = round($ratio_zcount5_pre);
 	?>
 
@@ -1153,4 +1154,4 @@ $idx_mb12d = $idx_mb12 / 10; if($idx_mb12d > 100) { $idx_mb12d = 100; }
 </html>
 
 
-<? } ?>
+<?php } ?>

@@ -1,52 +1,56 @@
-<?
-/*
-@author : YOGI ANDITIA;
-@update : Cihuy;
-@version : 3.0
+<?php
+// Hokonga POS
 
-*/
-
-include "config/common.inc";
-include "config/dbconn.inc";
-include "config/text_main_{$lang}.inc";
-require "config/user_functions_{$lang}.inc";
-include "admin.inc";
+include "config/common.php";
+include "config/dbconn.php";
+include "config/text_main_en.php";
+require "config/user_functions_en.php";
+include "admin.php";
 
 $mmenu = "main";
 $smenu = "dashboard";
 
+// modified
+$login_id = $_COOKIE['login_id'] ?? null;
+$login_level = $_COOKIE['login_level'] ?? null;
+$login_branch = $_COOKIE['login_branch'] ?? null;
 
-if(!$login_id OR $login_level < "1") {
+if (isset($_COOKIE['login_user_name'])) {
+	$login_name = $_COOKIE['login_user_name'];
+}
 
-  echo ("<meta http-equiv='Refresh' content='0; URL=user_login.php'>");
+// if(!$login_id OR $login_level < "1") {
 
-} else {
+  // echo ("<meta http-equiv='Refresh' content='0; URL=user_login.php'>");
+  // var_dump("echo masuk sini");
+
+// } else {
 
 $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 $date = date('Ymd');
 $query_getcl = "SELECT sales_code from pos_client where hostname = '$hostname'";
-$result_getcl = mysql_query($query_getcl);
-$idcode   = @mysql_result($result_getcl, 0, 0);
+$result_getcl = mysqli_query($dbconn, $query_getcl);
+$idcode   = @mysqli_result($result_getcl, 0, 0);
 $update_client = "UPDATE pos_client SET sales_code = '$login_id' where hostname = '$hostname'";
-$result_client = mysql_query($update_client);
- if (!$result_client) {
-            error("QUERY_ERROR");
-            exit;
-        }
+$result_client = mysqli_query($dbconn, $update_client);
+  if (!$result_client) {
+    error("QUERY_ERROR");
+      exit;
+  }
 
 // User Profile
 $query_foto = "SELECT name,gender,photo1 FROM member_staff WHERE id = '$login_id'";
-$result_foto = mysql_query($query_foto);
-    if (!$result_foto) { error("QUERY_ERROR"); exit; }
-$login_name2 = @mysql_result($result_foto,0,0);
+$result_foto = mysqli_query($dbconn, $query_foto);
+if (!$result_foto) { error("QUERY_ERROR"); exit; }
+$login_name2 = @mysqli_result($result_foto,0,0);
 	if(!$login_name2) {
 		$login_name2 = $login_name;
 	}
-$login_gender = @mysql_result($result_foto,0,1);
+$login_gender = @mysqli_result($result_foto,0,1);
 	if(!$login_gender) {
 		$login_gender = "M";
 	}
-$login_photo1 = @mysql_result($result_foto,0,2);
+$login_photo1 = @mysqli_result($result_foto,0,2);
 	if($login_photo1 == "none" OR $login_photo1 == "") {
 		$login_photo_img1 = "img/User_Photo_"."$login_gender".".png";
 	} else {
@@ -56,32 +60,32 @@ $login_photo1 = @mysql_result($result_foto,0,2);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="<?=$lang?>">
+<html lang="<?php $lang ?>">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Mosaddek">
-    <link rel="shortcut icon" href="img/favicon.ico">
+<meta name="description" content="">
+<meta name="author" content="Mosaddek">
+<link rel="shortcut icon" href="img/favicon.ico">
 
-    <title><?=$web_erp_name?></title>
+<title><?php $web_erp_name ?></title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-reset.css" rel="stylesheet">
-    <!--external css-->
-    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-reset.css" rel="stylesheet">
+<!--external css-->
+<link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
 
-    <!--dynamic table-->
-    <link href="assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
-    <link href="assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/data-tables/DT_bootstrap.css" />
-      <!--right slidebar-->
-      <link href="css/slidebars.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/style-responsive.css" rel="stylesheet" />
-    <!-- CSS POS -->
-    <link rel="stylesheet" href="css/pos.css">
+<!--dynamic table-->
+<link href="assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
+<link href="assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
+<link rel="stylesheet" href="assets/data-tables/DT_bootstrap.css" />
+  <!--right slidebar-->
+  <link href="css/slidebars.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="css/style.css" rel="stylesheet">
+<link href="css/style-responsive.css" rel="stylesheet" />
+<!-- CSS POS -->
+<link rel="stylesheet" href="css/pos.css">
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>:: POS ::</title>
@@ -95,132 +99,120 @@ function onEnter(e){
     showCell();
     showTotal();
     getClear();
-   $("#test").load("<?=$home?>/pos_cart.php");
-   $("#diplay").load("<?=$home?>/pos_display.php");
+   $("#test").load("<?php echo $home ?>/pos_cart.php");
+   $("#diplay").load("<?php echo $home ?>/pos_display.php");
    $('#form')[0].reset();
    $("#gambar").html('<img id="image" style="width: 100px;height: 100px;margin: auto;top: 0; bottom: 0;left: 0;right: 0;position: absolute;" src="img_pos/feelbuy.jpg"/>');
   //window.top.location = window.top.location;
   }
 }
 
-
 function onEnterC(e){
   var key=e.keyCode || e.which;
   if(key==13){
     document.getElementById('qty').focus();
     showTotal();
-  $("#test").load("<?=$home?>/pos_cart.php");
-  $("#diplay").load("<?=$home?>/pos_display.php");
+  $("#test").load("<?php echo $home ?>/pos_cart.php");
+  $("#diplay").load("<?php echo $home ?>/pos_display.php");
   }
 }
 
+function showTotal(){
+  $.ajax({
+    type:"POST",
+    url:"getbytotal.php",
+    data:{harga:'hargatotal',ppn:'ppn'},
+    success:function(data){
+      var harga = '';
+      var ppn = '';
+      var total = '';
+      var totqty = '';
+      var totdis = '';
+      var gross = '';
+      var transcode = '';
+      var obj = $.parseJSON(data);
+      $.each(obj, function() {
+        harga += this['harga'] + "<br/>";
+        ppn += this['ppn'] +"<br/>";
+        total += this['total'] + "<br/>";
+        totqty += this['totqty'] + "<br/>";
+        totdis += this['totdis'] + "<br/>";
+        gross += this['gross'] + "<br/>";
+        transcode += this['transcode'];
+      });
+      $('#subprice').html(harga);
+      $('#ppn').html(ppn);
+      $('#price').html(total);
 
-
- function showTotal(){
-        $.ajax({
-            type:"POST",
-            url:"getbytotal.php",
-            data:{harga:'hargatotal',ppn:'ppn'},
-            success:function(data){
-               var harga = '';
-               var ppn = '';
-               var total = '';
-               var totqty = '';
-               var totdis = '';
-               var gross = '';
-			   var transcode = '';
-                var obj = $.parseJSON(data);
-                $.each(obj, function() {
-                    harga += this['harga'] + "<br/>";
-                    ppn += this['ppn'] +"<br/>";
-                    total += this['total'] + "<br/>";
-                    totqty += this['totqty'] + "<br/>";
-                    totdis += this['totdis'] + "<br/>";
-                    gross += this['gross'] + "<br/>";
-					transcode += this['transcode'];
-                });
-                $('#subprice').html(harga);
-                $('#ppn').html(ppn);
-                $('#price').html(total);
-
-				var dash = parseInt((total).replace(/[^\d.]/g, ''));
-				if(dash == 0 ){
-
-					$("#dass").hide();
-				}else{
-					$("#dash").hide();
-
-				}
-                $('#totqty').html(totqty);
-                $('#disc').html(totdis);
-                $('#gross').html(gross);
-				$('#transcode').val(transcode);
-            }
-        });
-    }
+      var dash = parseInt((total).replace(/[^\d.]/g, ''));
+      if(dash == 0 ){
+        $("#dass").hide();
+      } else {
+        $("#dash").hide();
+      }
+        $('#totqty').html(totqty);
+        $('#disc').html(totdis);
+        $('#gross').html(gross);
+        $('#transcode').val(transcode);
+      }
+  });
+}
 
 function showCell(){
   iObj=document.getElementById("indexCell");
   index=iObj.value.trim();
   newIndex=eval(index)+1;
-
   rObj=document.getElementById("readBarcode");
   valBarcode=rObj.value.trim();
-
   rObj=document.getElementById("qty");
   valQty=rObj.value.trim();
-
   rObj=document.getElementById("uid");
   valUid=rObj.value.trim();
-
   rObj=document.getElementById("bypcode");
   valItem=rObj.value.trim();
 
-    if(valBarcode == '+' || valQty == '+'){
+    if (valBarcode == '+' || valQty == '+') {
       $("#submitform").submit();
-    }else if(valBarcode == 'c' || valQty == 'c'){
+    } else if(valBarcode == 'c' || valQty == 'c') {
       submitClear();
-    }else if(valBarcode == 'm' || valQty == 'm'){
-      window.location = "<?=$home?>/pos_master.php"
-    }else if(valBarcode == 'l' || valQty == 'l'){
+    } else if(valBarcode == 'm' || valQty == 'm') {
+      window.location = "<?php $home?>/pos_master.php"
+    } else if(valBarcode == 'l' || valQty == 'l') {
       listransaction();
-    }else if(valBarcode == '++' || valQty == '++') {
+    } else if(valBarcode == '++' || valQty == '++') {
       $("#submitform").submit();
-    }else{
+    } else {
     rObj.value="";rObj.focus(); iObj.value=newIndex;
     doRequested('viewResult'+index,'pos_insert.php?val='+valBarcode+'&index='+newIndex+'&qtys='+valQty+'&uid='+valUid+'&item='+valItem,false);
-     $("#test").load("<?=$home?>/pos_cart.php");
-     $("#diplay").load("<?=$home?>/pos_display.php");
-    // window.location = "<?=$home?>/pos.php"
+     $("#test").load("<?php $home?>/pos_cart.php");
+     $("#diplay").load("<?php $home?>/pos_display.php");
+    // window.location = "<?php $home?>/pos.php"
   }
 }
 function submitClear(){
    $("#clear").submit();
 }
 function listransaction(){
-  window.location = "<?=$home?>/pos_master.php?trans=list"
+  window.location = "<?php $home?>/pos_master.php?trans=list"
 }
 function getClear(){
-   $('#readBarcode').focus();
-    $('#readBarcode').val('');
-    $('#bypcode').val('');
-    $('#bypname').val('');
-    $('#qty').val('');
-    $('#temptotal').val('0');
-    $('#itempricedis').val('0');
-    $('#discdis').val('0');
-
+  $('#readBarcode').focus();
+  $('#readBarcode').val('');
+  $('#bypcode').val('');
+  $('#bypname').val('');
+  $('#qty').val('');
+  $('#temptotal').val('0');
+  $('#itempricedis').val('0');
+  $('#discdis').val('0');
 }
 
 var height = 0;
 $('.table2 tr').each(function(i, value){
-    height += parseInt($(this).height());
+  height += parseInt($(this).height());
 });
 
 height += '';
-
 $('.table2').animate({scrollTop: height});
-
 $( "#main" ).mouseover(function() {
   location.reload();
 });
@@ -229,122 +221,103 @@ $( "#main" ).mouseover(function() {
 <link rel="stylesheet" href="css/jquery-ui-pos.css">
   <script src="js/jquery-1.10.2-pos.js"></script>
   <script src="js/jquery-ui-pos.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-            $('.submit_on_enter_edit').keydown(function(event) {
-                if (event.keyCode == 13) {
-                  var id = $(this).parent().parent().attr('id');
-                  value = $('#'+id+'i').val();
-            var data = '?id=' + id +'&val='+value ;
-            $.ajax(
-            {
-                 type: "GET",
-                 url: "pos_edit_row.php"+data,
-                 data: {qty:'qty',gross:'gross'},
-                 cache: false,
-
-                 success: function(data)
-
-                 {
-                  var qty = '';
-                        var gross = '';
-                        var nett = '';
-
-                  var obj = $.parseJSON(data);
-                          $.each(obj, function() {
-                              qty += this['qty'];
-                              gross += this['gross'];
-                            nett += this['nett'];
-                          });
-
-                          $('#'+id+'i').val(qty);
-                          $('#'+id+'j').text(gross);
-                          $('#'+id+'k').text(nett);
-
-                 }
-             });
-
-
-                 }
-            });
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.submit_on_enter_edit').keydown(function(event) {
+        if (event.keyCode == 13) {
+          var id = $(this).parent().parent().attr('id');
+          value = $('#'+id+'i').val();
+          var data = '?id=' + id +'&val='+value ;
+          $.ajax({
+            type: "GET",
+            url: "pos_security_row.php"+data,
+            data: {qty:'qty',gross:'gross'},
+            cache: false,
+            success: function(data) {
+              var qty = '';
+              var gross = '';
+              var nett = '';
+              var obj = $.parseJSON(data);
+              $.each(obj, function() {
+                qty += this['qty'];
+                gross += this['gross'];
+                nett += this['nett'];
+              });
+              $('#'+id+'i').val(qty);
+              $('#'+id+'j').text(gross);
+              $('#'+id+'k').text(nett);
+            }
           });
-    </script>
-    <script>
-
-
-
-    $(function() {
-        function split( val ) {
-            return val.split( /,\s*/ );
         }
-        function extractLast( term ) {
-            return split( term ).pop();
-        }
-
-        $( "#readBarcode" ).bind( "keydown", function( event ) {
-            if ( event.keyCode === $.ui.keyCode.TAB &&
-                $( this ).autocomplete( "instance" ).menu.active ) {
-                event.preventDefault();
-            }
-        })
-        .autocomplete({
-            minLength: 3,
-            source: function( request, response ) {
-                // delegate back to autocomplete, but extract the last term
-                $.getJSON("getbybarcode.php", { term : extractLast( request.term )},response);
-            },
-            focus: function( event, ui ) {
-              $( "#readBarcode" ).val( ui.item.lbl1 );
-              $( "#bypname" ).val( ui.item.desc );
-              $( "#bypcode" ).val( ui.item.lbl1 );
-              $( "#uid" ).val( ui.item.uid );
-              $( "#itemprice" ).val( ui.item.price ).toLocaleString('en');
-              $( "#itemdisc").val(ui.item.disc);
-
-              var url= 'img_pos/'+ui.item.lbl1+'.jpg';
-
-              var url= 'img_pos/'+ui.item.lbl1+'.jpg';
-            $("#gambar").html('<img id="image" style="width: 100px;height: 100px;margin: auto;top: 0; bottom: 0;left: 0;right: 0;position: absolute;" src="'+url+'"/>');
-            $('#image').error(function() {
-            $("#gambar").html('<img id="image" style="width: 100px;height: 100px;margin: auto;top: 0; bottom: 0;left: 0;right: 0;position: absolute;" src="img_pos/feelbuy.jpg"/>');
       });
-
-
-
-              return false;
-            },
-            select: function( event, ui ) {
-              $( "#readBarcode" ).val( ui.item.lbl1 );
-              $( "#bypcode" ).val( ui.item.lbl1 );
-              $( "#itemprice" ).val( ui.item.price ).toLocaleString('en');
-              $( "#itemdisc").val(ui.item.disc);
-              return false;
-            }
-        });
+    });
+  </script>
+  <script>
+    $(function() {
+      function split( val ) {
+        return val.split( /,\s*/ );
+      }
+      function extractLast( term ) {
+        return split( term ).pop();
+      }
+      $( "#readBarcode" ).bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      }).autocomplete({
+        minLength: 3,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          $.getJSON("getbybarcode.php", { term : extractLast( request.term )},response);
+        },
+        focus: function( event, ui ) {
+          $( "#readBarcode" ).val( ui.item.lbl1 );
+          $( "#bypname" ).val( ui.item.desc );
+          $( "#bypcode" ).val( ui.item.lbl1 );
+          $( "#uid" ).val( ui.item.uid );
+          $( "#itemprice" ).val( ui.item.price ).toLocaleString('en');
+          $( "#itemdisc").val(ui.item.disc);
+          var url= 'img_pos/'+ui.item.lbl1+'.jpg';
+          var url= 'img_pos/'+ui.item.lbl1+'.jpg';
+          $("#gambar").html('<img id="image" style="width: 100px;height: 100px;margin: auto;top: 0; bottom: 0;left: 0;right: 0;position: absolute;" src="'+url+'"/>');
+          $('#image').error(function() {
+            $("#gambar").html('<img id="image" style="width: 100px;height: 100px;margin: auto;top: 0; bottom: 0;left: 0;right: 0;position: absolute;" src="img_pos/feelbuy.jpg"/>');
+          });
+          return false;
+        },
+        select: function( event, ui ) {
+          $( "#readBarcode" ).val( ui.item.lbl1 );
+          $( "#bypcode" ).val( ui.item.lbl1 );
+          $( "#itemprice" ).val( ui.item.price ).toLocaleString('en');
+          $( "#itemdisc").val(ui.item.disc);
+          return false;
+        }
+      });
     });
 
     function calculateItem(){
       var itemprice1 = document.form.itemprice.value;
-      if (!itemprice1)
-            itemprice1 = '0';
       var itemqty = document.form.qty.value;
-      if (!itemqty)
-      itemqty = '1';
       var itemdisc1 = document.form.itemdisc.value;
-      if (!itemdisc1)
-      itemdisc1 = '0';
+      if (!itemprice1) {
+        itemprice1 = '0';
+      }
+      if (!itemqty) {
+        itemqty = '1';
+      }
+      if (!itemdisc1) {
+        itemdisc1 = '0';
+      }
       var read = document.form.readBarcode.value;
-      if (!read){
+      if (!read) {
         document.form.temptotal.value= 0;
         document.form.discdis.value=0;
         document.form.itempricedis.value=0;
         document.form.subpricedis.value=0;
         document.form.ppndis.value=0;
         document.form.qtys.value='';
-
-
-      }else{
-         var price = parseFloat(itemprice1);
+      } else {
+        var price = parseFloat(itemprice1);
         var qty = parseFloat(itemqty);
         var disc = parseFloat(itemdisc1);
         var a= disc/100;
@@ -508,7 +481,7 @@ $( "#main" ).mouseover(function() {
 						  document.getElementById('bayar').focus();
 						  $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
 						  var a = document.getElementById('bayar');
-						  a.setAttribute('href','<?=$home?>/pos_pay.php?cashpay='+cashpay+'&change='+(cashpay-total)+'&login=<?=$login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
+						  a.setAttribute('href','<?php $home?>/pos_pay.php?cashpay='+cashpay+'&change='+(cashpay-total)+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
               return false;
 						  /*if (answer=confirm("Bayar?\n\nUang Kembalian = Rp. "+re+",-\n\n\n\n\n"))
 							{
@@ -529,11 +502,11 @@ $( "#main" ).mouseover(function() {
           //CREDIT CARD
             document.form.change.value = creamo - total;
             document.form.changedis.value = (creamo - total).toLocaleString('en');
-			<?if($login_id == 'superadmin' || $login_id == 'admin'){?>
+			<?php if($login_id == 'superadmin' || $login_id == 'admin'){?>
 				if((creamo-total) >= 0 ){
-			<?}else{?>
+			<?php }else{?>
 				if((creamo-total) == 0){
-            <?}?>
+            <?php }?>
 			document.form.cashpay.value = 0;
               document.form.debamo.value = 0;
               document.form.cashpay1.value = 0;
@@ -544,17 +517,17 @@ $( "#main" ).mouseover(function() {
               $('.submit_on_enter_crecardamo').keydown(function(event) {
                 if (!$("#cardcre").val() || $('#cardcre').val().length != 19){
 					   document.getElementById('cardcre').focus();
-					<?if($login_id == 'superadmin' || $login_id == 'admin'){?>
-					<?}else{?>
+					<?php if($login_id == 'superadmin' || $login_id == 'admin'){?>
+					<?php }else{?>
 					}else if($('#creamo').val() != total){
 						document.getElementById('creamo1').focus();
-					<?}?>
+					<?php }?>
 					}else{
 					  if (event.keyCode == 13) {
 						   document.getElementById('bayar').focus();
 						    $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
 						   var a = document.getElementById('bayar');
-						  a.setAttribute('href','<?=$home?>/pos_pay.php?creamo='+creamo+'&cardcre='+card_cre+'&login=<?=$login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
+						  a.setAttribute('href','<?php $home?>/pos_pay.php?creamo='+creamo+'&cardcre='+card_cre+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
               return false;
 						  /*  if (answer=confirm("Bayar?"))
 							{
@@ -580,11 +553,11 @@ $( "#main" ).mouseover(function() {
           //DEBIT CARD
             document.form.change.value = debamo - total;
             document.form.changedis.value = (debamo - total).toLocaleString('en');
-            <?if($login_id == 'superadmin' || $login_id == 'admin'){?>
+            <?php if($login_id == 'superadmin' || $login_id == 'admin'){?>
 				if((debamo-total) >= 0 ){
-			<?}else{?>
+			<?php }else{?>
 				if((debamo-total) == 0){
-            <?}?>
+            <?php }?>
               document.form.cashpay.value = 0;
               document.form.creamo.value = 0;
               document.form.cashpay1.value = 0;
@@ -595,17 +568,17 @@ $( "#main" ).mouseover(function() {
              $('.submit_on_enter_debcardamo').keydown(function(event) {
                   if (!$("#carddeb").val() || $('#carddeb').val().length != 19 ){
 					   document.getElementById('carddeb').focus();
-					<?if($login_id == 'superadmin' || $login_id == 'admin'){?>
-					<?}else{?>
+					<?php if($login_id == 'superadmin' || $login_id == 'admin'){?>
+					<?php }else{?>
 					}else if($('#debamo').val() != total){
 						 document.getElementById('debamo1').focus();
-					 <?}?>
+					 <?php }?>
 					}else{
 					  if (event.keyCode == 13) {
 						    document.getElementById('bayar').focus();
 							 $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
 						   var a = document.getElementById('bayar');
-						  a.setAttribute('href','<?=$home?>/pos_pay.php?debamo='+debamo+'&carddeb='+card_deb+'&login=<?=$login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
+						  a.setAttribute('href','<?php $home?>/pos_pay.php?debamo='+debamo+'&carddeb='+card_deb+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
               return false;
 						  /*  if (answer=confirm("Bayar?"))
 							{
@@ -654,7 +627,7 @@ $( "#main" ).mouseover(function() {
 						  document.getElementById('bayar').focus();
 						   $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
 						   var a = document.getElementById('bayar');
-						  a.setAttribute('href','<?=$home?>/pos_pay.php?debamo='+debamo+'&carddeb='+card_deb+'&cashpay='+cashpay+'&change='+((debamo+cashpay)-total)+'&login=<?=$login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
+						  a.setAttribute('href','<?php $home?>/pos_pay.php?debamo='+debamo+'&carddeb='+card_deb+'&cashpay='+cashpay+'&change='+((debamo+cashpay)-total)+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
               return false;
 						    /* if (answer=confirm("Bayar?\n\nUang Kembalian = Rp. "+re+",-\n\n\n\n\n"))
 							{
@@ -702,7 +675,7 @@ $( "#main" ).mouseover(function() {
 							 document.getElementById('bayar').focus();
 							  $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
 						   var a = document.getElementById('bayar');
-						  a.setAttribute('href','<?=$home?>/pos_pay.php?creamo='+creamo+'&cardcre='+card_cre+'&cashpay='+cashpay+'&change='+((creamo+cashpay)-total)+'&login=<?=$login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
+						  a.setAttribute('href','<?php $home?>/pos_pay.php?creamo='+creamo+'&cardcre='+card_cre+'&cashpay='+cashpay+'&change='+((creamo+cashpay)-total)+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
               return false;
 						   /* if (answer=confirm("Bayar?\n\nUang Kembalian = Rp. "+re+",-\n\n\n\n\n"))
 							{
@@ -747,7 +720,7 @@ $( "#main" ).mouseover(function() {
 						  document.getElementById('bayar').focus();
 						   $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
 						   var a = document.getElementById('bayar');
-						  a.setAttribute('href','<?=$home?>/pos_pay.php?creamo='+creamo+'&cardcre='+card_cre+'&debamo='+debamo+'&carddeb='+card_deb+'&login=<?=$login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
+						  a.setAttribute('href','<?php $home?>/pos_pay.php?creamo='+creamo+'&cardcre='+card_cre+'&debamo='+debamo+'&carddeb='+card_deb+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
               return false;
 
 						  /* if (answer=confirm("Bayar?"))
@@ -791,7 +764,7 @@ $( "#main" ).mouseover(function() {
 						  document.getElementById('bayar').focus();
 						   $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
 						   var a = document.getElementById('bayar');
-						  a.setAttribute('href','<?=$home?>/pos_pay.php?creamo='+creamo+'&cardcre='+card_cre+'&debamo='+debamo+'&carddeb='+card_deb+'&cashpay='+cashpay+'&change'+((creamo+debamo+cashpay) - total)+'&login=<?=$login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
+						  a.setAttribute('href','<?php $home?>/pos_pay.php?creamo='+creamo+'&cardcre='+card_cre+'&debamo='+debamo+'&carddeb='+card_deb+'&cashpay='+cashpay+'&change'+((creamo+debamo+cashpay) - total)+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
               return false;
 
 						   /* if (answer=confirm("Bayar?\n\nUang Kembalian = Rp. "+re+",-\n\n\n\n\n"))
@@ -1133,124 +1106,133 @@ onkeydown="return (event.keyCode != 8)" -->
     <!--main content start-->
     <section class="wrapper" style='margin-top:-1px;'>
       <div class="row">
-        <?
-        $paid=md5($hostname);
-
-        if($hold!=''){
+        <?php 
+        $paid = md5($hostname);
+        $hold = '';
+        if($hold != ''){
           $temp = "temp = '1'";
         }else{
            $temp = "temp = '0'";
         }
 
+    if($pay=$paid){
+      $gross = $gross ?? null;
+      $nett3 = $nett3 ?? null;
+      $nettvat = $netvatt ?? null;
+      $vat = $vat ?? null;
+      $qty = $qty ?? null;
+      $d7 = $d7 ?? null;
+      $d8 = $d8 ?? null;
+      $net2 = $net2 ?? null;
+      $dis1 = $dis1 ?? null;
+      $dis2 = $dis2 ?? null;
+      $dis3 = $dis3 ?? null;
+      $dis4 = $dis4 ?? null;
+      $dis5 = $dis5 ?? null;
+      $dis6 = $dis6 ?? null;
+      $detail2 = $_POST['detail2'] ?? null;
 
-        if($pay==$paid){
-		$query_getcl = "SELECT id_number from pos_client where sales_code = '$login_id' AND hostname = '$hostname'";
-		$result_getcl = mysql_query($query_getcl);
-		$id_number   = @mysql_result($result_getcl, 0, 0);
+		  $query_getcl = "SELECT id_number from pos_client where sales_code = '$login_id' AND hostname = '$hostname'";
+		  $result_getcl = mysqli_query($dbconn, $query_getcl);
+		  $id_number   = @mysqli_result($result_getcl, 0, 0);
 
-          $total_query="SELECT count(uid) FROM pos_detail2 where $temp AND pos_clientID = '$id_number'" ;
-          $fetch_total=mysql_query($total_query);
-          $total_rows=mysql_result($fetch_total,0);
+      $total_query="SELECT count(uid) FROM pos_detail2 where $temp AND pos_clientID = '$id_number'" ;
+      $fetch_total=mysqli_query($dbconn, $total_query);
+      $total_rows=mysqli_result($fetch_total,0);
 
-
-
-          //get matched data from skills table
-            $query_pos = "SELECT uid,pos_clientID,detail,datedetail,transcode,temp,qty,package,org_pcode FROM pos_detail2 where temp = '0' AND pos_clientID = '$id_number' order by uid asc";
-			$result_pos = mysql_query($query_pos);
-				 if (!$result_pos) {   error("QUERY_ERROR");   exit; }
-
+      //get matched data from skills table
+      $query_pos = "SELECT uid,pos_clientID,detail,datedetail,transcode,temp,qty,package,org_pcode FROM pos_detail2 where temp = '0' AND pos_clientID = '$id_number' order by uid asc";
+      $result_pos = mysqli_query($dbconn, $query_pos);
+			if (!$result_pos) {   error("QUERY_ERROR");   exit; }
 				for ($i=0; $i < $total_rows; $i++) {
-
-					$uid 			=  @mysql_result($result_pos,$i,0);
-					$pos_clientID 	=  @mysql_result($result_pos,$i,1);
-					$detaila 		=  @mysql_result($result_pos,$i,2);
-					$datedetail 	=  @mysql_result($result_pos,$i,3);
-					$transcode 		=  @mysql_result($result_pos,$i,4);
-					$temp 			=  @mysql_result($result_pos,$i,5);
-					$qty1 			=  @mysql_result($result_pos,$i,6);
-					$pack 			=  @mysql_result($result_pos,$i,7);
-					$packcode		=  @mysql_result($result_pos,$i,8);
-
-
+					$uid 			=  @mysqli_result($result_pos,$i,0);
+					$pos_clientID 	=  @mysqli_result($result_pos,$i,1);
+					$detaila 		=  @mysqli_result($result_pos,$i,2);
+					$datedetail 	=  @mysqli_result($result_pos,$i,3);
+					$transcode 		=  @mysqli_result($result_pos,$i,4);
+					$temp 			=  @mysqli_result($result_pos,$i,5);
+					$qty1 			=  @mysqli_result($result_pos,$i,6);
+					$pack 			=  @mysqli_result($result_pos,$i,7);
+					$packcode		=  @mysqli_result($result_pos,$i,8);
 					$new_detail = explode('|',$detaila);
 					$arrCount = count($new_detail);
-					if (!$dic){
+
+          $dic = $dic ?? null;
+					
+          if (!$dic){
 						$cat2 = '';
 						$diskon2 = 0;
 					}else{
 						$query_getcatdis2 = "SELECT cat from item_masters Where org_pcode = '$packcode'";
-						$result_getcatdis2 = mysql_query($query_getcatdis2);
-						$cat2   = @mysql_result($result_getcatdis2, 0, 0);
+						$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+						$cat2   = @mysqli_result($result_getcatdis2, 0, 0);
 						$diskon2 = $dic/100;
 					}
 
-
-
 					if($pack != ''){
-					$pcount="SELECT sum(qty) FROM pos_detail2 where pos_clientID = '$id_number'  group by transcode" ;
-					$fetch_pcount=mysql_query($pcount);
-					$cuidp=mysql_result($fetch_pcount,0,0);
-
+					$pcount = "SELECT sum(qty) FROM pos_detail2 where pos_clientID = '$id_number' group by transcode" ;
+					$fetch_pcount = mysqli_query($dbconn, $pcount);
+					$cuidp = mysqli_result($fetch_pcount,0,0);
 
 						if($pack == 1){
 							$codecount="SELECT MIN(qty) FROM pos_detail2 where pos_clientID = '$id_number' AND package = '$pack'";
-							$fetch_codecount=mysql_query($codecount);
-							$codecp	=mysql_result($fetch_codecount,0);
+							$fetch_codecount=mysqli_query($dbconn, $codecount);
+							$codecp	=mysqli_result($fetch_codecount,0);
 
 							$query_getcatdis2 = "SELECT sum(price_sale) from item_masters_package Where package = '$pack'";
-							$result_getcatdis2 = mysql_query($query_getcatdis2);
-							$sps   = @mysql_result($result_getcatdis2, 0, 0);
+							$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+							$sps   = @mysqli_result($result_getcatdis2, 0, 0);
 
 							$dis1 = $codecp * ($sps*0.1);
 
 						}else if($pack == 2){
 							$codecount="SELECT MIN(qty) FROM pos_detail2 where pos_clientID = '$id_number' AND package = '$pack' ";
-							$fetch_codecount=mysql_query($codecount);
-							$codecp	=mysql_result($fetch_codecount,0,0);
+							$fetch_codecount=mysqli_query($dbconn, $codecount);
+							$codecp	=mysqli_result($fetch_codecount,0,0);
 
 							$query_getcatdis2 = "SELECT sum(price_sale) from item_masters_package Where package = '$pack'";
-							$result_getcatdis2 = mysql_query($query_getcatdis2);
-							$sps   = @mysql_result($result_getcatdis2, 0, 0);
+							$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+							$sps   = @mysqli_result($result_getcatdis2, 0, 0);
 
 							$dis2 = $codecp * ($sps*0.1);
 						}else if($pack == 3){
 							$codecount="SELECT MIN(qty) FROM pos_detail2 where pos_clientID = '$id_number' AND package = '$pack' ";
-							$fetch_codecount=mysql_query($codecount);
-							$codecp	=mysql_result($fetch_codecount,0,0);
+							$fetch_codecount=mysqli_query($dbconn, $codecount);
+							$codecp	=mysqli_result($fetch_codecount,0,0);
 
 							$query_getcatdis2 = "SELECT sum(price_sale) from item_masters_package Where package = '$pack'";
-							$result_getcatdis2 = mysql_query($query_getcatdis2);
-							$sps   = @mysql_result($result_getcatdis2, 0, 0);
+							$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+							$sps   = @mysqli_result($result_getcatdis2, 0, 0);
 
 							$dis3 = $codecp * ($sps*0.1);
 						}else if($pack == 4){
 							$codecount="SELECT MIN(qty) FROM pos_detail2 where pos_clientID = '$id_number' AND package = '$pack' ";
-							$fetch_codecount=mysql_query($codecount);
-							$codecp	=mysql_result($fetch_codecount,0,0);
+							$fetch_codecount=mysqli_query($dbconn, $codecount);
+							$codecp	=mysqli_result($fetch_codecount,0,0);
 
 							$query_getcatdis2 = "SELECT sum(price_sale) from item_masters_package Where package = '$pack'";
-							$result_getcatdis2 = mysql_query($query_getcatdis2);
-							$sps   = @mysql_result($result_getcatdis2, 0, 0);
+							$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+							$sps   = @mysqli_result($result_getcatdis2, 0, 0);
 
 							$dis4 = $codecp * ($sps*0.1);
 						}else if($pack == 5){
 							$codecount="SELECT MIN(qty) FROM pos_detail2 where pos_clientID = '$id_number' AND package = '$pack' ";
-							$fetch_codecount=mysql_query($codecount);
-							$codecp	=mysql_result($fetch_codecount,0,0);
+							$fetch_codecount=mysqli_query($dbconn, $codecount);
+							$codecp	=mysqli_result($fetch_codecount,0,0);
 
 							$query_getcatdis2 = "SELECT sum(price_sale) from item_masters_package Where package = '$pack'";
-							$result_getcatdis2 = mysql_query($query_getcatdis2);
-							$sps   = @mysql_result($result_getcatdis2, 0, 0);
+							$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+							$sps   = @mysqli_result($result_getcatdis2, 0, 0);
 
 							$dis5 = $codecp * ($sps*0.1);
 						}else if($pack == 6){
 							$codecount="SELECT sum(qty) FROM pos_detail2 where pos_clientID = '$id_number' AND package = '$pack' ";
-							$fetch_codecount=mysql_query($codecount);
-							$codecp	=mysql_result($fetch_codecount,0,0);
+							$fetch_codecount=mysqli_query($dbconn, $codecount);
+							$codecp	=mysqli_result($fetch_codecount,0,0);
 
 							$query_getcatdis2 = "SELECT sum(price_sale) from item_masters_package Where package = '$pack'";
-							$result_getcatdis2 = mysql_query($query_getcatdis2);
-							$sps   = @mysql_result($result_getcatdis2, 0, 0);
+							$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+							$sps   = @mysqli_result($result_getcatdis2, 0, 0);
 
 							$xpack = $sps/$pack;
 							$deci = floor($codecp/3);
@@ -1258,37 +1240,37 @@ onkeydown="return (event.keyCode != 8)" -->
 							$dis6 = $deci*3900;
 						}else if($pack == 7){
 							$codecount="SELECT qty,org_pcode FROM pos_detail2 where pos_clientID = '$id_number' AND package = '$pack' AND org_pcode = '$packcode' ";
-							$fetch_codecount=mysql_query($codecount);
-							$qtycps	=mysql_result($fetch_codecount,0,0);
-							$coda	=mysql_result($fetch_codecount,0,1);
+							$fetch_codecount=mysqli_query($dbconn, $codecount);
+							$qtycps	=mysqli_result($fetch_codecount,0,0);
+							$coda	=mysqli_result($fetch_codecount,0,1);
 
 							$deci = floor($qtycps/6);
 
 							$query_getcatdis2 = "SELECT org_pcode,price_sale from item_masters Where org_pcode = '$coda'";
-							$result_getcatdis2 = mysql_query($query_getcatdis2);
-							$op   = @mysql_result($result_getcatdis2, 0, 0);
-							$ps   = @mysql_result($result_getcatdis2, 0, 1);
+							$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+							$op   = @mysqli_result($result_getcatdis2, 0, 0);
+							$ps   = @mysqli_result($result_getcatdis2, 0, 1);
 
 							if($op == 'AP_9019'){
-								$d7 += $deci*6600;
+								$d7 += $deci * 6600;
 
 							}else if($op == 'AP_9116'){
-								$d7 += $deci*4200;
+								$d7 += $deci * 4200;
 							}else if($op == 'AP_9216'){
-								$d7 += $deci*6000;
+								$d7 += $deci * 6000;
 							}
 						}else if($pack == 8){
 							$codecount="SELECT qty,org_pcode FROM pos_detail2 where pos_clientID = '$id_number' AND package = '$pack' AND org_pcode = '$packcode' ";
-							$fetch_codecount=mysql_query($codecount);
-							$qtycps	=mysql_result($fetch_codecount,0,0);
-							$coda	=mysql_result($fetch_codecount,0,1);
+							$fetch_codecount = mysqli_query($dbconn, $codecount);
+							$qtycps	= mysqli_result($fetch_codecount,0,0);
+							$coda	= mysqli_result($fetch_codecount,0,1);
 
 							$deci = floor($qtycps/3);
 
 							$query_getcatdis2 = "SELECT org_pcode,price_sale from item_masters Where org_pcode = '$coda'";
-							$result_getcatdis2 = mysql_query($query_getcatdis2);
-							$op   = @mysql_result($result_getcatdis2, 0, 0);
-							$ps   = @mysql_result($result_getcatdis2, 0, 1);
+							$result_getcatdis2 = mysqli_query($dbconn, $query_getcatdis2);
+							$op   = @mysqli_result($result_getcatdis2, 0, 0);
+							$ps   = @mysqli_result($result_getcatdis2, 0, 1);
 
 							if($coda == 'KC_163'){
 								$d8 += $deci*6000;
@@ -1311,39 +1293,27 @@ onkeydown="return (event.keyCode != 8)" -->
 					}
 
 					for ($j=0; $j < $arrCount ; $j++){
-
 						if($j == 3){
-
-						}else if($j == 2){
-
-						}else if($j == 4){
-
-						}else if($j == 5){
-							$gross +=$new_detail[$j];
-						}else if($j == 6){
+						} else if($j == 2) {
+						} else if($j == 4) {
+						} else if($j == 5) {
+							$gross + $new_detail[$j];
+						} else if($j == 6) {
 							if ($cat2 == 1){
-
-
 								$net2 += $new_detail[$j];
-
 							}else{
-								$nett3 +=$new_detail[$j];
+								$nett3 +$new_detail[$j];
 							}
 						}else if($j == 7){
-							$nettvat +=$new_detail[$j];
-
+							$nettvat +$new_detail[$j];
 						}else if($j == 8){
-							$vat +=$new_detail[$j];
+							$vat +$new_detail[$j];
 						}else{
 
 						}
-
-
 					}
-					$qty +=$qty1;
-
-					$detail2[$i] =$new_detail[0].'|'.$qty1.'|'.$cat2;
-
+					$qty +$qty1;
+					$detail2[$i] = $new_detail[0].'|'.$qty1.'|'.$cat2;
 				}
 				$dis7 = $d7;
 				$dis8 = $d8;
@@ -1351,16 +1321,9 @@ onkeydown="return (event.keyCode != 8)" -->
 				$jml = ($net2-$dis1-$dis2-$dis3-$dis4-$dis5-$dis6-$dis7-$dis8);
 				$jml15 = $jml*$diskon2;
 				$jmlAll = $jml - $jml15;
-				$nett =$jmlAll+$nett3;
-
-			//$nettvat +=$netvat;
-            //$vat +=$vat1;
-            //$nett +=$nett1;
-
-            //$gross +=$gross1;
-
-          $totdis=$nett - $gross;
-          ?>
+				$nett = $jmlAll+$nett3;
+        $totdis = $nett - $gross;
+        ?>
 
         <div class="col-lg-4" id='side'>
           <!--user info table start-->
@@ -1369,176 +1332,174 @@ onkeydown="return (event.keyCode != 8)" -->
               <div class="task-progress">
                 <h1>PAYMENT</h1>
                 <p>
-                  <?=$login_id?>
+                  <?php $login_id?>
                 </p>
-
               </div>
-
             </div>
-			<div>
+		  <div>
+		</div>
+        <form name="form" id="form" class='form_pay' action='pos_pay.php' method='post' onsubmit="return validateForm()" enctype="multipart/form-data">
+          <?php  
+          switch ($total_rows) {
+            case $total_rows <=18:
+              $new_total = $total_rows;
+              $teste=1 ;
+              $khusus=1 ;
+              break;
 
-			</div>
-            <form name="form" id="form" class='form_pay' action='pos_pay.php' method='post' onsubmit="return validateForm()" enctype="multipart/form-data">
-              <? switch ($total_rows) {
+            case $total_rows> 18 AND $total_rows <=40:
+              $new_total = $total_rows;
+              $new_mod = $new_total - 18;
+              $teste=2 ;
+              break;
 
-                case $total_rows <=18:
-                  $new_total=$total_rows;
-                  $teste=1 ;
-                  $khusus=1 ;
-                  break;
+            case $total_rows> 40 AND $total_rows <=60:
+              $new_total = $total_rows;
+              $new_mod = $new_total - 40;
+              $teste=3 ;
+              break; /* case $total_rows> 78 AND $total_rows
+              <=1 04: $new_total$ total_rows; $new_mod$ new_total % 78; $teste=4 ; break; case $total_rows> 104 AND $total_rows
+                <=1 30: $new_total$ total_rows; $new_mod$ new_total % 104; $teste=5 ; break; case $total_rows> 130 AND $total_rows
+                  <=1 56: $new_total$ total_rows; $new_mod$ new_total % 130; $teste=6 ; break; case $total_rows> 180 AND $total_rows
+                    <=2 10: $new_total$ total_rows; $teste=7 ; break; case $total_rows> 210 AND $total_rows
+                      <=2 40: $new_total$ total_rows; $teste=8 ; break; case $total_rows> 240 AND $total_rows
+                        <=2 70: $new_total$ total_rows; $teste=9 ; break; case $total_rows> 270 AND $total_rows
+                          <=3 00: $new_total$ total_rows; $teste=1 0; break; */ 
+            default: $new_total = $total_rows; $teste=1 ; break; } ?>
+              <!--<input type='hidden' name='teste' value="3">-->
+              <input type='hidden' name='teste' value='<?php echo $teste?>'>
+              <input type='hidden' name='totale' value="<?php echo $new_total?>">
+              <input type='hidden' name='modus' value="<?php echo $new_mod?>">
+              <input type='hidden' name='khusus' value="<?php echo $khusus?>">
+              <input type='hidden' id='paging' value="<?php echo 'teste='.$teste.'&totale='.$new_total.'&modus='.$new_mod.'&khusus='.$khusus ?> ">
+              <input type='hidden' name='nettvat' value="<?php echo $nettvat ?>">
+              <input type='hidden' name='vat' value="<?php echo $vat ?>">
+              <input type="hidden" name='hold' value="<?php echo $_GET['hold'] ?>">
+              <table class="table table1">
+                <tbody>
+                  <!--
+                    <tr>
+                  <th  >
+                      <p style='font-size:14px; margin:5px 5px;' >TOTAL QTY</p>
+                    </th>
+                    <th >
+                      <p style='font-size:14px; margin:5px 5px;float:right;' id='totqty'><?php $qty?></p>
 
-                case $total_rows> 18 AND $total_rows <=40:
-                  $new_total=$total_rows;
-                  $new_mod=$new_total - 18;
-                  $teste=2 ;
-                  break;
+                    </th>
+                  </tr>
+                  <tr>
+                    <th  >
+                      <p style='font-size:14px; margin:5px 5px;' >NORMAL PRICE</p>
+                    </th>
+                    <th >
+                      <p style='font-size:14px; margin:5px 5px;float:right;' id='gross'><?php number_format($gross)?></p>
 
-                case $total_rows> 40 AND $total_rows <=60:
-                  $new_total=$total_rows;
-                  $new_mod=$new_total - 40;
-                  $teste=3 ;
-                  break; /* case $total_rows> 78 AND $total_rows
-                  <=1 04: $new_total=$ total_rows; $new_mod=$ new_total % 78; $teste=4 ; break; case $total_rows> 104 AND $total_rows
-                    <=1 30: $new_total=$ total_rows; $new_mod=$ new_total % 104; $teste=5 ; break; case $total_rows> 130 AND $total_rows
-                      <=1 56: $new_total=$ total_rows; $new_mod=$ new_total % 130; $teste=6 ; break; case $total_rows> 180 AND $total_rows
-                        <=2 10: $new_total=$ total_rows; $teste=7 ; break; case $total_rows> 210 AND $total_rows
-                          <=2 40: $new_total=$ total_rows; $teste=8 ; break; case $total_rows> 240 AND $total_rows
-                            <=2 70: $new_total=$ total_rows; $teste=9 ; break; case $total_rows> 270 AND $total_rows
-                              <=3 00: $new_total=$ total_rows; $teste=1 0; break; */ default: $new_total=$total_rows; $teste=1 ; break; } ?>
-                                <!--<input type='hidden' name='teste' value="3">-->
-                                <input type='hidden' name='teste' value='<?=$teste?>'>
-                                <input type='hidden' name='totale' value="<?=$new_total?>">
-                                <input type='hidden' name='modus' value="<?=$new_mod?>">
-                                <input type='hidden' name='khusus' value="<?=$khusus?>">
-								<input type='hidden' id='paging' value="<?php echo 'teste='.$teste.'&totale='.$new_total.'&modus='.$new_mod.'&khusus='.$khusus?>">
-                                <input type='hidden' name='nettvat' value="<?=$nettvat?>">
-                                <input type='hidden' name='vat' value="<?=$vat?>">
-                                <input type="hidden" name='hold' value="<?=$_GET['hold']?>">
-                                <table class="table table1">
-                                  <tbody>
-                                    <!--
-                                     <tr>
-                                    <th  >
-                                       <p style='font-size:14px; margin:5px 5px;' >TOTAL QTY</p>
-                                      </th>
-                                      <th >
-                                        <p style='font-size:14px; margin:5px 5px;float:right;' id='totqty'><?=$qty?></p>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th  >
+                      <p style='font-size:14px; margin:5px 5px; color:blue;' >TOTAL DISCOUNT</p>
+                    </th>
+                    <th >
+                      <p style='font-size:14px; margin:5px 5px; color:blue;float:right;' id='disc'><?php number_format($totdis)?></p>
+                    </th>
+                  </tr> -->
+                  <tr>
+                    <th>
+                      <p style='font-size:14px; margin:5px 5px;'>TOTAL</p>
+                    </th>
+                    <th>
+                      <p style='font-size:14px; margin:5px 5px;float:right;' id='price'>
+                        <?php number_format($nett)?>
+                      </p>
+                    </th>
+                  </tr>
+                  <tr id='change1'>
+                    <th>
+                      <p style='font-size:14px; margin:5px 5px;'>CHANGE</p>
+                    </th>
+                    <th style='float:right;'>
+                      <input disabled type='text' style='float: right;text-align: right;background:transparent;color:red; font-size:14px; margin:3px; width:70%; border-style:none' name='changedis' id='changedis' readonly>
 
-                                      </th>
-                                    </tr>
-                                    <tr>
-                                      <th  >
-                                       <p style='font-size:14px; margin:5px 5px;' >NORMAL PRICE</p>
-                                      </th>
-                                      <th >
-                                        <p style='font-size:14px; margin:5px 5px;float:right;' id='gross'><?=number_format($gross)?></p>
+                    </th>
+                  </tr>
+                  </tr>
+                  <tr id='cashpay_tr'>
+                    <th>
+                      <p style='font-size:14px; margin:5px 5px;'>CASH</p>
+                        <th >
 
-                                      </th>
-                                    </tr>
-                                    <tr>
-                                      <th  >
-                                       <p style='font-size:14px; margin:5px 5px; color:blue;' >TOTAL DISCOUNT</p>
-                                      </th>
-                                      <th >
-                                        <p style='font-size:14px; margin:5px 5px; color:blue;float:right;' id='disc'><?=number_format($totdis)?></p>
-                                      </th>
-                                    </tr> -->
-                                    <tr>
-                                      <th>
-                                        <p style='font-size:14px; margin:5px 5px;'>TOTAL</p>
-                                      </th>
-                                      <th>
-                                        <p style='font-size:14px; margin:5px 5px;float:right;' id='price'>
-                                          <?=number_format($nett)?>
-                                        </p>
-                                      </th>
-                                    </tr>
-                                    <tr id='change1'>
-                                      <th>
-                                        <p style='font-size:14px; margin:5px 5px;'>CHANGE</p>
-                                      </th>
-                                      <th style='float:right;'>
-                                        <input disabled type='text' style='float: right;text-align: right;background:transparent;color:red; font-size:14px; margin:3px; width:70%; border-style:none' name='changedis' id='changedis' readonly>
+                        <input autofocus type='text'  pattern="[0-9,]+" style='text-align:right;font-size:14px; margin:3px; width:95%' id='cashpay1' name='cashpay1' onkeyup="calculateCASH()" class='form-control submit_on_enter requiblue amount'>
+                          <input  type='hidden'  pattern="[0-9,]+" style='text-align:right;font-size:14px; margin:3px; width:95%' id='cashpay' name='cashpay' onkeyup="calculateCASH()" class='form-control submit_on_enter requiblue amount'>
+                      </th>
+                  </tr>
+                  <tr id='cardno1'>
+                    <th>
+                      <p style='font-size:14px; margin:5px 5px;'>DEBIT CARD NO</p>
+                    </th>
+                    <th>
+                      <input  type='text' id='carddeb' name='carddeb' onkeyup="calculateCASH()" pattern="[^0-9]+" style='font-size:14px; margin:3px; width:95%' maxlength="19" class='form-control submit_on_enter_carddeb debitwarna' placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </th>
+                  </tr>
+                  <tr id='debitcardamo'>
+                    <th>
+                      <p style='font-size:14px; margin:5px 5px;'>DEBIT CARD AMOUNT</p>
+                    </th>
+                    <th>
+                      <input type='text' id='debamo1' name='debamo1' pattern="[0-9.]+" style='text-align:right;font-size:14px; margin:3px; width:95%' onkeyup="calculateCASH()" class='form-control submit_on_enter_debcardamo debitwarna'>
+                      <input type='hidden' id='debamo' name='debamo' pattern="[0-9.]+" style='text-align:right;font-size:14px; margin:3px; width:95%' onkeyup="calculateCASH()" class='form-control submit_on_enter_debcardamo'>
 
-                                      </th>
-                                    </tr>
-                                    </tr>
-                                    <tr id='cashpay_tr'>
-                                      <th>
-                                        <p style='font-size:14px; margin:5px 5px;'>CASH</p>
-                                         <th >
+                    </th>
+                  </tr>
+                  <tr id='cardno2'>
+                    <th>
+                      <p style='font-size:14px;  margin:5px 5px;'>CREDIT CARD NO</p>
+                    </th>
+                    <th>
+                      <input type='text' id='cardcre' name='cardcre' onkeyup="calculateCASH()" pattern="[^0-9]+" style='font-size:14px; margin:3px; width:95%' maxlength="19" class='form-control submit_on_enter_cardcre creditwarna' placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </th>
+                  </tr>
+                  <tr id='creditcardamo'>
+                    <th>
+                      <p style='font-size:14px;  margin:5px 5px;'>CREDIT CARD AMOUNT</p>
+                    </th>
+                    <th>
+                      <input type='text' id='creamo1' name='creamo1' pattern="[0-9.]+" style='text-align:right;font-size:14px; margin:3px; width:95%' onkeyup="calculateCASH()" class='form-control submit_on_enter_crecardamo creditwarna'>
+                      <input type='hidden' id='creamo' name='creamo' pattern="[0-9.]+" style='text-align:right;font-size:14px; margin:3px; width:95%' onkeyup="calculateCASH()" class='form-control submit_on_enter_crecardamo'>
 
-                                          <input autofocus type='text'  pattern="[0-9,]+" style='text-align:right;font-size:14px; margin:3px; width:95%' id='cashpay1' name='cashpay1' onkeyup="calculateCASH()" class='form-control submit_on_enter requiblue amount'>
-                                           <input  type='hidden'  pattern="[0-9,]+" style='text-align:right;font-size:14px; margin:3px; width:95%' id='cashpay' name='cashpay' onkeyup="calculateCASH()" class='form-control submit_on_enter requiblue amount'>
-                                        </th>
-                                    </tr>
-                                    <tr id='cardno1'>
-                                      <th>
-                                        <p style='font-size:14px; margin:5px 5px;'>DEBIT CARD NO</p>
-                                      </th>
-                                      <th>
-                                        <input  type='text' id='carddeb' name='carddeb' onkeyup="calculateCASH()" pattern="[^0-9]+" style='font-size:14px; margin:3px; width:95%' maxlength="19" class='form-control submit_on_enter_carddeb debitwarna' placeholder="XXXX-XXXX-XXXX-XXXX">
-                                      </th>
-                                    </tr>
-                                    <tr id='debitcardamo'>
-                                      <th>
-                                        <p style='font-size:14px; margin:5px 5px;'>DEBIT CARD AMOUNT</p>
-                                      </th>
-                                      <th>
-                                        <input type='text' id='debamo1' name='debamo1' pattern="[0-9.]+" style='text-align:right;font-size:14px; margin:3px; width:95%' onkeyup="calculateCASH()" class='form-control submit_on_enter_debcardamo debitwarna'>
-                                        <input type='hidden' id='debamo' name='debamo' pattern="[0-9.]+" style='text-align:right;font-size:14px; margin:3px; width:95%' onkeyup="calculateCASH()" class='form-control submit_on_enter_debcardamo'>
+                    </th>
+                  </tr>
 
-                                      </th>
-                                    </tr>
-                                    <tr id='cardno2'>
-                                      <th>
-                                        <p style='font-size:14px;  margin:5px 5px;'>CREDIT CARD NO</p>
-                                      </th>
-                                      <th>
-                                        <input type='text' id='cardcre' name='cardcre' onkeyup="calculateCASH()" pattern="[^0-9]+" style='font-size:14px; margin:3px; width:95%' maxlength="19" class='form-control submit_on_enter_cardcre creditwarna' placeholder="XXXX-XXXX-XXXX-XXXX">
-                                      </th>
-                                    </tr>
-                                    <tr id='creditcardamo'>
-                                      <th>
-                                        <p style='font-size:14px;  margin:5px 5px;'>CREDIT CARD AMOUNT</p>
-                                      </th>
-                                      <th>
-                                        <input type='text' id='creamo1' name='creamo1' pattern="[0-9.]+" style='text-align:right;font-size:14px; margin:3px; width:95%' onkeyup="calculateCASH()" class='form-control submit_on_enter_crecardamo creditwarna'>
-                                        <input type='hidden' id='creamo' name='creamo' pattern="[0-9.]+" style='text-align:right;font-size:14px; margin:3px; width:95%' onkeyup="calculateCASH()" class='form-control submit_on_enter_crecardamo'>
+                  <tr id='buttonpayhold'>
 
-                                      </th>
-                                    </tr>
-
-                                    <tr id='buttonpayhold'>
-
-                                      <!--<th colspan='2'>
-                                        <input type='submit' class='btn btn-primary' onkeyup="calculateCASH()" formaction="pos_pay.php" onsubmit="return validateForm()" value='BAYAR' style=" color:#fff; width:100%;border-color:#81C784; height: 50px;" onfocus=clearField(this)>
-                                      </th>
-                                    </tr>
-                                     <tr>
-                                      <th colspan='2'>
-                                        <input type='submit' class='btn btn-primary' name='hold' formaction="pos_hold.php" value='TAHAN' style=" color:#fff; width:100%;border-color:#81C784; height: 30px;">
-                                      </th>
-                                    </tr> -->
+                    <!--<th colspan='2'>
+                      <input type='submit' class='btn btn-primary' onkeyup="calculateCASH()" formaction="pos_pay.php" onsubmit="return validateForm()" value='BAYAR' style=" color:#fff; width:100%;border-color:#81C784; height: 50px;" onfocus=clearField(this)>
+                    </th>
+                  </tr>
+                    <tr>
+                    <th colspan='2'>
+                      <input type='submit' class='btn btn-primary' name='hold' formaction="pos_hold.php" value='TAHAN' style=" color:#fff; width:100%;border-color:#81C784; height: 30px;">
+                    </th>
+                  </tr> -->
 
 
-                                    <input type='text' name='total' style='border-style:none;color:white;'	id='total' onkeyup="calculateCASH()" value="<?=$nett?>">
+                  <input type='text' name='total' style='border-style:none;color:white;'	id='total' onkeyup="calculateCASH()" value="<?php $nett?>">
 
-                                    <input type='hidden' name='change' 	id='change' readonly>
-									<input type='hidden' name='detail' 	id='detail' value='<?=$detail?>'>
-									<input type='hidden' name='lid' 	id='lid' value='<?=$id_number?>'>
-                                    <input type='hidden' name='gross' 	id='grossid' value='<?=$gross?>'>
-                                    <input type='hidden' name='login' 	id='login' value='<?=$login_id?>'>
-									<input type='hidden' name='transcode' id='transcode' value='<?=$transcode?>'>
-                                    <input type='hidden' onkeyup="calculateCASH()" name='totqty' id='totqty' value='<?=$qty?>'>
-                                  </tbody>
-                                </table>
-              </form>
+                  <input type='hidden' name='change' 	id='change' readonly>
+                  <input type='hidden' name='detail' 	id='detail' value='<?php $detail?>'>
+                  <input type='hidden' name='lid' 	id='lid' value='<?php $id_number?>'>
+                  <input type='hidden' name='gross' 	id='grossid' value='<?php $gross?>'>
+                  <input type='hidden' name='login' 	id='login' value='<?php $login_id?>'>
+                  <input type='hidden' name='transcode' id='transcode' value='<?php $transcode?>'>
+                  <input type='hidden' onkeyup="calculateCASH()" name='totqty' id='totqty' value='<?php $qty?>'>
+                </tbody>
+              </table>
+          </form>
           </section>
           <!--user info table end-->
         </div>
 
-        <?}else{?>
+        <?php } else { ?>
 
           <div class="col-lg-4" id='side'>
             <!--user info table start-->
@@ -1546,19 +1507,19 @@ onkeydown="return (event.keyCode != 8)" -->
               <div class="panel-body progress-panel">
                 <div class="task-progress">
                   <h1>INPUT PRODUCT AND INFORMATION</h1>
-                  <img alt="" src="<?=$login_photo_img1?>" style="height: 70px;width: 70px">&nbsp;<?=$login_name2?>
+                  <img alt="" src="<?php $login_photo_img1?>" style="height: 70px;width: 70px">&nbsp;<?php $login_name2?>
                   <span class="tools pull-right">
-					<?
+					<?php 
 						$query_dss="SELECT count(transcode) FROM pos_detail where temp = '0' AND sales_code = '$login_id' and hostname = '$hostname' group by transcode" ;
-						$fetch_dss=mysql_query($query_dss);
-						$ct=mysql_result($fetch_dss,0,0);
+						$fetch_dss=mysqli_query($dbconn, $query_dss);
+						$ct=mysqli_result($fetch_dss,0,0);
 
 						if($ct == 0 AND $module_0509 == '1'){?>
-							 <a href="<?=$home?>" class="fa fa-fast-backward" id="dash" data-toggle="tooltip" title="DASHBOARD"> DASHBOARD</a>
+							 <a href="<?php $home?>" class="fa fa-fast-backward" id="dash" data-toggle="tooltip" title="DASHBOARD"> DASHBOARD</a>
 
-						<?}?>
+						<?php }?>
 
-					<?php  echo '<a href="'.$home.'/pos.php"  class="fa fa-home" data-toggle="tooltip" title="FIRST"> REFRESH</a>'; ?>
+					<?php echo '<a href="'.$home.'/pos.php"  class="fa fa-home" data-toggle="tooltip" title="FIRST"> REFRESH</a>'; ?>
                     <?php  echo '<a href="'.$home.'/pos_master.php?trans=hold"  class="fa fa-list" data-toggle="tooltip" title="HOLD LIST"> HOLD LIST</a>'; ?>
 					<?php
 						if($module_0509 == '1'){
@@ -1578,13 +1539,13 @@ onkeydown="return (event.keyCode != 8)" -->
                   <tbody>
                     <tr>
                       <td colspan='2'>
-                        <?if ($trans=='list' ){?>
+                        <?php if ($trans=='list' ){?>
                           <input style='float:left; width:100%; height:40px; font-size:20px;' type="text" id="readTrans" name="val" onkeypress="onEnterT(event)" class='form-control' placeholder='Transaction Code' autofocus/>
-                      <?}else{?>
+                      <?php }else{?>
                           <div id='gambar' class='col-sm-2' style='height:130px;width:130px; margin: 0 auto;width: 100%;'></div>
                           <input style='float:left; width:75%; height:40px; font-size:20px;' type="text" id="readBarcode" name="val" onkeypress="onEnterC(event)" class='form-control' placeholder='Barcode' autofocus/>
                           <input style='float:right; width:23%; height:40px; font-size:20px;' type="text" onkeyup='calculateItem()' pattern="[^0-9]+" maxlength='3' id="qty" name="qtys"  onkeypress="onEnter(event)" style="text" class='form-control' placeholder='1' />
-                      <?}?>
+                      <?php }?>
 
                           <input type="text" id="indexCell" name="indexCell" value="0" style="display:none" />
                           <input type="text" id="uid" name="uid" value="0" style="display:none" />
@@ -1635,44 +1596,47 @@ onkeydown="return (event.keyCode != 8)" -->
             </section>
             <!--user info table end-->
           </div>
-          <?}?>
+          <?php }?>
 
             <div class="col-lg-8 table-responsive" id='main' style='border: 0px solid #FFF;'>
               <!--PRODUCT CART LIST-->
               <section class="panel">
-                <form name='clear' id='clear' method='post' action="<?=$_SERVER['PHP_SELF'];?>">
-                  <input type='hidden' id='clr' name='clr' value='<?=md5($login_id)?>'>
+                <form name='clear' id='clear' method='post' action="<?php $_SERVER['PHP_SELF'];?>">
+                  <input type='hidden' id='clr' name='clr' value='<?php md5($login_id)?>'>
                   <?php
-                  $delete=md5($login_id);
-                  $list=md5($date);
-                  if($delete==$clr) {
-					$query_getcl = "SELECT id_number from pos_client where sales_code = '$login_id' AND hostname = '$hostname'";
-					$result_getcl = mysql_query($query_getcl);
-					$id_number   = @mysql_result($result_getcl, 0, 0);
-
-
-
+                  $clr = $clr ?? null;
+                  $delete = md5($login_id);
+                  $list = md5($date);
+                  if($delete = $clr) {
+					          $query_getcl = "SELECT id_number from pos_client where sales_code = '$login_id' AND hostname = '$hostname'";
+					          $result_getcl = mysqli_query($dbconn, $query_getcl);
+					          $id_number   = @mysqli_result($result_getcl, 0, 0);
                     $sql_query="DELETE FROM pos_detail2 where temp = '0' AND pos_clientID = '$id_number'" ;
-                    mysql_query($sql_query);
-                    echo( "<meta http-equiv='Refresh' content='0; URL=$home/pos.php'>"); exit; }
-                    ?>
+                    mysqli_query($dbconn, $sql_query);
+                    echo( "<meta http-equiv='Refresh' content='0; URL$home/pos.php'>"); exit; 
+                  }
+                  ?>
                 </form>
 
-                <? if ($trans=='list' ){ include "pos_lys.inc"; }else{?>
+                <?php 
+                $trans = $trans ?? null;
+                if ($trans == 'list' ){ include "pos_lys.inc"; 
+                } else {
+                ?>
                 <div class="panel-body progress-panel" id='display'>
-                  <?include "pos_display.php";?>
+                  <?php include "pos_display.php";?>
                 </div>
 
                 <table class="table table1 ">
                   <thead class='thead'>
                     <tr>
-                       <td style="width:30px">NO</td>
-					   <td style="width:20px;text-align:left;">QTY</td>
+                      <td style="width:30px">NO</td>
+					            <td style="width:20px;text-align:left;">QTY</td>
                       <td style="width:90px;text-align:center;">ITEM CODE</td>
                       <td style="width:120px;text-align:center;">BARCODE</td>
                       <td style="width:180px;text-align:center;">PRODUCT NAME</td>
                       <td style="width:50px;text-align:center;">PRICE</td>
-					   <td style="width:30px;text-align:center;">DISC</td>
+					            <td style="width:30px;text-align:center;">DISC</td>
                       <td style="width:90px;text-align:center;">SUBTOTAL</td>
                       <td style="width:90px;text-align:center;">TOTAL</td>
                       <td style="width:10px"></td>
@@ -1682,44 +1646,47 @@ onkeydown="return (event.keyCode != 8)" -->
                 <div id="viewResult0">
                 </div>
                 <div id='test'>
-                  <?include "pos_cart.php";?>
+                  <?php include "pos_cart.php";?>
                 </div>
-                <? } ?>
+                <?php  } ?>
             </div>
 
             </section>
             <!--PRODUCT CART LIST end-->
       </div>
       </div>
-	  <?$paid=md5($hostname); if($pay==$paid){?>
+	  <?php $paid=md5($hostname); if($pay=$paid){?>
       <div id='footer_paid'>
-       <?}else{?>
+       <?php }else{?>
 	   <div id='footer'>
-	   <?}?>
+	   <?php }?>
      <br/><br/><br/>
-		<form name='submitform' id='submitform' method='post' action="<?=$_SERVER['PHP_SELF'];?>">
+		<form name='submitform' id='submitform' method='post' action="<?php $_SERVER['PHP_SELF'];?>">
           <div class="row">
             <div class='col-sm-2' style='margin: 0 auto;width: 100%;'>
-              <input type='hidden' id='login' name='login' value='<?=$login_id?>'>
-              <input type='hidden' id='pay' name='pay' value='<?=md5($hostname)?>'>
+              <input type='hidden' id='login' name='login' value='<?php $login_id?>'>
+              <input type='hidden' id='pay' name='pay' value='<?php md5($hostname)?>'>
 			   <input type='hidden' name='transcode' id='transcode' value=''>
-              <?php $paid=md5($hostname); if($pay==$paid){?>
+              <?php $paid = md5($hostname); if($pay=$paid){?>
           <br/>
 					<a  id='bayar' class="btn btn-primary bayar" style=" color:#fff; width:100%;border-color:#81C784; height: 4em;padding:1em;" >PAY</a>
-					<a href="<?=$home?>/pos.php" id='back' class="btn btn-primary back" style=" color:#fff; width:100%;border-color:#81C784; margin-top:5px;" >BACK</a>
-					<?if($dic == TRUE){}else{?>
-					<a href="<?=$home?>/pos_hold.php?transcode=<?=$transcode?>" id='back' class="btn btn-primary back" style=" color:#fff; width:100%;border-color:#81C784; margin-top:5px;" >HOLD</a>
-					<?}?>
-			  <?}else{?>
+					<a href="<?php echo $home?>/pos.php" id='back' class="btn btn-primary back" style=" color:#fff; width:100%;border-color:#81C784; margin-top:5px;" >BACK</a>
+					<?php if($dic == TRUE) { 
+              "echo masuk true";
+            } else {
+          ?>
+					<a href="<?php echo $home?>/pos_hold.php?transcode=<?php echo $transcode?>" id='back' class="btn btn-primary back" style=" color:#fff; width:100%;border-color:#81C784; margin-top:5px;" >HOLD</a>
+					<?php } ?>
+			  <?php } else { ?>
 
-					 <?
+					 <?php 
 					  $query_hold="SELECT transcode FROM pos_detail2 where temp = '0' AND pos_clientID = '$id_number'" ;
-					  $fetch_hold=mysql_query($query_hold);
-					  $transcode=mysql_result($fetch_hold,0,0);
+					  $fetch_hold=mysqli_query($dbconn, $query_hold);
+					  $transcode=mysqli_result($fetch_hold,0,0);
 					  ?>
 					  <input type='submit' value='PROCESS' class='btn btn-primary' style=" color:#fff; width:100%;border-color:#81C784; height: 50px;" onfocus=clearField(this)>
 
-					  <?
+					  <?php 
 					  if(!$transcode){
 						  $x = '2X(Click)';
 					  }else{
@@ -1727,7 +1694,7 @@ onkeydown="return (event.keyCode != 8)" -->
 					  }
 					  echo '<a href="'.$home. '/pos_hold.php?transcode='.$transcode.'" class="btn btn-primary" style=" color:#fff; width:100%;border-color:#81C784;margin-top: 5px;" >HOLD '.$x.'</a>';
 					?>
-			<?}?>
+			<?php }?>
             </div>
           </div>
       </div>
@@ -1756,4 +1723,4 @@ onkeydown="return (event.keyCode != 8)" -->
 </html>
 
 
-<? } ?>
+<?php // } ?>

@@ -183,7 +183,7 @@ $( "#main" ).mouseover(function() {
             $.ajax(
             {
                  type: "GET",
-                 url: "pos_edit_row.php"+data,
+                 url: "pos_security_row.php"+data,
                  data: {qty:'qty',gross:'gross'},
                  cache: false,
                 

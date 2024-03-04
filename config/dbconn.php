@@ -1,25 +1,23 @@
-<?
-error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-$dbconn = mysql_connect($DB_SERVER,$DB_LOGIN,$DB_PASSWORD) or die("Failed to connect the Database!");
-$status = mysql_select_db($DB,$dbconn);
-if (!$status) {
-   error("DB_ERROR");
-   exit;
-}
-error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-//$login_id = $_COOKIE['login_id'];
-//$login_level = $_COOKIE['login_level'];
+<?php
 
+require "func/mysqli_result.php";
+
+$dbconn = new mysqli($DB_HOST,$DB_USER,$DB_PASSWORD, $DB_SCHEMA);
+if ($dbconn -> connect_errno) {
+    echo "Failed to connect the database" . mysqli -> connect_error;
+	exit();
+}
 
 // Channel Code & Website Account
 global $login_branch;
-$query_wbs = "SELECT branch_name,signdate FROM client_branch WHERE branch_code = '$login_branch'";
-$result_wbs = mysql_query($query_wbs);
-  if(!$result_wbs) { error("QUERY_ERROR"); exit; }
-  $row_wbs = mysql_fetch_array($result_wbs);
+#$query_wbs = "SELECT branch_name,signdate FROM client_branch WHERE branch_code = '$login_branch'";
+$query_wbs = "SELECT branch_name,signdate FROM client_branch WHERE branch_code = 'CORP_05'";
+$result_wbs = mysqli_query($dbconn, $query_wbs);
+if(!$result_wbs) {  echo("Error description: " . mysqli_error($dbconn)); }
+$row_wbs = mysqli_fetch_array($result_wbs);
 
 $now_branch_name = $row_wbs["branch_name"];
-	$now_branch_name = stripslashes($now_branch_name);
+// $now_branch_name = stripslashes($now_branch_name);
 $branch_signdate = $row_wbs["signdate"];
 
 // Reporting Date
@@ -31,12 +29,11 @@ $report_last_date = "$branch_signyear_prev"."1231";
 $report_start_date = "$branch_signyear"."0101";
 
 
-
 // Currency
 $query_cur = "SELECT default_currency,currency_01 FROM client_currency";
-$result_cur = mysql_query($query_cur);
-  if(!$result_cur) { error("QUERY_ERROR"); exit; }
-  $row_cur = mysql_fetch_object($result_cur);
+$result_cur = mysqli_query($dbconn, $query_cur);
+if(!$result_cur) { error("QUERY_ERROR"); exit; }
+$row_cur = mysqli_fetch_object($result_cur);
 
 $now_currency1 = $row_cur->default_currency;
 if(!$now_currency1 OR $now_currency1 == "") {
@@ -47,34 +44,34 @@ $now_currency2 = $row_cur->currency_01;
 
 // Exchange Rate
 $query_xcg = "SELECT xchange_rate,upd_date FROM shop_xchange ORDER BY upd_date DESC";
-$result_xcg = mysql_query($query_xcg);
-if (!$result_xcg) {   error("QUERY_ERROR");   exit; }
-
-$now_xchange_rate = @mysql_result($result_xcg,0,0);
-$now_xchange_date = @mysql_result($result_xcg,0,1);
+$result_xcg = mysqli_query($dbconn, $query_xcg);
+if (!$result_xcg) {   var_dump("QUERY_ERROR");   exit; }
+// var_dump(mysqli_num_rows($result_xcg)); die();
+$now_xchange_rate = @mysqli_result($result_xcg,0,0);
+$now_xchange_date = @mysqli_result($result_xcg,0,1);
 
 
 // Main Modules
 global $login_gate;
 $query_asso = "SELECT associate,web_flag,gatepage,module_01,module_01B,module_02,module_03,module_04,module_05,
 			module_06,module_07,module_08,module_09,module_10,module_11 FROM client WHERE branch_code = '$login_branch' AND client_id = '$login_gate'";
-$result_asso = mysql_query($query_asso);
+$result_asso = mysqli_query($dbconn, $query_asso);
 	if (!$result_asso) { error("QUERY_ERROR"); exit; }
-$now_associate = @mysql_result($result_asso,0,0);
-$now_web_flag = @mysql_result($result_asso,0,1);
-$now_gatepage = @mysql_result($result_asso,0,2);
-$mmodule_01 = @mysql_result($result_asso,0,3); // 01. Purchasing
-$mmodule_01B = @mysql_result($result_asso,0,4); // 01B. Purchase Request (PR)
-$mmodule_02 = @mysql_result($result_asso,0,5); // 02. Inventory (SCO)
-$mmodule_03 = @mysql_result($result_asso,0,6); // 03. Logistics
-$mmodule_04 = @mysql_result($result_asso,0,7); // 04. Asset Management
-$mmodule_05 = @mysql_result($result_asso,0,8); // 05. Sales (FeelBuy Shop)
-$mmodule_06 = @mysql_result($result_asso,0,9); // 06. Sales (Associate Store)
-$mmodule_07 = @mysql_result($result_asso,0,10); // 07. Sales (Direct Sales)
-$mmodule_08 = @mysql_result($result_asso,0,11); // 08. CRM/HR
-$mmodule_09 = @mysql_result($result_asso,0,12); // 09. Finance
-$mmodule_10 = @mysql_result($result_asso,0,13); // 10. Accounting
-$mmodule_11 = @mysql_result($result_asso,0,14); // 11. CMS (Website)
+$now_associate = @mysqli_result($result_asso,0,0);
+$now_web_flag = @mysqli_result($result_asso,0,1);
+$now_gatepage = @mysqli_result($result_asso,0,2);
+$mmodule_01 = @mysqli_result($result_asso,0,3); // 01. Purchasing
+$mmodule_01B = @mysqli_result($result_asso,0,4); // 01B. Purchase Request (PR)
+$mmodule_02 = @mysqli_result($result_asso,0,5); // 02. Inventory (SCO)
+$mmodule_03 = @mysqli_result($result_asso,0,6); // 03. Logistics
+$mmodule_04 = @mysqli_result($result_asso,0,7); // 04. Asset Management
+$mmodule_05 = @mysqli_result($result_asso,0,8); // 05. Sales (FeelBuy Shop)
+$mmodule_06 = @mysqli_result($result_asso,0,9); // 06. Sales (Associate Store)
+$mmodule_07 = @mysqli_result($result_asso,0,10); // 07. Sales (Direct Sales)
+$mmodule_08 = @mysqli_result($result_asso,0,11); // 08. CRM/HR
+$mmodule_09 = @mysqli_result($result_asso,0,12); // 09. Finance
+$mmodule_10 = @mysqli_result($result_asso,0,13); // 10. Accounting
+$mmodule_11 = @mysqli_result($result_asso,0,14); // 11. CMS (Website)
 
 
 // Associate Types & POS Types
@@ -96,9 +93,9 @@ if($login_level < 3) {
 global $login_id;
 $query_lang = "SELECT default_lang,group_admin,module_01,module_01B,module_02,module_03,module_04,module_05,
 			module_06,module_07,module_08,module_09,module_10,module_11 FROM admin_user WHERE user_id = '$login_id'";
-$result_lang = mysql_query($query_lang);
+$result_lang = mysqli_query($dbconn, $query_lang);
   if(!$result_lang) { error("QUERY_ERROR"); exit; }
-  $row_lang = mysql_fetch_array($result_lang);
+  $row_lang = mysqli_fetch_array($result_lang);
   
 $lang = $row_lang["default_lang"];
 if(!$lang OR $lang == "") {
