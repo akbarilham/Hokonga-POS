@@ -9,3 +9,4 @@ img_pos/*
 *.png
 backup
 assets
+config/*
