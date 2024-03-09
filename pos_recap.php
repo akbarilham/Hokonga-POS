@@ -262,9 +262,9 @@ if(!$login_id OR $login_level < "1") {
     </section>
     <!--main content end-->
 
-      <?php include "right_slidebar.inc"; ?>
+      <?php include "right_slidebar.html"; ?>
 
-      <?php include "footer.inc"; ?>
+      <?php include "footer.php"; ?>
     
     
   </section>
