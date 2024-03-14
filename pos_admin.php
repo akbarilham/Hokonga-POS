@@ -1,13 +1,13 @@
-<?
+<?php
 /*
   Creator By : Cihuy Programmer
   Inspiration : Ena ena
   Version : 5.0
 */
-include "config/common.inc";
-include "config/dbconn.inc";
-include "config/text_main_{$lang}.inc";
-require "config/user_functions_{$lang}.inc";
+include "config/common.php";
+include "config/dbconn.php";
+include "config/text_main_{$lang}.php";
+require "config/user_functions_{$lang}.php";
 
 if(!$login_id OR $login_id == "" OR $login_level < "1") {
 
@@ -21,21 +21,21 @@ $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 
 // Verkope vir Admin - Sales for Admin
 $query_verkope = "SELECT sum(qty) FROM pos_detail WHERE temp = '9'";
-$fetch_verkope = mysql_query($query_verkope);
+$fetch_verkope = mysqli_query($dbconn, $query_verkope);
 if (!$fetch_verkope) { error("QUERY_ERROR"); exit; }
-  $totale_verkope = @mysql_result($fetch_verkope,0,0);
+  $totale_verkope = @mysqli_result($fetch_verkope,0,0);
 
 // Transaksie vir Admin - Transaction for Admin
 $query_transaksie = "SELECT count(transaction_code) FROM pos_total2";
-$fetch_transaksie = mysql_query($query_transaksie);
+$fetch_transaksie = mysqli_query($dbconn, $query_transaksie);
 if (!$fetch_transaksie) { error("QUERY_ERROR"); exit; }
-  $totale_transaksie = @mysql_result($fetch_transaksie,0,0);
+  $totale_transaksie = @mysqli_result($fetch_transaksie,0,0);
 
 // Wins vir Admin - Profit for Admin
 $query_wins = "SELECT sum(total_nett) FROM pos_total2";
-$fetch_wins = mysql_query($query_wins);
+$fetch_wins = mysqli_query($dbconn, $query_wins);
 if (!$fetch_wins) { error("QUERY_ERROR"); exit; }
-  $totale_wins = @mysql_result($fetch_wins,0,0);
+  $totale_wins = @mysqli_result($fetch_wins,0,0);
 
   // Skakel na Miljoen - Convert to Million
   if ($totale_wins > 999 && $totale_wins <= 999999) {
@@ -50,31 +50,31 @@ if (!$fetch_wins) { error("QUERY_ERROR"); exit; }
 
 // Verkope vir kassier = Sales for Cashier
 $navra_verkope = "SELECT sum(qty) FROM pos_detail WHERE temp = '9' AND hostname = '$hostname' AND sales_code = '$login_id'";
-$haal_verkope = mysql_query($navra_verkope);
+$haal_verkope = mysqli_query($dbconn, $navra_verkope);
 if (!$haal_verkope) { error("QUERY_ERROR"); exit; }
-  $kassier_verkope = @mysql_result($haal_verkope,0,0);
+  $kassier_verkope = @mysqli_result($haal_verkope,0,0);
 
 // Voorraad vir Admin - Stocks for Admin
 $navra_voorraad = "SELECT sum(stok_awal) FROM item_masters ";
-$haal_voorraad = mysql_query($navra_voorraad);
+$haal_voorraad = mysqli_query($dbconn, $navra_voorraad);
 if (!$haal_voorraad) { error("QUERY_ERROR"); exit; }
-  $kassier_voorraad = @mysql_result($haal_voorraad,0,0);
+  $kassier_voorraad = @mysqli_result($haal_voorraad,0,0);
 
 // Transaksie vir Admin - Transaction for Admin
 $navra_transaksie = "SELECT SUM(count) FROM (SELECT COUNT(transaction_code) AS count FROM pos_detail WHERE transaction_code like 'BS%') as A";
-$haal_transaksie = mysql_query($navra_transaksie);
+$haal_transaksie = mysqli_query($dbconn, $navra_transaksie);
 if (!$haal_transaksie) { error("QUERY_ERROR"); exit; }
-  $kassier_transaksie = @mysql_result($haal_transaksie,0,0);
+  $kassier_transaksie = @mysqli_result($haal_transaksie,0,0);
 
 // Wins vir Admin - Profit for Admin
 $navra_wins = "SELECT sum(total_nett) FROM pos_total WHERE status = '9' AND hostname = '$hostname' AND user_id = '$login_id'";
-$haal_wins = mysql_query($navra_wins);
+$haal_wins = mysqli_query($dbconn, $navra_wins);
 if (!$haal_wins) { error("QUERY_ERROR"); exit; }
-  $kassier_wins = @mysql_result($haal_wins,0,0);
+  $kassier_wins = @mysqli_result($haal_wins,0,0);
 ?>
 
 <!DOCTYPE html>
-<html lang="<?=$lang?>">
+<html lang="<?php echo $lang?>">
   <head>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,7 +83,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
     <meta name="keyword" content="FEEL BUY, ikbiz, Bootstrap, Responsive, Youngkay">
     <link rel="shortcut icon" href="img/favicon.ico">
 
-    <title><?=$web_erp_name?></title>
+    <title><?php echo $web_erp_name?></title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -120,7 +120,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
         <section class="wikkel">
           <img src="img/feelbuy-logo.jpg" style="margin-bottom: 2%; width: 13%; height: 7%">
           <br/>
-          <a href="<?=$home?>" class="btn btn-primary" style=" color:#fff; width:10%;border-color:#81C784;border-bottom-left-radius:0px;border-top-left-radius:0px;margin-bottom:10px">BACK</a>
+          <a href="<?php echo $home?>" class="btn btn-primary" style=" color:#fff; width:10%;border-color:#81C784;border-bottom-left-radius:0px;border-top-left-radius:0px;margin-bottom:10px">BACK</a>
 
             <!--state overview start-->
             <div class="row state-overview">
@@ -186,7 +186,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                         <div class="value">
                             <!--<h1 class=" count4">-->
                             <h1>
-                                <?=$resultaat?>
+                                <?php echo $resultaat?>
                             </h1>
                             <p>Total Profit</p>
                         </div>
@@ -205,7 +205,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                       <div class="panel-body progress-panel">
                           <div class="task-progress">
                               <h1>Total /Name</h1>
-                              <!--<p><?=$login_name2?></p>-->
+                              <!--<p><?php echo $login_name2?></p>-->
                           </div>
                       </div>
                   <table class="table table-hover personal-task">
@@ -217,13 +217,13 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                       <th><center> Gross </center></th>
                       <th><center> Nett </center></th>
                   </tr>
-                  <?
+                  <?php
                   $tanggal_ini = date('Y-m-d');
 
                   $query_totale_uidk = "SELECT count(id) from pos_total2 where trx_date like '$tanggal_ini%' ";
-                  $fetch_totale_uidk = mysql_query($query_totale_uidk);
+                  $fetch_totale_uidk = mysqli_query($dbconn, $query_totale_uidk);
                   if (!$fetch_totale_uidk) { error("QUERY_ERROR"); exit; }
-                  $totale_uidk = @mysql_result($fetch_totale_uidk,0,0);
+                  $totale_uidk = @mysqli_result($fetch_totale_uidk,0,0);
 
                     $reken_uidk = 10;
 
@@ -231,29 +231,29 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
 
                     //Tyd transaksie vir Admin - Best items for Admin
                     $query_tyd = "SELECT cashier_id, count(transaction_code) as trx, sum(total_nett) as nett,sum(total_item) as qty,sum(total_gross) as gross from pos_total2 where trx_date like '$tanggal_ini%' group by cashier_id";
-                    $fetch_tyd = mysql_query($query_tyd);
+                    $fetch_tyd = mysqli_query($dbconn, $query_tyd);
                     if (!$fetch_tyd) { error("QUERY_ERROR"); exit; }
-                      $tyd_kassier = @mysql_result($fetch_tyd,$k,0);
-                      $tyd_transaksie_J = @mysql_result($fetch_tyd,$k,1);
-                      $tyd_netto = @mysql_result($fetch_tyd,$k,2);
-                      $tyd_qty = @mysql_result($fetch_tyd,$k,3);
-                      $tyd_bruto = @mysql_result($fetch_tyd,$k,4);
+                      $tyd_kassier = @mysqli_result($fetch_tyd,$k,0);
+                      $tyd_transaksie_J = @mysqli_result($fetch_tyd,$k,1);
+                      $tyd_netto = @mysqli_result($fetch_tyd,$k,2);
+                      $tyd_qty = @mysqli_result($fetch_tyd,$k,3);
+                      $tyd_bruto = @mysqli_result($fetch_tyd,$k,4);
                   ?>
                   <tr>
-                <?
+                <?php
                 if ($tyd_kassier == '') {
                   $tyd_kassier_T = 'Cashier is not available';
                 } elseif ($tyd_kassier != '') {
                   $tyd_kassier_T = $tyd_kassier;
                 }
                 ?>
-                <td><?=$tyd_kassier_T?></td>
-                <td style="text-align:right;"><?=number_format($tyd_transaksie_J)?></td>
-                <td style="text-align:right;"><?=number_format($tyd_qty)?></td>
-                <td style="text-align:right;"><?=number_format($tyd_bruto)?></td>
-                <td><?=number_format($tyd_netto)?></td>
+                <td><?php echo $tyd_kassier_T?></td>
+                <td style="text-align:right;"><?php echo number_format($tyd_transaksie_J)?></td>
+                <td style="text-align:right;"><?php echo number_format($tyd_qty)?></td>
+                <td style="text-align:right;"><?php echo number_format($tyd_bruto)?></td>
+                <td><?php echo number_format($tyd_netto)?></td>
                 </tr>
-                <?
+                <?php
                 $tyd_transaksie_K3 += $tyd_transaksie_J;
                 $tyd_qty_K3 += $tyd_qty;
                 $tyd_netto_K3 += $tyd_netto;
@@ -262,10 +262,10 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                 ?>
                   <tr>
                     <td><b>TOTAL </b></td>
-                    <td style="text-align:right;"><b><?=number_format($tyd_transaksie_K3)?></b></td>
-                    <td style="text-align:right;"><b><?=number_format($tyd_qty_K3)?></b></td>
-                <td style="text-align:right;"><b><?=number_format($tyd_bruto_K3)?></b></td>
-                              <td><b><?=number_format($tyd_netto_K3)?></b></td>
+                    <td style="text-align:right;"><b><?php echo number_format($tyd_transaksie_K3)?></b></td>
+                    <td style="text-align:right;"><b><?php echo number_format($tyd_qty_K3)?></b></td>
+                <td style="text-align:right;"><b><?php echo number_format($tyd_bruto_K3)?></b></td>
+                              <td><b><?php echo number_format($tyd_netto_K3)?></b></td>
                             </tr>
                           </tbody>
                       </table>
@@ -278,7 +278,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                         <div class="panel-body progress-panel">
                             <div class="task-progress">
                                 <h1>Total /Number</h1>
-                                <!--<p><?=$login_name2?></p>-->
+                                <!--<p><?php echo $login_name2?></p>-->
                             </div>
                         </div>
                     <table class="table table-hover personal-task">
@@ -290,12 +290,12 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                         <th><center> Gross </center></th>
                         <th><center> Nett </center></th>
                     </tr>
-                    <?
+                    <?php
                     $datum = date('Y-m-d'); // Tanggal
                     $query_totale = "SELECT count(id) from pos_total_closing where trx_date = '$datum' "; // Query Today
-                    $fetch_totale = mysql_query($query_totale);
+                    $fetch_totale = mysqli_query($dbconn, $query_totale);
                     if (!$fetch_totale) { error("QUERY_ERROR"); exit; }
-                    $totale_totale = @mysql_result($fetch_totale,0,0);
+                    $totale_totale = @mysqli_result($fetch_totale,0,0);
 
                       $reken_totale = 10;
 
@@ -304,29 +304,29 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
 
                       //Totale transaksie vir Admin - Best items for Admin
                       $query_totale_J = "SELECT cashier_id, count(transaction_code) as trx, sum(total_nett) as nett,sum(total_item) as qty,sum(total_gross) as gross from pos_total_closing WHERE status = 'P' group by cashier_id";
-                      $fetch_totale_J = mysql_query($query_totale_J);
+                      $fetch_totale_J = mysqli_query($dbconn, $query_totale_J);
                       if (!$fetch_totale_J) { error("QUERY_ERROR"); exit; }
-                        $totale_kassier = @mysql_result($fetch_totale_J,$k,0);
-                        $totale_transaksie_J = @mysql_result($fetch_totale_J,$k,1);
-                        $totale_netto = @mysql_result($fetch_totale_J,$k,2);
-                        $totale_qty = @mysql_result($fetch_totale_J,$k,3);
-                        $totale_bruto = @mysql_result($fetch_totale_J,$k,4);
+                        $totale_kassier = @mysqli_result($fetch_totale_J,$k,0);
+                        $totale_transaksie_J = @mysqli_result($fetch_totale_J,$k,1);
+                        $totale_netto = @mysqli_result($fetch_totale_J,$k,2);
+                        $totale_qty = @mysqli_result($fetch_totale_J,$k,3);
+                        $totale_bruto = @mysqli_result($fetch_totale_J,$k,4);
                     ?>
                 <tr>
-                <?
+                <?php
                 if ($totale_kassier == '') {
                   $totale_kassier_T = 'Cashier is not available';
                 } elseif ($totale_kassier != '') {
                   $totale_kassier_T = $totale_kassier;
                 }
                 ?>
-                    <td><?=$totale_kassier_T?></td>
-                    <td style="text-align:right;"><?=number_format($totale_transaksie_J)?></td>
-                    <td style="text-align:right;"><?=number_format($totale_qty)?></td>
-                    <td style="text-align:right;"><?=number_format($totale_bruto)?></td>
-                    <td><?=number_format($totale_netto)?></td>
+                    <td><?php echo $totale_kassier_T?></td>
+                    <td style="text-align:right;"><?php echo number_format($totale_transaksie_J)?></td>
+                    <td style="text-align:right;"><?php echo number_format($totale_qty)?></td>
+                    <td style="text-align:right;"><?php echo number_format($totale_bruto)?></td>
+                    <td><?php echo number_format($totale_netto)?></td>
                 </tr>
-                <?
+                <?php
                 $totale_transaksie_K3 += $totale_transaksie_J;
                 $totale_qty_K3 += $totale_qty;
                 $totale_netto_K3 += $totale_netto;
@@ -335,10 +335,10 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                 ?>
                 <tr>
                   <td><b>TOTAL</b></td>
-                  <td style="text-align:right;"><b><?=number_format($totale_transaksie_K3)?></b></td>
-                  <td style="text-align:right;"><b><?=number_format($totale_qty_K3)?></b></td>
-                  <td style="text-align:right;"><b><?=number_format($totale_bruto_K3)?></b></td>
-                  <td><b><?=number_format($totale_netto_K3)?></b></td>
+                  <td style="text-align:right;"><b><?php echo number_format($totale_transaksie_K3)?></b></td>
+                  <td style="text-align:right;"><b><?php echo number_format($totale_qty_K3)?></b></td>
+                  <td style="text-align:right;"><b><?php echo number_format($totale_bruto_K3)?></b></td>
+                  <td><b><?php echo number_format($totale_netto_K3)?></b></td>
                     </tr>
                   </tbody>
                 </table>
@@ -351,7 +351,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                   <div class="panel-body progress-panel">
                       <div class="task-progress">
                           <h1>Real Time</h1>
-                          <!--<p><?=$login_name2?></p>-->
+                          <!--<p><?php echo $login_name2?></p>-->
                       </div>
                   </div>
                 <table class="table table-hover personal-task">
@@ -362,11 +362,11 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                     <th style="text-align: center;"> Prices </th>
                     <th style="text-align: center;"> Payment Method </th>
                 </tr>
-                <?
+                <?php
                 $query_totale_uidk = "SELECT count(id) from pos_total";
-                $fetch_totale_uidk = mysql_query($query_totale_uidk);
+                $fetch_totale_uidk = mysqli_query($dbconn, $query_totale_uidk);
                 if (!$fetch_totale_uidk) { error("QUERY_ERROR"); exit; }
-                $totale_uidk = @mysql_result($fetch_totale_uidk,0,0);
+                $totale_uidk = @mysqli_result($fetch_totale_uidk,0,0);
 
                   $reken_uidk = 10;
 
@@ -374,25 +374,25 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
 
                   //Huidige transaksie vir Admin - Best items for Admin
                   $query_huidige = "SELECT transaction_code,total_nett,total_item,card_type FROM pos_total order by transaction_code desc";
-                  $fetch_huidige = mysql_query($query_huidige);
+                  $fetch_huidige = mysqli_query($dbconn, $query_huidige);
                   if (!$fetch_huidige) { error("QUERY_ERROR"); exit; }
-                    $huidige_transaksie = @mysql_result($fetch_huidige,$k,0);
-                    $netto = @mysql_result($fetch_huidige,$k,1);
-                    $punkt = @mysql_result($fetch_huidige,$k,2);
-                    $tipe_kaart = @mysql_result($fetch_huidige,$k,3);
+                    $huidige_transaksie = @mysqli_result($fetch_huidige,$k,0);
+                    $netto = @mysqli_result($fetch_huidige,$k,1);
+                    $punkt = @mysqli_result($fetch_huidige,$k,2);
+                    $tipe_kaart = @mysqli_result($fetch_huidige,$k,3);
                 ?>
                 <tr>
-                <?
+                <?php
                 if ($huidige_transaksie == '') {
                   $huidige_transaksie_T = 'Transaction is not available';
                 } elseif ($huidige_transaksie != '') {
                   $huidige_transaksie_T = $huidige_transaksie;
                 }
                 ?>
-                <td><?=$huidige_transaksie_T?></td>
-                <td style="text-align: right;"><?=number_format($punkt)?></td>
-                <td style="text-align: right;"><?=number_format($netto)?></td>
-                <?
+                <td><?php echo $huidige_transaksie_T?></td>
+                <td style="text-align: right;"><?php echo number_format($punkt)?></td>
+                <td style="text-align: right;"><?php echo number_format($netto)?></td>
+                <?php
                 switch ($tipe_kaart) {
                   case '3':
                     $betalings_metode = 'Tunai';
@@ -428,25 +428,25 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                 }
 
                 ?>
-                <td style="text-align: center;"><?=$betalings_metode?></td>
+                <td style="text-align: center;"><?php echo $betalings_metode?></td>
                 <td style="display: none;">ena</td>
             </tr>
-                  <? } ?>
+                  <?php } ?>
                   </tbody>
               </table>
           </div>
           <!--Current Transaction end-->
 
-                    <?/*
+                    <?php/*
                       <!--user info table start-->
                       <div class="col-lg-4" style="float: left;">
                           <section class="panel">
                               <div class="panel-body">
                                   <a href="#" class="task-thumb">
-                                      <img src="<?=$login_photo_img1?>" style="width: 80px" alt="">
+                                      <img src="<?php echo $login_photo_img1?>" style="width: 80px" alt="">
                                   </a>
                                   <div class="task-thumb-details">
-                                      <h1><a href="#"><?=$login_id?></a></h1>
+                                      <h1><a href="#"><?php echo $login_id?></a></h1>
                                       <p>Cashier no : 1</p>
                                   </div>
                                   <div class="task-option">
@@ -464,14 +464,14 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                                             <i class=" fa fa-tasks"></i>
                                         </td>
                                         <td>Sales</td>
-                                        <td><?=number_format($kassier_verkope);?></td>
+                                        <td><?php echo number_format($kassier_verkope);?></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <i class="fa fa-exclamation-triangle"></i>
                                         </td>
                                         <td>Profits</td>
-                                        <td><?=number_format($kassier_wins);?></td>
+                                        <td><?php echo number_format($kassier_wins);?></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -500,7 +500,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                               <div class="panel-body progress-panel">
                                   <div class="task-progress">
                                       <h1>Best Items</h1>
-                                      <!--<p><?=$login_name2?></p>-->
+                                      <!--<p><?php echo $login_name2?></p>-->
                                   </div>
                               </div>
                               <table class="table table-hover personal-task">
@@ -511,28 +511,28 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                                       <th>Product Name</th>
                                       <th>Qty Sold</th>
                                   </tr>
-                                  <?
+                                  <?php
                                   for ($k=0; $k < 10; $k++) {
 
                                     //Beste item vir Admin - Best items for Admin
                                     $query_beste = "SELECT pd.org_pcode,spl.pname, sum(pd.qty) as best FROM pos_detail pd INNER JOIN item_masters spl ON pd.org_pcode = spl.org_pcode WHERE pd.temp = '9' group by pd.org_pcode order by best desc";
-                                    $fetch_beste = mysql_query($query_beste);
+                                    $fetch_beste = mysqli_query($dbconn, $query_beste);
                                     if (!$fetch_beste) { error("QUERY_ERROR"); exit; }
-                                      $product_code = @mysql_result($fetch_beste,$k,0);
-                                      $best_items = @mysql_result($fetch_beste,$k,1);
-                                      $totale_best_items = @mysql_result($fetch_beste,$k,2);
+                                      $product_code = @mysqli_result($fetch_beste,$k,0);
+                                      $best_items = @mysqli_result($fetch_beste,$k,1);
+                                      $totale_best_items = @mysqli_result($fetch_beste,$k,2);
                                   ?>
                                   <tr>
-                                      <td><?=$k+1?></td>
-                                  <?
+                                      <td><?php echo $k+1?></td>
+                                  <?php
                                   if ($product_code == '') {
                                     $product_code_T = '-';
                                   } elseif ($product_code != '') {
                                     $product_code_T = $product_code;
                                   }
                                   ?>
-                                                      <td><?=$product_code_T?></td>
-                                  <?
+                                  <td><?php echo $product_code_T?></td>
+                                  <?php
                                   if ($best_items == '') {
                                     $best_items_T = 'Product is not available';
                                   } elseif ($best_items != '') {
@@ -540,13 +540,13 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
                                   }
                                   ?>
                                       <td>
-                                          <?=$best_items_T?>
+                                          <?php echo $best_items_T?>
                                       </td>
                                       <td>
-                                          <center><?=number_format($totale_best_items)?></center>
+                                          <center><?php echo number_format($totale_best_items)?></center>
                                       </td>
                                   </tr>
-                                  <? } ?>
+                                  <?php } ?>
                                   </tbody>
                               </table>
                           </section>
@@ -560,9 +560,9 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
     </section>
     <!--main content end-->
 
-      <? include "right_slidebar.inc"; ?>
+      <?php include "right_slidebar.php"; ?>
 
-      <? include "footer.inc"; ?>
+      <?php include "footer.php"; ?>
 
 
   </section>
@@ -589,13 +589,13 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
     <script src="js/sparkline-chart.js"></script>
     <script src="js/easy-pie-chart.js"></script>
 
-  <?
+  <?php
   // Counter 2 - Sales
   // $query_count2 = "SELECT count(uid) FROM finance WHERE f_class = 'in' AND branch_code = '$login_branch'";
   $query_count2 = "SELECT count(uid) FROM finance WHERE f_class = 'in'";
-  $result_count2 = mysql_query($query_count2,$dbconn);
+  $result_count2 = mysqli_query($dbconn, $query_count2,$dbconn);
     if (!$result_count2) { error("QUERY_ERROR"); exit; }
-  // $zcount2 = @mysql_result($result_count2,0,0);
+  // $zcount2 = @mysqli_result($result_count2,0,0);
   $zcount2 = 927;
 
   ?>
@@ -622,7 +622,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
     }, int_speed);
   }
 
-  countUp("<?=$totale_transaksie?>");
+  countUp("<?php echo $totale_transaksie?>");
 
 
   function countUp2(count)
@@ -646,7 +646,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
     }, int_speed);
   }
 
-  countUp2("<?=$totale_voorraad?>");
+  countUp2("<?php echo $totale_voorraad?>");
 
 
   function countUp3(count)
@@ -670,7 +670,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
     }, int_speed);
   }
 
-  countUp3("<?=$totale_verkope?>");
+  countUp3("<?php echo $totale_verkope?>");
 
 
   function countUp4(count)
@@ -694,7 +694,7 @@ if (!$haal_wins) { error("QUERY_ERROR"); exit; }
     }, int_speed);
   }
 
-  countUp4("<?=$totale_wins?>");
+  countUp4("<?php echo $totale_wins?>");
   </script>
 
   <script>
@@ -732,6 +732,6 @@ $(document).ready(
 
   </body>
 </html>
-<?  echo ("<meta http-equiv='Refresh' content='7; URL=$home/pos_admin.php'>");  ?>
+<?php  echo ("<meta http-equiv='Refresh' content='7; URL=$home/pos_admin.php'>");  ?>
 
-<? } ?>
+<?php } ?>
