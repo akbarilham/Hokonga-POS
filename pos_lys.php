@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 	Creator : Cihuy Programmer
 */
@@ -20,7 +20,7 @@ $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Feelbuy POS | Transaction List Page </title>
+	<title>Hokonga POS | Transaction List Page </title>
 </head>
 <!-- Creator by : Cihuy Programmer -->
 
@@ -34,8 +34,8 @@ $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 <link href="assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
 <link href="assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
 <link rel="stylesheet" href="assets/data-tables/DT_bootstrap.css" />
-  <!--right slidebar-->
-  <link href="css/slidebars.css" rel="stylesheet">
+<!--right slidebar-->
+<link href="css/slidebars.css" rel="stylesheet">
 <!-- Custom styles for this template -->
 <link href="css/style.css" rel="stylesheet">
 <link href="css/style-responsive.css" rel="stylesheet" />
@@ -68,7 +68,7 @@ $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
             </tr>
           </thead>     
 
-          <?
+          <?php
             $query_ps = "SELECT count(id) FROM pos_total where hostname = '$hostname'";
             $result_ps = mysql_query($query_ps);
             $total =  @mysql_result($result_ps,0,0);
@@ -99,7 +99,7 @@ $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
               <td><?=$krediet_bedrag?></td>
               <td><?=number_format($kontant_bly);?></td>
             </tr>
-        <?
+        <?php
         	}
         ?>
          
@@ -111,6 +111,6 @@ $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 </div>
 
 <!-- ////////////////////////////////////////////////////////////////////////////////// -->
-<? } ?>
+<?php } ?>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 </html>

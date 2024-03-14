@@ -219,39 +219,39 @@ $( "#main" ).mouseover(function() {
 
 </script>
 <link rel="stylesheet" href="css/jquery-ui-pos.css">
-  <script src="js/jquery-1.10.2-pos.js"></script>
-  <script src="js/jquery-ui-pos.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('.submit_on_enter_edit').keydown(function(event) {
-        if (event.keyCode == 13) {
-          var id = $(this).parent().parent().attr('id');
-          value = $('#'+id+'i').val();
-          var data = '?id=' + id +'&val='+value ;
-          $.ajax({
-            type: "GET",
-            url: "pos_security_row.php"+data,
-            data: {qty:'qty',gross:'gross'},
-            cache: false,
-            success: function(data) {
-              var qty = '';
-              var gross = '';
-              var nett = '';
-              var obj = $.parseJSON(data);
-              $.each(obj, function() {
-                qty += this['qty'];
-                gross += this['gross'];
-                nett += this['nett'];
-              });
-              $('#'+id+'i').val(qty);
-              $('#'+id+'j').text(gross);
-              $('#'+id+'k').text(nett);
-            }
-          });
-        }
-      });
+<script src="js/jquery-1.10.2-pos.js"></script>
+<script src="js/jquery-ui-pos.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.submit_on_enter_edit').keydown(function(event) {
+      if (event.keyCode == 13) {
+        var id = $(this).parent().parent().attr('id');
+        value = $('#'+id+'i').val();
+        var data = '?id=' + id +'&val='+value ;
+        $.ajax({
+          type: "GET",
+          url: "pos_security_row.php"+data,
+          data: {qty:'qty',gross:'gross'},
+          cache: false,
+          success: function(data) {
+            var qty = '';
+            var gross = '';
+            var nett = '';
+            var obj = $.parseJSON(data);
+            $.each(obj, function() {
+              qty += this['qty'];
+              gross += this['gross'];
+              nett += this['nett'];
+            });
+            $('#'+id+'i').val(qty);
+            $('#'+id+'j').text(gross);
+            $('#'+id+'k').text(nett);
+          }
+        });
+      }
     });
-  </script>
+  });
+</script>
   <script>
     $(function() {
       function split( val ) {
@@ -331,183 +331,172 @@ $( "#main" ).mouseover(function() {
         document.form.subpricedis.value=e.toLocaleString('en');
         document.form.ppndis.value=d.toLocaleString('en');
       }
-
-
-
     }
 
     function calculateCASH() {
-        var totqty = $("#totqty").val();
-		var paging = $("#paging").val();
-		var too = $("#total").val();
-		var grossid = $("#grossid").val();
-		var card_cre = $("#cardcre").val();
-		var card_deb = $("#carddeb").val();
-		var transcode = $("#transcode").val();
-		var detail = $("#detail").val();
-		var lid = $("#lid").val();
-		if(!$("#cashpay1").val() || $("#cashpay1").val() == ''){
-			var c = 0;
-		}else{
-			var c = $("#cashpay1").val().replace(/[^\d.]/g, '');
-			//var cashpay = parseInt(c);
-		}
+      var totqty = $("#totqty").val();
+      var paging = $("#paging").val();
+      var too = $("#total").val();
+      var grossid = $("#grossid").val();
+      var card_cre = $("#cardcre").val();
+      var card_deb = $("#carddeb").val();
+      var transcode = $("#transcode").val();
+      var detail = $("#detail").val();
+      var lid = $("#lid").val();
+      if(!$("#cashpay1").val() || $("#cashpay1").val() == ''){
+        var c = 0;
+      }else{
+        var c = $("#cashpay1").val().replace(/[^\d.]/g, '');
+        //var cashpay = parseInt(c);
+      }
 
-		if(!$("#debamo").val() || $("#debamo").val() == ''){
-			var d = 0;
-		}else{
-			var d = $("#debamo").val().replace(/[^\d.]/g, '');
-		}
+      if(!$("#debamo").val() || $("#debamo").val() == ''){
+        var d = 0;
+      }else{
+        var d = $("#debamo").val().replace(/[^\d.]/g, '');
+      }
 
-		if(!$("#creamo").val() || $("#creamo").val() == ''){
-			var e = 0;
-		}else{
-			var e = $("#creamo").val().replace(/[^\d.]/g, '');
-		}
+      if(!$("#creamo").val() || $("#creamo").val() == ''){
+        var e = 0;
+      }else{
+        var e = $("#creamo").val().replace(/[^\d.]/g, '');
+      }
 
-		if(!$("#total").val() || $("#total").val() == ''){
-			var f = 0;
-		}else{
-			var f = $("#total").val().replace(/[^\d.]/g, '');
-		}
+      if(!$("#total").val() || $("#total").val() == ''){
+        var f = 0;
+      }else{
+        var f = $("#total").val().replace(/[^\d.]/g, '');
+      }
 
 		var totStr =document.form.total.value;
-        if (!totStr)
-            totStr = '0';
-        var cpStr = document.form.cashpay1.value;
-        if (!cpStr)
-            cpStr = '0';
-        var debamoStr = document.form.debamo1.value;
-        if (!debamoStr)
-            debamoStr = '0';
-        var creamoStr = document.form.creamo1.value;
-        if (!creamoStr)
-            creamoStr = '0';
-       var creStr = document.form.cardcre.value;
-        if (!creStr)
-            creStr = '0';
-        var debStr = document.form.carddeb.value;
-        if (!debStr)
-            debStr = '0';
-        var cheStr = document.form.change.value;
-        if (!cheStr)
-            cheStr = '0';
+    var cpStr = document.form.cashpay1.value;
+    var debamoStr = document.form.debamo1.value;
+    var creamoStr = document.form.creamo1.value;
+    var creStr = document.form.cardcre.value;
+    var debStr = document.form.carddeb.value;
+    var cheStr = document.form.change.value;
+    if (!totStr) {
+      totStr = '0';
+    }        
+    if (!cpStr) {
+      cpStr = '0';
+    }
+    if (!debamoStr) {
+      debamoStr = '0';
+    }
+    if (!creamoStr) {
+      creamoStr = '0';
+    }
+    if (!creStr) {
+      creStr = '0';
+    }
+    if (!debStr) {
+      debStr = '0';
+    }
+    if (!cheStr) {
+      cheStr = '0';
+    }
+    var total = parseFloat(totStr);
+    var change = parseFloat(cheStr);
+    var cashpay = parseInt(cpStr.replace(/[^\d.]/g, ''));
+    var debamo = parseInt(debamoStr.replace(/[^\d.]/g, ''));
+    var creamo = parseInt(creamoStr.replace(/[^\d.]/g, ''));
+    document.form.cashpay.value = cashpay;
+    document.form.debamo.value = debamo;
+    document.form.creamo.value = creamo;
+    if (change<=0){
+        $('.submit_on_enter').keydown(function(event) {
+        if (event.keyCode == 13) {
+          document.getElementById('carddeb').focus();
+          }
+      });
+    }
+    if (!$("#carddeb").val()){
+      $('.submit_on_enter_carddeb').keydown(function(event) {
+        if (event.keyCode == 13) {
+          document.getElementById('cardcre').focus();
+          }
+      });
+    }else{
+      $('.submit_on_enter_carddeb').keydown(function(event) {
+        if (event.keyCode == 13) {
+          document.getElementById('debamo1').focus();
+          }
+      });
+    }
+    if (!$("#cardcre").val()){
+      $('.submit_on_enter_cardcre').keydown(function(event) {
+        if (event.keyCode == 13) {
+          document.getElementById('cashpay1').focus();
+          }
+      });
 
-
-        var total = parseFloat(totStr);
-        var change = parseFloat(cheStr);
-        var cashpay = parseInt(cpStr.replace(/[^\d.]/g, ''));
-        var debamo = parseInt(debamoStr.replace(/[^\d.]/g, ''));
-        var creamo = parseInt(creamoStr.replace(/[^\d.]/g, ''));
-        document.form.cashpay.value = cashpay;
-        document.form.debamo.value = debamo;
-        document.form.creamo.value = creamo;
-
-
-        if (change<=0){
-            $('.submit_on_enter').keydown(function(event) {
-            if (event.keyCode == 13) {
-             document.getElementById('carddeb').focus();
-             }
-          });
-        }
-
-
-        if (!$("#carddeb").val()){
-          $('.submit_on_enter_carddeb').keydown(function(event) {
-            if (event.keyCode == 13) {
-             document.getElementById('cardcre').focus();
-             }
-          });
-        }else{
-          $('.submit_on_enter_carddeb').keydown(function(event) {
-            if (event.keyCode == 13) {
-             document.getElementById('debamo1').focus();
-             }
-          });
-        }
-
-
-
-
-        if (!$("#cardcre").val()){
-          $('.submit_on_enter_cardcre').keydown(function(event) {
-            if (event.keyCode == 13) {
-             document.getElementById('cashpay1').focus();
-             }
-          });
-
-        }else{
-          $('.submit_on_enter_cardcre').keydown(function(event) {
-            if (event.keyCode == 13) {
-             document.getElementById('creamo1').focus();
-             }
-          });
-        }
-
+    }else{
+      $('.submit_on_enter_cardcre').keydown(function(event) {
+        if (event.keyCode == 13) {
+          document.getElementById('creamo1').focus();
+          }
+      });
+    }
 		$('.bayar').keydown(function(event) {
-            if (event.keyCode == 40) {
-             document.getElementById('back').focus();
-             }
-          });
-
+      if (event.keyCode == 40) {
+        document.getElementById('back').focus();
+        }
+    });
 		$('.back').keydown(function(event) {
-            if (event.keyCode == 38) {
-             document.getElementById('bayar').focus();
-             }
-          });
+      if (event.keyCode == 38) {
+        document.getElementById('bayar').focus();
+        }
+    });
 
-        if(creamo == '0' && debamo == '0' && cashpay !='0' ){
-        //CASH
-            document.form.change.value = cashpay - total;
-            document.form.changedis.value = (cashpay - total).toLocaleString('en');
+    if(creamo == '0' && debamo == '0' && cashpay !='0' ){
+    //CASH
+      document.form.change.value = cashpay - total;
+      document.form.changedis.value = (cashpay - total).toLocaleString('en');
 			var re = (cashpay - total).toLocaleString('en');
-
-            if((cashpay-total) >= 0 ){
-              document.form.creamo.value = 0;
-              document.form.debamo.value = 0;
-              document.form.creamo1.value = 0;
-              document.form.debamo1.value = 0;
-              $("#debamo1").prop('disabled',true);
-              $("#carddeb").prop('disabled',true);
-              $("#creamo1").prop('disabled',true);
-              $("#cardcre").prop('disabled',true);
+      if ((cashpay-total) >= 0 ) {
+        document.form.creamo.value = 0;
+        document.form.debamo.value = 0;
+        document.form.creamo1.value = 0;
+        document.form.debamo1.value = 0;
+        $("#debamo1").prop('disabled',true);
+        $("#carddeb").prop('disabled',true);
+        $("#creamo1").prop('disabled',true);
+        $("#cardcre").prop('disabled',true);
 			  $('.submit_on_enter').keydown(function(event) {
-				if (!$("#cashpay1").val() || $("#cashpay1").val() == '' || $("#cashpay1").val().replace(/[^\d.]/g, '') < total){
-					   document.getElementById('carddeb').focus();
-					}else{
-
-					  if (event.keyCode == 13) {
-						  document.getElementById('bayar').focus();
-						  $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
-						  var a = document.getElementById('bayar');
-						  a.setAttribute('href','<?php $home?>/pos_pay.php?cashpay='+cashpay+'&change='+(cashpay-total)+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
+          if (!$("#cashpay1").val() || $("#cashpay1").val() == '' || $("#cashpay1").val().replace(/[^\d.]/g, '') < total){
+            document.getElementById('carddeb').focus();
+          } else {
+            if (event.keyCode == 13) {
+              document.getElementById('bayar').focus();
+              $("#bayar").css({"background-color": "#FFEA00", "color": "black"});
+              var a = document.getElementById('bayar');
+              a.setAttribute('href','<?php $home?>/pos_pay.php?cashpay='+cashpay+'&change='+(cashpay-total)+'&login=<?php $login_id?>'+'&totqty='+totqty+'&'+paging+'&total='+too+'&gross='+grossid+'&transcode='+transcode+'&detail='+detail+'&lid='+lid);
               return false;
-						  /*if (answer=confirm("Bayar?\n\nUang Kembalian = Rp. "+re+",-\n\n\n\n\n"))
-							{
-								if (answer==true) {
-								   this.form.submit();
-									return false;
-								}
-							}else{
-								location.reload();
-							}
-							*/
-						 }
-
-					}
+              /*if (answer=confirm("Bayar?\n\nUang Kembalian = Rp. "+re+",-\n\n\n\n\n"))
+              {
+                if (answer==true) {
+                    this.form.submit();
+                  return false;
+                }
+              }else{
+                location.reload();
+              }
+              */
+              }
+          }
 			  });
-            }
-        }else if(creamo != '0' && debamo == '0' && cashpay =='0'){
-          //CREDIT CARD
-            document.form.change.value = creamo - total;
-            document.form.changedis.value = (creamo - total).toLocaleString('en');
-			<?php if($login_id == 'superadmin' || $login_id == 'admin'){?>
+      }
+    }else if(creamo != '0' && debamo == '0' && cashpay =='0') {
+      //CREDIT CARD
+      document.form.change.value = creamo - total;
+      document.form.changedis.value = (creamo - total).toLocaleString('en');
+			<?php if($login_id == 'superadmin' || $login_id == 'admin') { ?>
 				if((creamo-total) >= 0 ){
-			<?php }else{?>
-				if((creamo-total) == 0){
+			    <?php } else { ?>
+				    if((creamo-total) == 0){
             <?php }?>
-			document.form.cashpay.value = 0;
+			        document.form.cashpay.value = 0;
               document.form.debamo.value = 0;
               document.form.cashpay1.value = 0;
               document.form.debamo1.value = 0;
@@ -515,10 +504,10 @@ $( "#main" ).mouseover(function() {
               $("#debamo1").prop('disabled',true);
               $("#carddeb").prop('disabled',true);
               $('.submit_on_enter_crecardamo').keydown(function(event) {
-                if (!$("#cardcre").val() || $('#cardcre').val().length != 19){
-					   document.getElementById('cardcre').focus();
-					<?php if($login_id == 'superadmin' || $login_id == 'admin'){?>
-					<?php }else{?>
+              if (!$("#cardcre").val() || $('#cardcre').val().length != 19) {
+					      document.getElementById('cardcre').focus();
+					      <?php if($login_id == 'superadmin' || $login_id == 'admin') {?>
+					      <?php } else { ?>
 					}else if($('#creamo').val() != total){
 						document.getElementById('creamo1').focus();
 					<?php }?>
@@ -1130,6 +1119,7 @@ onkeydown="return (event.keyCode != 8)" -->
       $dis4 = $dis4 ?? null;
       $dis5 = $dis5 ?? null;
       $dis6 = $dis6 ?? null;
+      // $detail2 = mysqli_real_escape_string($dbconn, $_POST['detail2']) ?? null; #sanitize
       $detail2 = $_POST['detail2'] ?? null;
 
 		  $query_getcl = "SELECT id_number from pos_client where sales_code = '$login_id' AND hostname = '$hostname'";
