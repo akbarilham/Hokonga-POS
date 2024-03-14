@@ -23,24 +23,24 @@ $trans = $_POST['trans'];
 //TOTAL CASHIER REPORT PER PAYMENT TRANSACTIONS
 if ($module_0509 == '1') {
 	$query_count = "SELECT count(distinct sales_code) FROM pos_total2 WHERE sales_code !=  '' AND status = 'P'";
-	$fetch_count = mysql_query($query_count);
-	$count_name = mysql_result($fetch_count,0,0);
+	$fetch_count = mysqli_query($dbconn, $query_count);
+	$count_name = mysqli_result($fetch_count,0,0);
 } else {
 	$query_count = "SELECT count(distinct sales_code) FROM pos_total2 WHERE sales_code =  '$login_id'";
-	$fetch_count = mysql_query($query_count);
-	$count_name = mysql_result($fetch_count,0,0);
+	$fetch_count = mysqli_query($dbconn, $query_count);
+	$count_name = mysqli_result($fetch_count,0,0);
 }
 
 if ($kasir == $login_id) {
 
 	// Closing Method (Payment and Void Transactions)
 	$query_closing = "UPDATE pos_total2 SET closing = '1' WHERE sales_code = '$login_id'";
-	$fetch_closing = mysql_query($query_closing);
+	$fetch_closing = mysqli_query($dbconn, $query_closing);
 	if(!$fetch_closing) { error("QUERY_ERROR"); }
 /*
 	// Closing only void
 	$query_closing_V = "UPDATE pos_total2 SET closing = '1' WHERE sales_code = '$login_id' AND status = 'V'";
-	$fetch_closing_V = mysql_query($query_closing_V);
+	$fetch_closing_V = mysqli_query($dbconn, $query_closing_V);
 	if(!$fetch_closing_V) { error("QUERY_ERROR"); }
 */
 }
@@ -92,47 +92,47 @@ span { padding: 2px 0px 0px 5px; display: block; }
 <link href="css/bootstrap-reset.css" rel="stylesheet">
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<? for ($i=0; $i < $count_name; $i++) {
+<?php for ($i=0; $i < $count_name; $i++) {
 
 	// GET sales_code WITHOUT FILTERS
 	if ($module_0509 == '1') {
 		$query_name = "SELECT distinct sales_code FROM pos_total2 WHERE sales_code !=  ''";
-		$fetch_name = mysql_query($query_name);
+		$fetch_name = mysqli_query($dbconn, $query_name);
 		if (!$fetch_name) {   error("QUERY_ERROR");exit; }
-		$name = mysql_result($fetch_name,$i,0);
+		$name = mysqli_result($fetch_name,$i,0);
 	} else {
 		$query_name = "SELECT distinct sales_code FROM pos_total2 WHERE sales_code =  '$login_id'";
-		$fetch_name = mysql_query($query_name);
+		$fetch_name = mysqli_query($dbconn, $query_name);
 		if (!$fetch_name) {   error("QUERY_ERROR");exit; }
-		$name = mysql_result($fetch_name,$i,0);
+		$name = mysqli_result($fetch_name,$i,0);
 	}
 
 	// GET TRANSACTIONS PAYMENT (EXCLUDED VOID)
-	$query 			= "SELECT sales_code, count(transaction_code) AS trans,
-						sum(substring_index(substring_index(total,'|',1),'|',-1)) AS qty,
-						sum(substring_index(substring_index(total,'|',2),'|',-1)) AS gross,
-						sum(substring_index(substring_index(total,'|',3),'|',-1)) AS nett,
-						sum(substring_index(substring_index(total,'|',6),'|',-1)) AS cash,
-						sum(substring_index(substring_index(total,'|',7),'|',-1)) AS remain,
-						sum(substring_index(substring_index(total,'|',8),'|',-1)) AS credit,
-						sum(substring_index(substring_index(total,'|',9),'|',-1)) AS debit
-					  FROM pos_total2 WHERE sales_code = '$name' AND status = 'P' GROUP BY sales_code";
-	$fetch_total	=mysql_query($query);
-    $user_id		=mysql_result($fetch_total,0,0);
-	$trans			=mysql_result($fetch_total,0,1);
-	$qty			=mysql_result($fetch_total,0,2);
-	$gross			=mysql_result($fetch_total,0,3);
-	#$nett			=mysql_result($fetch_total,0,4);
-	$cash_amount	=mysql_result($fetch_total,0,5);
-	$cash_remain	=mysql_result($fetch_total,0,6);
-	$credit_amount	=mysql_result($fetch_total,0,7);
-	$debit_amount	=mysql_result($fetch_total,0,8);
+	$query = "SELECT sales_code, count(transaction_code) AS trans,
+		sum(substring_index(substring_index(total,'|',1),'|',-1)) AS qty,
+		sum(substring_index(substring_index(total,'|',2),'|',-1)) AS gross,
+		sum(substring_index(substring_index(total,'|',3),'|',-1)) AS nett,
+		sum(substring_index(substring_index(total,'|',6),'|',-1)) AS cash,
+		sum(substring_index(substring_index(total,'|',7),'|',-1)) AS remain,
+		sum(substring_index(substring_index(total,'|',8),'|',-1)) AS credit,
+		sum(substring_index(substring_index(total,'|',9),'|',-1)) AS debit
+		FROM pos_total2 WHERE sales_code = '$name' AND status = 'P' GROUP BY sales_code";
+	$fetch_total	=mysqli_query($dbconn, $query);
+    $user_id		=mysqli_result($fetch_total,0,0);
+	$trans			=mysqli_result($fetch_total,0,1);
+	$qty			=mysqli_result($fetch_total,0,2);
+	$gross			=mysqli_result($fetch_total,0,3);
+	#$nett			=mysqli_result($fetch_total,0,4);
+	$cash_amount	=mysqli_result($fetch_total,0,5);
+	$cash_remain	=mysqli_result($fetch_total,0,6);
+	$credit_amount	=mysqli_result($fetch_total,0,7);
+	$debit_amount	=mysqli_result($fetch_total,0,8);
 	$nett 			= $cash_amount-$cash_remain+$debit_amount+$credit_amount;
 
 	$query_name_K = "SELECT user_name FROM admin_user WHERE user_id = '$name';";
-	$fetch_name_K = mysql_query($query_name_K);
+	$fetch_name_K = mysqli_query($dbconn, $query_name_K);
 	if (!$fetch_name_K) {   error("QUERY_ERROR");exit; }
-	$cashier_name_K = mysql_result($fetch_name_K,0,0);
+	$cashier_name_K = mysqli_result($fetch_name_K,0,0);
 ?>
 <html>
 <head>
@@ -199,38 +199,34 @@ span { padding: 2px 0px 0px 5px; display: block; }
 			<th style="float: right;"><?=number_format($cash_amount-$cash_remain)?></th>
 		</tr>
 	</table>
-
-
-
-
 	</div>
 </body>
 </html>
-<? } ?>
-<? if ($module_0509 == '1') { ?>
+<?php } ?>
+<?php if ($module_0509 == '1') { ?>
 <script type="text/javascript">
 	window.print();
 </script>
-<? } ?>
-<?
+<?php } ?>
+<?php
 /*
 	$query_pos_del  = "DELETE FROM pos_detail WHERE temp = '0'";
-	$result_pos_del = mysql_query($query_pos_del);
+	$result_pos_del = mysqli_query($dbconn, $query_pos_del);
 	if (!$result_pos_del) {
 	    error("QUERY_ERROR");
 	    exit;
 	}
 
 	$query_pos_tol  = "DELETE FROM pos_total WHERE user_id IS NULL OR sesskey = '' OR total_item IS NULL";
-	$result_pos_tol = mysql_query($query_pos_tol);
+	$result_pos_tol = mysqli_query($dbconn, $query_pos_tol);
 	if (!$result_pos_tol) {
 	    error("QUERY_ERROR");
 	    exit;
 	}
 */
 ?>
-<?
+<?php
 echo ("<meta http-equiv='Refresh' content='0; URL=$home/pos_master.php?trans=list'>");
 ?>
 
-<? } ?>
+<?php } ?>
