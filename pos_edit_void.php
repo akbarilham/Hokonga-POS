@@ -72,139 +72,136 @@ window.close();
 }
 
 </script>
-<?
+<?php
+  if (!$del){
 
+    // Void semua transaksi, data $payments tetap tersimpan
+    $sql_query_s="UPDATE pos_total2 SET total='$new_payments', status = 'V' WHERE transcode = '$trans'";
+    $result_pos_s = mysql_query($sql_query_s);
+    if (!$result_pos_s) {   error("QUERY_ERROR");   exit; }
 
-    if (!$del){
+    $sql_query="UPDATE pos_detail_backup SET temp='V' WHERE transcode = '$trans'";
+    $result_poss = mysql_query($sql_query);
+    if (!$result_poss) {   error("QUERY_ERROR");   exit; }
+    echo("<meta http-equiv='Refresh' content='0; URL=$home/pos_pay_reprint.php?reprint=$trans&void=void'>");
 
-      // Void semua transaksi, data $payments tetap tersimpan
-      $sql_query_s="UPDATE pos_total2 SET total='$new_payments', status = 'V' WHERE transcode = '$trans'";
-      $result_pos_s = mysql_query($sql_query_s);
-	    if (!$result_pos_s) {   error("QUERY_ERROR");   exit; }
+  }else{
 
-      $sql_query="UPDATE pos_detail_backup SET temp='V' WHERE transcode = '$trans'";
-      $result_poss = mysql_query($sql_query);
-	    if (!$result_poss) {   error("QUERY_ERROR");   exit; }
-	    echo("<meta http-equiv='Refresh' content='0; URL=$home/pos_pay_reprint.php?reprint=$trans&void=void'>");
+        if($del == 1){
 
-    }else{
+            // void one by one, data $payments wajib update
+            $sql_query="UPDATE pos_detail_backup SET temp='V' WHERE uid='$pid' AND transcode = '$trans'";
+            $result_pos = mysql_query($sql_query);
+            if (!$result_pos) {   error("QUERY_ERROR");   exit; }
 
-          if($del == 1){
+            // total baris detail
+            $query_eud = "SELECT count(uid) FROM pos_detail_backup WHERE sales_code ='$sales_code'
+                          AND temp = '9' AND transcode = '$trans'";
+            $fetch_eud = mysql_query($query_eud);
+            if (!$fetch_eud) { error("QUERY_ERROR"); exit; }
+            $eud_detail = @mysql_result($fetch_eud,0,0);
 
-              // void one by one, data $payments wajib update
-              $sql_query="UPDATE pos_detail_backup SET temp='V' WHERE uid='$pid' AND transcode = '$trans'";
-              $result_pos = mysql_query($sql_query);
-              if (!$result_pos) {   error("QUERY_ERROR");   exit; }
+            // detail
+            $query_detail = "SELECT uid,detail,datedetail,temp,qty FROM pos_detail_backup
+                            WHERE sales_code ='$sales_code' AND temp = '9' AND transcode = '$trans'";
+            $fetch_detail = mysql_query($query_detail);
+            if (!$fetch_detail) {   error("QUERY_ERROR"); exit; }
 
-              // total baris detail
-              $query_eud = "SELECT count(uid) FROM pos_detail_backup WHERE sales_code ='$sales_code'
-                            AND temp = '9' AND transcode = '$trans'";
-              $fetch_eud = mysql_query($query_eud);
-              if (!$fetch_eud) { error("QUERY_ERROR"); exit; }
-              $eud_detail = @mysql_result($fetch_eud,0,0);
+            for ($le=0; $le<$eud_detail; $le++) {
 
-              // detail
-              $query_detail = "SELECT uid,detail,datedetail,temp,qty FROM pos_detail_backup
-                              WHERE sales_code ='$sales_code' AND temp = '9' AND transcode = '$trans'";
-              $fetch_detail = mysql_query($query_detail);
-              if (!$fetch_detail) {   error("QUERY_ERROR"); exit; }
+              #$pid = @mysql_result($fetch_detail,$le,0);
+              $detail = @mysql_result($fetch_detail,$le,1);
+              $detail_ex = explode("|", $detail);
+              $datedetail = @mysql_result($fetch_detail,$le,2);
+              $temp = @mysql_result($fetch_detail,$le,3);
+              $qtyp = @mysql_result($fetch_detail,$le,4);
 
-              for ($le=0; $le<$eud_detail; $le++) {
+              $itemcode = $detail_ex[0];
+              $disc_rate = $detail_ex[4];
+              $gross = $detail_ex[5];
+              $nett = $detail_ex[6];
+              $nettax = $detail_ex[7];
+              $vat = $detail_ex[8];
 
-                #$pid = @mysql_result($fetch_detail,$le,0);
-                $detail = @mysql_result($fetch_detail,$le,1);
-                $detail_ex = explode("|", $detail);
-                $datedetail = @mysql_result($fetch_detail,$le,2);
-                $temp = @mysql_result($fetch_detail,$le,3);
-                $qtyp = @mysql_result($fetch_detail,$le,4);
+              // SUM
+              $total_item1 += $qtyp;
+              $total_gross1 += $gross;
+              $total_nett1 += $nett;
+              $total_nettax1 += $nettax;
+              $total_vat1 += $vat;
 
-                $itemcode = $detail_ex[0];
-                $disc_rate = $detail_ex[4];
-                $gross = $detail_ex[5];
-                $nett = $detail_ex[6];
-                $nettax = $detail_ex[7];
-                $vat = $detail_ex[8];
+              $dump_ap[$le] = $itemcode.'|'.$qtyp.'|'.$aaa;
 
-                // SUM
-                $total_item1 += $qtyp;
-                $total_gross1 += $gross;
-                $total_nett1 += $nett;
-                $total_nettax1 += $nettax;
-                $total_vat1 += $vat;
+            }
 
-                $dump_ap[$le] = $itemcode.'|'.$qtyp.'|'.$aaa;
+            #$cash_remain1 = $cash_amount - $total_nett1;
+            $cash_remain1 = $cash_amount + $credit_amount + $debit_amount - $total_nett1;
 
-              }
+            $dump_apdet = implode('|',$dump_ap);
+            $payments_apdet = $total_item1.'|'.$total_gross1.'|'.$total_nett1.'|'.$total_nettax1.'|'.$total_vat1.'|'.$cash_amount.'|'.$cash_remain1.'|'.$credit_amount.'|'.$debit_amount.'|'.$krediet_kaart.'|'.$debiet_kaart.'|'.$card_type;
 
-              #$cash_remain1 = $cash_amount - $total_nett1;
-              $cash_remain1 = $cash_amount + $credit_amount + $debit_amount - $total_nett1;
+            $sql_querys="UPDATE pos_total2 SET total = '$payments_apdet', dump='$dump_apdet' WHERE sales_code='$sales_code' AND transcode='$trans'";
+            $result_p = mysql_query($sql_querys);
+            if (!$result_p) {   error("QUERY_ERROR");exit; }
 
-              $dump_apdet = implode('|',$dump_ap);
-              $payments_apdet = $total_item1.'|'.$total_gross1.'|'.$total_nett1.'|'.$total_nettax1.'|'.$total_vat1.'|'.$cash_amount.'|'.$cash_remain1.'|'.$credit_amount.'|'.$debit_amount.'|'.$krediet_kaart.'|'.$debiet_kaart.'|'.$card_type;
+        }/*else if($del == 2){
 
-              $sql_querys="UPDATE pos_total2 SET total = '$payments_apdet', dump='$dump_apdet' WHERE sales_code='$sales_code' AND transcode='$trans'";
+              // unknown function
+              $query_detail = "SELECT uid,qty,price,disc_rate,transaction_code FROM pos_total2 where uid = '$uid'";
+              $result_detail = mysql_query($query_detail);
+              if (!$result_detail) {   error("QUERY_ERROR");   exit; }
+
+              $uid =  @mysql_result($result_detail,0,0);
+              $qtyd =  @mysql_result($result_detail,0,1);
+              $price =  @mysql_result($result_detail,0,2);
+              $disc =  @mysql_result($result_detail,0,3);
+              $disc =  @mysql_result($result_detail,0,3);
+
+              $newgross = $qtym*$price;
+              $newdis = $newgross*($disc/100);
+              $newnett = $newgross-$newdis;
+              $newvat = $newnett/11;
+              $newnettvat = $newvat*10;
+
+              $new_detail = $pcode.'|'.$barcode.'|'.$pname.'|'.$price.'|'.$newvat.'|'.$newdis.'|'.$newgross.'|'.$newnett.'|'.$newnettvat.'|'.$newvat;
+
+              $sql_querys="UPDATE pos_total2 SET detail = '$new_detail',qty='$qtym' WHERE uid='$uid'";
               $result_p = mysql_query($sql_querys);
+              // var_dump($sql_querys);
               if (!$result_p) {   error("QUERY_ERROR");exit; }
+        }
 
-          }/*else if($del == 2){
+        // Update hasil dari void, lalu update ke pos total
+        $query ="SELECT sum(nett) as nett ,sum(gross) as gross,sum(qty) as qty,sum(netvat) as netvat,sum(vat) as vat FROM pos_detail where temp = '9' AND transcode = '$trans'";
+        $result = mysql_query($query);
+        if (!$result) {   error("QUERY_ERROR");   exit; }
+        $nett =  @mysql_result($result,0,0);
+        $gross =  @mysql_result($result,0,1);
+        $qty =  @mysql_result($result,0,2);
+        $netvat =  @mysql_result($result,0,3);
+        $vat =  @mysql_result($result,0,4);
 
-                // unknown function
-                $query_detail = "SELECT uid,qty,price,disc_rate,transaction_code FROM pos_total2 where uid = '$uid'";
-                $result_detail = mysql_query($query_detail);
-                if (!$result_detail) {   error("QUERY_ERROR");   exit; }
+    //GET data from pos_total
+    $query_st = "SELECT cash_amount,debit_amount,credit_amount FROM pos_total WHERE transaction_code = '$trans'";
+    $result_st = mysql_query($query_st);
+    if (!$result_st) {   error("QUERY_ERROR");exit; }
+    $cash_amount 	=  @mysql_result($result_st,0,0);
+    $debit_amount 	=  @mysql_result($result_st,0,1);
+    $credit_amount 	=  @mysql_result($result_st,0,2);
+    $remain 		= $cash_amount - $nett;
 
-                $uid =  @mysql_result($result_detail,0,0);
-                $qtyd =  @mysql_result($result_detail,0,1);
-                $price =  @mysql_result($result_detail,0,2);
-                $disc =  @mysql_result($result_detail,0,3);
-                $disc =  @mysql_result($result_detail,0,3);
+        $sql_query_u="UPDATE pos_total2 SET total_gross= '$gross',total_nett = '$nett',total_nettax = '$netvat',total_vat = '$vat', total_item = '$qty',cash_remain = '$remain'  WHERE transaction_code = '$trans'";
 
-                $newgross = $qtym*$price;
-                $newdis = $newgross*($disc/100);
-                $newnett = $newgross-$newdis;
-                $newvat = $newnett/11;
-                $newnettvat = $newvat*10;
-
-                $new_detail = $pcode.'|'.$barcode.'|'.$pname.'|'.$price.'|'.$newvat.'|'.$newdis.'|'.$newgross.'|'.$newnett.'|'.$newnettvat.'|'.$newvat;
-
-                $sql_querys="UPDATE pos_total2 SET detail = '$new_detail',qty='$qtym' WHERE uid='$uid'";
-                $result_p = mysql_query($sql_querys);
-                // var_dump($sql_querys);
-                if (!$result_p) {   error("QUERY_ERROR");exit; }
-         }
-
-          // Update hasil dari void, lalu update ke pos total
-          $query ="SELECT sum(nett) as nett ,sum(gross) as gross,sum(qty) as qty,sum(netvat) as netvat,sum(vat) as vat FROM pos_detail where temp = '9' AND transcode = '$trans'";
-          $result = mysql_query($query);
-          if (!$result) {   error("QUERY_ERROR");   exit; }
-          $nett =  @mysql_result($result,0,0);
-          $gross =  @mysql_result($result,0,1);
-          $qty =  @mysql_result($result,0,2);
-          $netvat =  @mysql_result($result,0,3);
-          $vat =  @mysql_result($result,0,4);
-
-		  //GET data from pos_total
-			$query_st = "SELECT cash_amount,debit_amount,credit_amount FROM pos_total WHERE transaction_code = '$trans'";
-			$result_st = mysql_query($query_st);
-			if (!$result_st) {   error("QUERY_ERROR");exit; }
-			$cash_amount 	=  @mysql_result($result_st,0,0);
-			$debit_amount 	=  @mysql_result($result_st,0,1);
-			$credit_amount 	=  @mysql_result($result_st,0,2);
-			$remain 		= $cash_amount - $nett;
-
-          $sql_query_u="UPDATE pos_total2 SET total_gross= '$gross',total_nett = '$nett',total_nettax = '$netvat',total_vat = '$vat', total_item = '$qty',cash_remain = '$remain'  WHERE transaction_code = '$trans'";
-
-          $result_pos_u = mysql_query($sql_query_u);
-          if (!$result_pos_u) {   error("QUERY_ERROR");   exit; }
+        $result_pos_u = mysql_query($sql_query_u);
+        if (!$result_pos_u) {   error("QUERY_ERROR");   exit; }
 */
 
-      if($del == 1){
-        echo '<input type="button" class="btn btn-primary" style=" color:#fff; width:40%;border-color:#81C784;border-bottom-left-radius:0px;border-top-left-radius:0px;" value="Done" onclick="selectIt()">';
-      }else{
-         echo("<meta http-equiv='Refresh' content='0; URL=$home/pos_cart_void.php?void=void&trans=$trans&security=$sec>");
-      }
+    if($del == 1){
+      echo '<input type="button" class="btn btn-primary" style=" color:#fff; width:40%;border-color:#81C784;border-bottom-left-radius:0px;border-top-left-radius:0px;" value="Done" onclick="selectIt()">';
+    }else{
+        echo("<meta http-equiv='Refresh' content='0; URL=$home/pos_cart_void.php?void=void&trans=$trans&security=$sec>");
     }
-
+  }
 
 }
 ?>
