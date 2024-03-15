@@ -3,10 +3,10 @@ $intro = $_POST['intro'];
 
 if ($intro == 'akbar'){
 
-  include "config/common.inc";
-	include "config/dbconn.inc";
-	include "config/text_main_{$lang}.inc";
-	include "config/user_functions_{$lang}.inc";
+  include "config/common.php";
+	include "config/dbconn.php";
+	include "config/text_main_{$lang}.php";
+	include "config/user_functions_{$lang}.php";
 
   $db1 = $_POST['db1'];
   $db12 = file_get_contents($db1);
@@ -26,8 +26,8 @@ if ($intro == 'akbar'){
       $ki = $k + 1;
     ?>
     <fieldset>
-      <span>Database <?=$ki?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="file" name="db<?=$ki?>" tabindex="<?=$ki?>" autofocus>
+      <span>Database <?php echo $ki?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="file" name="db<?php echo $ki?>" tabindex="<?php echo $ki?>" autofocus>
     </fieldset>
     <?php
     }
@@ -40,4 +40,4 @@ if ($intro == 'akbar'){
     <p class="copyright">Designed by <a href="https://feelbuy.co.id" target="_blank" title="Colorlib">Feelbuy</a></p>
   </form>
 </div>
-<? } ?>
+<?php } ?>

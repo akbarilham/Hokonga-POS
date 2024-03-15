@@ -1,4 +1,4 @@
-<? 
+<?php
 /*
   Creator By : Cihuy Programmer
   Inspiration : Ena ena
@@ -16,7 +16,7 @@ if(!$login_id OR $login_level < "1") {
 } else {
 ?>
 <!DOCTYPE html>
-<html lang="<?=$lang?>">
+<html lang="<?php echo $lang?>">
   <head>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +25,7 @@ if(!$login_id OR $login_level < "1") {
     <meta name="keyword" content="FEEL BUY, ikbiz, Bootstrap, Responsive, Youngkay">
     <link rel="shortcut icon" href="img/favicon.ico">
 
-    <title><?=$web_erp_name?></title>
+    <title><?php echo $web_erp_name?></title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -35,8 +35,8 @@ if(!$login_id OR $login_level < "1") {
     <link href="assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
     <link rel="stylesheet" href="css/owl.carousel.css" type="text/css">
 
-      <!--right slidebar-->
-      <link href="css/slidebars.css" rel="stylesheet">
+    <!--right slidebar-->
+    <link href="css/slidebars.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
 
@@ -65,10 +65,10 @@ if(!$login_id OR $login_level < "1") {
             <div class="row"> <!-- start div row -->
             <div class="col-lg-3" style="margin-left:20px">
               <form action="pos_closing.php">
-                <input type="text" name="close" class="form-control" placeholder="<?=date('Y-m-d')?>"/>
+                <input type="text" name="close" class="form-control" placeholder="<?php echo date('Y-m-d')?>"/>
                 <input type="submit" class="form-control" value="Closing"/>
               </form>
-              <a href="<?=$home?>/pos_admin.php" class="btn btn-primary" style=" color:#fff; width:30%;border-color:#81C784;border-bottom-left-radius:0px;border-top-left-radius:0px;">BACK</a>
+              <a href="<?php echo $home?>/pos_admin.php" class="btn btn-primary" style=" color:#fff; width:30%;border-color:#81C784;border-bottom-left-radius:0px;border-top-left-radius:0px;">BACK</a>
             </div>
             </div>
 
@@ -77,7 +77,7 @@ if(!$login_id OR $login_level < "1") {
     </section>
     <!--main content end-->
 
-      <? include "right_slidebar.inc"; ?>
+      <?php include "right_slidebar.php"; ?>
     
     
   </section>
@@ -180,5 +180,5 @@ if ($closing != '') {
 }
   
 ?>
-<? include "footer.inc"; ?>
-<? } ?>
+<?php include "footer.php"; ?>
+<?php } ?>
