@@ -48,7 +48,7 @@ Creator : Cihuy Programmer
 <div class="panel-body progress-panel">
   <div class="task-progress">
     <h1>TRANSACTION HOLD hold</h1>
-    <p><?= $login_id ?>-<?= $hostname ?></p>
+    <p><?php echo $login_id ?>-<?php echo $hostname ?></p>
   </div>
 </div>
 <?php
