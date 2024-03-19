@@ -63,13 +63,13 @@ if (!$login_id OR $login_id == "" OR $login_level < "1") {
     if ($val == 'o') {
         $list = md5($date);
         echo ("
-    <div id='viewResult<?=$index?>''>
+    <div id='viewResult<?php echo $index?>''>
     </div>
     <meta http-equiv='Refresh' content='2; URL=$home'>");
     } else if ($val == 'm') {
         $list = md5($date);
         echo ("
-    <div id='viewResult<?=$index?>''>
+    <div id='viewResult<?php echo $index?>''>
     </div>
     <meta http-equiv='Refresh' content='2; URL=$home/pos_admin.php'>");
     } else {
@@ -162,29 +162,29 @@ if (!$login_id OR $login_id == "" OR $login_level < "1") {
         <!-- Menampilkan result -->
         
 		
-		<?if($val != $pco){?>
-			<div id="viewResult<?= $index ?>">
+		<?php if($val != $pco){?>
+			<div id="viewResult<?php echo  $index ?>">
 				<p style='background:red; width:100%; padding: 7px;color:#FFF;'>Item tidak terdaftar</p>
 			</div>
-		<?}else{?>
-			<div id="viewResult<?= $index ?>">
+		<?php } else { ?>
+			<div id="viewResult<?php echo  $index ?>">
 			</div>
-		<?}?>
-     <?
+		<?php } ?>
+     <?php
         }else if($bind == $qty){?>
-			 <div id="viewResult<?= $index ?>">
-				<p style='background:red; width:100%; padding: 7px;color:#FFF;'>Jumlah Item <?=$qtys?> sama dengan 3 [<?=substr($val,0,3)?>]<?=substr($val,4,15)?> kode awal karakter barcode</p>
+			 <div id="viewResult<?php echo  $index ?>">
+				<p style='background:red; width:100%; padding: 7px;color:#FFF;'>Jumlah Item <?php echo $qtys?> sama dengan 3 [<?php echo substr($val,0,3)?>]<?php echo substr($val,4,15)?> kode awal karakter barcode</p>
 			</div>
 			
-		<?} else if(!is_numeric($qty)){?>
-			<div id="viewResult<?= $index ?>">
+		<?php } else if(!is_numeric($qty)){?>
+			<div id="viewResult<?php echo  $index ?>">
 				<p style='background:red; width:100%; padding: 7px;color:#FFF;'>Quanitity mengandung Karakter</p>
 			</div>
-		<?} else if($s_awal < $qty){?>
-			<div id="viewResult<?= $index ?>">
-				<p style='background:red; width:100%; padding: 7px;color:#FFF;'>Sisa stok hanya <?=$s_awal?></p>
+		<?php } else if($s_awal < $qty){?>
+			<div id="viewResult<?php echo  $index ?>">
+				<p style='background:red; width:100%; padding: 7px;color:#FFF;'>Sisa stok hanya <?php echo $s_awal?></p>
 			</div>
-		<?}else {
+		<?php }else {
             //jika tidak ada transcode buat transaksi baru
 			$detail = $code.'|'.$barcode.'|'.$pname.'|'.$price_sale.'|'.$dc_rate.'|'.$gross.'|'.$nett.'|'.$nettvat.'|'.$vat.'|'.$uid;
             if (!$transcode1) {
@@ -215,9 +215,6 @@ if (!$login_id OR $login_id == "" OR $login_level < "1") {
                 $vat1     = $nett1 / 11;
                 $nettvat1 = $vat1 * 10;
 				
-				
-				
-				
 				if ($code == $pcode) {
 					$detail = $code.'|'.$barcode.'|'.$pname.'|'.$price_sale.'|'.$dc_rate.'|'.$gross1.'|'.$nett1.'|'.$nettvat1.'|'.$vat1.'|'.$uid;
 					 mysql_query("UPDATE pos_detail2 SET qty = '$addqty', detail = '$detail' WHERE temp = '0' AND org_pcode = '$pcode' AND transcode = '$transcode1'");
@@ -228,42 +225,33 @@ if (!$login_id OR $login_id == "" OR $login_level < "1") {
 				}
 			}
             
-            
-?>
-      <?
             if ($qtys < 0 || $bind == $qtys) {
-?>
-          <div id="viewResult<?= $index ?>">
+        ?>
+          <div id="viewResult<?php echo  $index ?>">
 		  
           </div>
-      <?
-            } else {
-                
-                
-                
+<?php
+    } else {                
 ?>
 
 
-       <div id="viewResult<?= $index ?>">
+       <div id="viewResult<?php echo  $index ?>">
 	   
-	   <?if($package != ''){
+	   <?php if($package != ''){
 			echo "<p style='background:green; width:100%; padding: 7px;color:#FFF;'>Item ".$codep." Termasuk Paket ".$package." code ".$code."</p>";
 			
 		}else{
 			
 		}?>
-	   
 	  
       </div>
 
-
-
       <!-- Menampilkan result 
        <table class="table table1" id='newTable'>
-       <tr id='<?= $con + 1 ?>'>
+       <tr id='<?php echo  $con + 1 ?>'>
        
-        <td style="width:90px"><?= $code ?></td>
-         <td style="width:120px"><?= $barcode ?></td>
+        <td style="width:90px"><?php echo  $code ?></td>
+         <td style="width:120px"><?php echo  $barcode ?></td>
         <td style="width:250px"><?php
                 if (strlen($pname) > 30) {
                     echo substr($pname, 0, 30) . '...';
@@ -272,23 +260,23 @@ if (!$login_id OR $login_id == "" OR $login_level < "1") {
                 }
 ?>
                           </td>
-        <td style="width:80px;text-align:right;"><?= number_format($price_sale); ?></td>
+        <td style="width:80px;text-align:right;"><?php echo  number_format($price_sale); ?></td>
         <td style="width:40px">
-          <input type='text' name='<?= $con + 1 ?>i' id='<?= $con + 1 ?>i' value='<?= $qty ?>'style='width:50px;' onkeyup='test()' class='submit_on_enter_edit_s hover'>
+          <input type='text' name='<?php echo  $con + 1 ?>i' id='<?php echo  $con + 1 ?>i' value='<?php echo  $qty ?>'style='width:50px;' onkeyup='test()' class='submit_on_enter_edit_s hover'>
         </td>
         <td style="width:90px;text-align:right;">
-          <span name='<?= $con + 1 ?>j' id='<?= $con + 1 ?>j' ><?= number_format($gross) ?></span>
+          <span name='<?php echo  $con + 1 ?>j' id='<?php echo  $con + 1 ?>j' ><?php echo  number_format($gross) ?></span>
         </td>
-        <td style="width:30px;text-align:right;"><?= $dc_rate ?>%</td>
+        <td style="width:30px;text-align:right;"><?php echo  $dc_rate ?>%</td>
         <td style="width:90px;text-align:right;">
-          <span name='<?= $con + 1 ?>k' id='<?= $con + 1 ?>k' ><?= number_format($nett) ?></span>
+          <span name='<?php echo  $con + 1 ?>k' id='<?php echo  $con + 1 ?>k' ><?php echo  number_format($nett) ?></span>
         </td>
         <td style="width:10px"><a href="#" class="delete fa fa-times-circle fa-2x" style="color:#FF0000;"></a></td>
       </tr>
       </table>
 
      -->
-    <?
+    <?php
             }
         }
     }
