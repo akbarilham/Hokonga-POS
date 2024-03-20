@@ -1,12 +1,12 @@
 <?php
-include "config/common.inc";
+include "config/common.php";
 if(!$login_id OR $login_id == "" OR $login_level < "1") {
   echo ("<meta http-equiv='Refresh' content='0; URL=$home'>");
 } else {
 
-include "config/dbconn.inc";
-include "config/text_main_{$lang}.inc";
-include "config/user_functions_{$lang}.inc";
+include "config/dbconn.php";
+include "config/text_main_{$lang}.php";
+include "config/user_functions_{$lang}.php";
     
 
     //get search term
@@ -28,7 +28,7 @@ include "config/user_functions_{$lang}.inc";
                         OR RIGHT(org_barcode,6) LIKE '%$search_each%'
                         OR RIGHT(org_pcode,4) LIKE '%$search_each%'
                        
-                        ";    
+            ";    
         }
         else{
             $find .="  AND LEFT(org_barcode,8) LIKE '%$search_each%' 
@@ -37,8 +37,7 @@ include "config/user_functions_{$lang}.inc";
                         OR pname LIKE '%$search_each%' 
                         OR RIGHT(org_barcode,6) LIKE '%$search_each%'
                         OR RIGHT(org_pcode,4) LIKE '%$search_each%'
-
-                        ";
+            ";
         }
     }
     //get matched data from skills table
