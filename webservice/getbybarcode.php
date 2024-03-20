@@ -4,11 +4,10 @@ if(!$login_id OR $login_id == "" OR $login_level < "1") {
   echo ("<meta http-equiv='Refresh' content='0; URL=$home'>");
 } else {
 
-include "config/dbconn.php";
-include "config/text_main_{$lang}.php";
-include "config/user_functions_{$lang}.php";
+    include "config/dbconn.php";
+    include "config/text_main_{$lang}.php";
+    include "config/user_functions_{$lang}.php";
     
-
     //get search term
     $searchTerm = $_GET['term'];
 
@@ -19,19 +18,18 @@ include "config/user_functions_{$lang}.php";
         $x++;
         if($x==1){
             $find .="
-                        LEFT(org_barcode,8) LIKE '%$search_each%' 
-                        OR LEFT(org_pcode,4) LIKE '%$search_each%'
-                        OR org_pcode LIKE '%$search_each%'
-                        OR org_barcode LIKE '%$search_each%' 
-                        OR REPLACE(pname, ' ', '') = REPLACE('%$search_each%', ' ', '')
-                        OR pname LIKE '%$search_each%' 
-                        OR RIGHT(org_barcode,6) LIKE '%$search_each%'
-                        OR RIGHT(org_pcode,4) LIKE '%$search_each%'
-                       
+                LEFT(org_barcode,8) LIKE '%$search_each%' 
+                OR LEFT(org_pcode,4) LIKE '%$search_each%'
+                OR org_pcode LIKE '%$search_each%'
+                OR org_barcode LIKE '%$search_each%' 
+                OR REPLACE(pname, ' ', '') = REPLACE('%$search_each%', ' ', '')
+                OR pname LIKE '%$search_each%' 
+                OR RIGHT(org_barcode,6) LIKE '%$search_each%'
+                OR RIGHT(org_pcode,4) LIKE '%$search_each%'     
             ";    
         }
         else{
-            $find .="  AND LEFT(org_barcode,8) LIKE '%$search_each%' 
+            $find .="   AND LEFT(org_barcode,8) LIKE '%$search_each%' 
                         OR LEFT(org_pcode,4) LIKE '%$search_each%'
                         OR org_pcode LIKE '%$search_each%' 
                         OR pname LIKE '%$search_each%' 
