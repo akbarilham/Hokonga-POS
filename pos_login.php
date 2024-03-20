@@ -1,10 +1,10 @@
-<?
+<?php
 session_start();
 
-include "config/common.inc";
-include "config/dbconn.inc";
-include "config/text_main_{$lang}.inc";
-include "config/user_functions_{$lang}.inc";
+include "config/common.php";
+include "config/dbconn.php";
+include "config/text_main_{$lang}.php";
+include "config/user_functions_{$lang}.php";
 
 $mmenu = "user";
 $smenu = "user_login";
@@ -18,7 +18,7 @@ if(isset($_POST['step_next'])){
 if(!$step_next) {
 
 $query_logo = "SELECT img1 FROM client_branch WHERE branch_code = 'CORP_01'";
-$result_logo = mysql_query($query_logo);
+$result_logo = mysqli_query($dbconn, $query_logo);
 if(!$result_logo) { error("QUERY_ERROR"); exit; }
    $row_logo = mysql_fetch_object($result_logo);
 
@@ -27,7 +27,7 @@ $logo_file = $row_logo->img1;
 ?>
 
 <!DOCTYPE html>
-<html lang="<?=$lang?>">
+<html lang="<?php echo $lang?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +36,7 @@ $logo_file = $row_logo->img1;
     <meta name="keyword" content="FEEL BUY, ikbiz, Bootstrap, Responsive, Youngkay">
     <link rel="shortcut icon" href="img/favicon.ico">
 
-    <title><?=$web_erp_name?></title>
+    <title><?php echo $web_erp_name?></title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -111,16 +111,15 @@ $logo_file = $row_logo->img1;
   </body>
 </html>
 
-
-<?
+<?php
 } else if($step_next == "permit_okay") {
 
-        $new_id = $_POST['new_id'];
-        $new_pwd = $_POST['new_pwd'];
+    $new_id = $_POST['new_id'];
+    $new_pwd = $_POST['new_pwd'];
 
 	$query1 = "SELECT branch_code,gate,subgate,shop_code,user_pw,user_level,visit,default_lang,user_name,shop_flag,shop_userlevel 
 			FROM admin_user WHERE user_id = '$new_id'";
-	$result1 = mysql_query($query1);
+	$result1 = mysqli_query($dbconn, $query1);
 	if(!$result1) { error("QUERY_ERROR"); exit; }
 	$row1 = mysql_fetch_object($result1);
 
@@ -138,53 +137,50 @@ $logo_file = $row_logo->img1;
    
 
 	// change Input-Word into Password
-	$result2 = mysql_query("SELECT old_password('$new_pwd')"); // login with old_password; because different mysql version
+	$result2 = mysqli_query($dbconn, "SELECT old_password('$new_pwd')"); // login with old_password; because different mysql version
 	$user_passwd2 = mysql_result($result2,0,0);
-		if(strcmp($db_passwd,$user_passwd2)) {      
-			error("LOGIN_INVALID_PW");
-			exit;
-		} else {
+    if(strcmp($db_passwd,$user_passwd2)) {      
+        error("LOGIN_INVALID_PW");
+        exit;
+    } else {
 
- 	      $signdate = time();
- 	      $m_ip = getenv('REMOTE_ADDR');
- 	      
-			$cnt_visit = $cnt_visit + 1;	
-			$resultV = mysql_query("UPDATE admin_user SET visit = $cnt_visit, log_in = $signdate, log_ip = '$m_ip' WHERE user_id = '$new_id'");
-			if(!$resultV) { error("QUERY_ERROR"); exit; }
+        $signdate = time();
+        $m_ip = getenv('REMOTE_ADDR');
         
+        $cnt_visit = $cnt_visit + 1;	
+        $resultV = mysqli_query($dbconn, "UPDATE admin_user SET visit = $cnt_visit, log_in = $signdate, log_ip = '$m_ip' WHERE user_id = '$new_id'");
+        if(!$resultV) { error("QUERY_ERROR"); exit; }
+    
 
-	    //session_start();
-        $login_id = "$new_id";
-        $login_level = "$db_userlevel";
-        $login_branch = "$db_branch";
-        $login_gate = "$db_gate";
-        $login_subgate = "$db_subgate";
-        $login_shop = "$db_shop_code";
-        $login_ip = "$m_ip";
-		$login_user_name = "$db_user_name";
-		$login_shop_flag = "$db_shop_flag";
-		$login_shop_userlevel = "$db_shop_userlevel";
+    //session_start();
+    $login_id = "$new_id";
+    $login_level = "$db_userlevel";
+    $login_branch = "$db_branch";
+    $login_gate = "$db_gate";
+    $login_subgate = "$db_subgate";
+    $login_shop = "$db_shop_code";
+    $login_ip = "$m_ip";
+    $login_user_name = "$db_user_name";
+    $login_shop_flag = "$db_shop_flag";
+    $login_shop_userlevel = "$db_shop_userlevel";
+    
+    
+    SetCookie("login_id",$login_id,0,"/");
+    SetCookie("login_level",$login_level,0,"/");
+    SetCookie("login_branch",$login_branch,0,"/");
+    SetCookie("login_gate",$login_gate,0,"/");
+    SetCookie("login_subgate",$login_subgate,0,"/");
+    SetCookie("login_shop",$login_shop,0,"/");
+    SetCookie("login_ip",$login_ip,0,"/"); 
+    SetCookie("loco",$loco,0,"/");
+    SetCookie("login_user_name",$login_user_name,0,"/");
+    SetCookie("login_shop_flag",$login_shop_flag,0,"/");
+    SetCookie("login_shop_userlevel",$login_shop_userlevel,0,"/");
+
         
-        
-		SetCookie("login_id",$login_id,0,"/");
-	    SetCookie("login_level",$login_level,0,"/");
-		SetCookie("login_branch",$login_branch,0,"/");
-	    SetCookie("login_gate",$login_gate,0,"/");
-	    SetCookie("login_subgate",$login_subgate,0,"/");
-	    SetCookie("login_shop",$login_shop,0,"/");
-	    SetCookie("login_ip",$login_ip,0,"/"); 
-		SetCookie("loco",$loco,0,"/");
-		SetCookie("login_user_name",$login_user_name,0,"/");
-		SetCookie("login_shop_flag",$login_shop_flag,0,"/");
-		SetCookie("login_shop_userlevel",$login_shop_userlevel,0,"/");
+    echo ("<meta http-equiv='Refresh' content='0; URL=pos.php'>");
 
-	      
-	      echo ("<meta http-equiv='Refresh' content='0; URL=pos.php'>");
-
-		}
-
-
+    }
 
 }
 ?>
-
