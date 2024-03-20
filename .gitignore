@@ -10,3 +10,5 @@ img_pos/*
 backup
 assets
 config/*
+# list erp files below
+*crm*
