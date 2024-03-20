@@ -12,3 +12,17 @@ assets
 config/*
 # list erp files below
 *crm*
+*div*
+*finance*
+*graph*
+*hr_member*
+*inventory*
+*logistic*
+*process*
+*report*
+*restore*
+*sales*
+*system*
+*website*
+*wms*
+*work*
