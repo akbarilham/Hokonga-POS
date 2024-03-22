@@ -2,29 +2,29 @@
 /*
  Modified by : Cihuy Programmer;
 */
-include "config/common.inc";
+include "config/common.php";
 if(!$login_id OR $login_id == "" OR $login_level < "1") {
   echo ("<meta http-equiv='Refresh' content='0; URL=$home'>");
 } else {
 
-include "config/dbconn.inc";
-include "config/text_main_{$lang}.inc";
-include "config/user_functions_{$lang}.inc";
+include "config/dbconn.php";
+include "config/text_main_{$lang}.php";
+include "config/user_functions_{$lang}.php";
 
 function start_transaction(){
-        mysql_query("START TRANSACTION");
+	mysqli_query($dbconn, "START TRANSACTION");
 }
 
 function begin(){
-        mysql_query("BEGIN");
+	mysqli_query($dbconn, "BEGIN");
 }
 
 function commit(){
-        mysql_query("COMMIT");
+	mysqli_query($dbconn, "COMMIT");
 }
 
 function rollback(){
-        mysql_query("ROLLBACK");
+	mysqli_query($dbconn, "ROLLBACK");
 }
 
 $voids = $_GET['voids'];
@@ -32,19 +32,19 @@ $transcode = $_GET['trans'];
 
 // Get data count from POS DETAIL
 $query_pos_detail_C = "SELECT count(transcode) FROM pos_detail2 WHERE transcode = '$transcode' AND temp='9'";
-$result_pos_detail_C = mysql_query($query_pos_detail_C);
+$result_pos_detail_C = mysqli_query($dbconn, $query_pos_detail_C);
 if (!$result_pos_detail_C) {   error("QUERY_ERROR");   exit; }
-$total_pos_detail = @mysql_result($result_pos_detail_C,0,0);
+$total_pos_detail = @mysqli_result($result_pos_detail_C,0,0);
 
 // Get data from POS TOTAL
 $query_pos_total = "SELECT transaction_code,trx_date,sales_code,total
 					FROM pos_total2 WHERE transcode = '$transcode'";
-$result_pos_total = mysql_query($query_pos_total);
+$result_pos_total = mysqli_query($dbconn, $query_pos_total);
 if (!$result_pos_total) {   error("QUERY_ERROR");   exit; }
 
-$transaction_code = @mysql_result($result_pos_total,0,0);
-$trx_date_J = @mysql_result($result_pos_total,0,1);
-$payments = @mysql_result($result_pos_total,0,3);
+$transaction_code = @mysqli_result($result_pos_total,0,0);
+$trx_date_J = @mysqli_result($result_pos_total,0,1);
+$payments = @mysqli_result($result_pos_total,0,3);
 $payments_ex = explode("|", $payments);
 
 $total_item = $payments_ex[0];
@@ -94,15 +94,15 @@ if ($total_pos_detail < 18 ) {
 
 // Kassier Aantal
 $query_kassier_2 = "SELECT no,sales_code from pos_client where id_number = '$pos_client_id'";
-$fetch_kassier_2 = mysql_query($query_kassier_2);
+$fetch_kassier_2 = mysqli_query($dbconn, $query_kassier_2);
 if (!$fetch_kassier_2) { error("QUERY_ERROR"); exit; }
-$kassier_aantal = mysql_result($fetch_kassier_2,0,0);
-$sales_code = mysql_result($fetch_kassier_2,0,1);
+$kassier_aantal = mysqli_result($fetch_kassier_2,0,0);
+$sales_code = mysqli_result($fetch_kassier_2,0,1);
 
 // Kassier naam
 $query_kassier = "SELECT user_name FROM admin_user WHERE user_id = '$sales_code'";
-$fetch_kassier = mysql_query($query_kassier);
-$kassier_naam = mysql_result($fetch_kassier,0,0);
+$fetch_kassier = mysqli_query($dbconn, $query_kassier);
+$kassier_naam = mysqli_result($fetch_kassier,0,0);
 ?>
 
 <style type="text/css">
@@ -159,11 +159,11 @@ for ($k=0; $k<$test; $k++) {
 
 	<div class="row" style="border: 0px solid red; margin-left: 0%;">
 		<div style="float:left; border: 0px solid green">
-			<div> No : ES<?=$kassier_aantal?>-<?=substr($transaction_code, 4)?> </div>
+			<div> No : ES<?php echo $kassier_aantal?>-<?php echo substr($transaction_code, 4)?> </div>
 		</div>
-		<div id="pageke" class="bok" style="float: left; margin-left: 20%"><?=$test?></div>
+		<div id="pageke" class="bok" style="float: left; margin-left: 20%"><?php echo $test?></div>
 		<div style="float: left; border: 0px solid blue; margin-left: 20%">
-			<div> <?=date("d/m/Y H:i", strtotime($trx_date))?> </div>
+			<div> <?php echo date("d/m/Y H:i", strtotime($trx_date))?> </div>
 		</div>
 	</div>
 
@@ -172,14 +172,14 @@ for ($k=0; $k<$test; $k++) {
 		<div> NPWP : 21.078.015.1-411.000</div>
 	</center><br/>
 	<div style="float:left;">
-		<div> Cashier : [<?=$kassier_aantal?>] - <?=$kassier_naam?> </div>
+		<div> Cashier : [<?php echo $kassier_aantal?>] - <?php echo $kassier_naam?> </div>
 	</div>
 	<div style="float: right;">
-		<? if($voids == 'leemte') { ?>
+		<?php if($voids == 'leemte') { ?>
 		<i> Void - </i> [Copy]
-    <? } else if($total_nett < 0) { ?>
+    <?php } else if($total_nett < 0) { ?>
     <i> Return - </i> [Copy]
-		<? } else { ?>
+		<?php } else { ?>
 		[Copy]
 		<?}?>
 	</div>
@@ -211,18 +211,18 @@ for ($k=0; $k<$test; $k++) {
 		</tr>
 		</thead>
 
-	<?
+	<?php
 	// Total all carts
 	$query_total_pay = "SELECT count(uid) FROM pos_detail2
 	WHERE pos_clientID = '$pos_client_id' AND transcode = '$transcode' AND temp = '9'";
-	$result_total_pay = mysql_query($query_total_pay);
+	$result_total_pay = mysqli_query($dbconn, $query_total_pay);
 	if (!$result_total_pay) {   error("QUERY_ERROR");   exit; }
-	$totuid = @mysql_result($result_total_pay,0,0);
+	$totuid = @mysqli_result($result_total_pay,0,0);
 
 	// Show all carts
 	$query_pay = "SELECT uid,detail,datedetail,temp,qty FROM pos_detail2
 	WHERE pos_clientID ='$pos_client_id' AND temp = '9' AND transcode = '$transcode'";
-	$result_pay = mysql_query($query_pay);
+	$result_pay = mysqli_query($dbconn, $query_pay);
 	if (!$result_pay) {   error("QUERY_ERROR");   exit; }
 
 	if ($new_totale > 18 AND $new_totale <= 40){
@@ -241,13 +241,13 @@ for ($k=0; $k<$test; $k++) {
 
 	// Looping for carts
 	for ($i; $i <$totuid_K3; $i++) {
-		$uid = @mysql_result($result_pay,$i,0);
-		$detail = @mysql_result($result_pay,$i,1);
+		$uid = @mysqli_result($result_pay,$i,0);
+		$detail = @mysqli_result($result_pay,$i,1);
 		$detail_ex = explode("|", $detail);
 		$detail_J_ex = explode("|", $detail_J);
-		$datedetail = @mysql_result($result_pay,$i,2);
-		$temp = @mysql_result($result_pay,$i,3);
-		$qty_k = @mysql_result($result_pay,$i,4);
+		$datedetail = @mysqli_result($result_pay,$i,2);
+		$temp = @mysqli_result($result_pay,$i,3);
+		$qty_k = @mysqli_result($result_pay,$i,4);
 
 		$pcode = $detail_ex[0];
 		$barcode = $detail_ex[1];
@@ -259,45 +259,45 @@ for ($k=0; $k<$test; $k++) {
 	    $subtotal = number_format($nett);
 
 	    $query = "SELECT pname FROM item_masters WHERE org_pcode = '$pcode'";
-	    $result = mysql_query($query);
+	    $result = mysqli_query($dbconn, $query);
 	    if (!$result) {   error("QUERY_ERROR");   exit; }
-	    $pname =  @mysql_result($result,0,0);
+	    $pname =  @mysqli_result($result,0,0);
 	    $p_name = explode(" ", $pname);
 
 	    ?>
 		<tr>
 			<td>
-				<span><?=substr($pcode,0,12)?></span>
+				<span><?php echo substr($pcode,0,12)?></span>
 			</td>
 			<td>
-				<span><? echo substr($p_name[0],0,7).' '.substr($p_name[1],0,7);?></span>
-				<!--<span><? echo substr($pname,0,20);?></span>-->
+				<span><?php echo substr($p_name[0],0,7).' '.substr($p_name[1],0,7);?></span>
+				<!--<span><?php echo substr($pname,0,20);?></span>-->
 			</td>
 			<td>
-				<center><span><?=number_format($qty_k)?></span></center>
+				<center><span><?php echo number_format($qty_k)?></span></center>
 			</td>
 			<td>
-				<center><span class="formaat"><?=number_format($price)?></span></center>
+				<center><span class="formaat"><?php echo number_format($price)?></span></center>
 			</td>
 			<td>
-				<center><span><?=$disc_rate?>%</span></center>
+				<center><span><?php echo $disc_rate?>%</span></center>
 			</td>
 			<td>
-				<center><span class="formaat"><?=$subtotal?></span></center>
+				<center><span class="formaat"><?php echo $subtotal?></span></center>
 			</td>
 		</tr>
 
-	<?
+	<?php
 	}
 	?>
 
-	<? if ($khusus == 1) { ?>
+	<?php if ($khusus == 1) { ?>
 		<tr class="lyn" style="margin-top: 30%">
 			<td colspan="2"><span><b><center>TOTAL</center></b></span></td>
-			<td><span><b><center><?=number_format($total_item)?></center></b></span></td>
-			<td><center><span class="formaat"><b><?=number_format($total_gross)?></b></span></center></td>
+			<td><span><b><center><?php echo number_format($total_item)?></center></b></span></td>
+			<td><center><span class="formaat"><b><?php echo number_format($total_gross)?></b></span></center></td>
 			<td>&nbsp;</td>
-			<td colspan="3"><center><span class="formaat"><b><?=number_format($total_nett)?></b></span></center></td>
+			<td colspan="3"><center><span class="formaat"><b><?php echo number_format($total_nett)?></b></span></center></td>
 		</tr>
 
 	</table>
@@ -312,12 +312,12 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td height="">&nbsp;</td>
 			</tr>
-			<? if($card_type == '6' OR $card_type == '9' OR $card_type == 'TK' OR $card_type == 'TD') { ?>
+			<?php if($card_type == '6' OR $card_type == '9' OR $card_type == 'TK' OR $card_type == 'TD') { ?>
 			<tr>
 				<td colspan="3">Nomor Kartu : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($card_no,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($card_no,-4);?></td>
 			</tr>
 			<tr>
 				<td><i>Harga sudah termasuk PPN</i></td>
@@ -327,18 +327,18 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
-			<? } else if ($krediet_kaart != '' AND $debiet_kaart != '') { ?>
+			<?php } else if ($krediet_kaart != '' AND $debiet_kaart != '') { ?>
 			<tr>
 				<td colspan="3">Kartu Debit : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($debiet_kaart,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($debiet_kaart,-4);?></td>
 			</tr>
 			<tr>
 				<td colspan="3">Kartu Kredit : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($krediet_kaart,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($krediet_kaart,-4);?></td>
 			</tr>
 			<tr>
 				<td><i>Harga sudah termasuk PPN</i></td>
@@ -348,7 +348,7 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
-			<? } else { ?>
+			<?php } else { ?>
 			<tr>
 				<td colspan="3">Nomor Kartu : </td>
 			</tr>
@@ -361,7 +361,7 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td height="">&nbsp;</td>
 			</tr>
-			<? } ?>
+			<?php } ?>
 		</table>
 		</div>
 
@@ -375,46 +375,46 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td colspan="3">Tunai</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=$nf_cash_amount?></b></td>
+				<td class="formaat"><b><?php echo $nf_cash_amount?></b></td>
 			</tr>
 			<?	if ($card_type == '9' OR $card_type == 'TK') { // Krediet	?>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kartu</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($credit_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($credit_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } else if ($card_type == '6' OR $card_type == 'TD') {  // Debiet ?>
+			<?php } else if ($card_type == '6' OR $card_type == 'TD') {  // Debiet ?>
 			<!-- Debiet  -->
 			<tr>
 				<td colspan="3">Debit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($debit_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($debit_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } else if ($krediet_kaart != '' AND $debiet_kaart != '') {  // Krediet & Debiet ?>
+			<?php } else if ($krediet_kaart != '' AND $debiet_kaart != '') {  // Krediet & Debiet ?>
 			<!-- Debiet  -->
 			<tr>
 				<td colspan="3">Debit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($debit_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($debit_amount)?></b></td>
 			</tr>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kredit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($credit_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($credit_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
@@ -422,7 +422,7 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;:&nbsp;</td>
 				<td class="formaat"><b>0</b></td>
 			</tr>
-			<? } else { // No Krediet dan Debiet ?>
+			<?php } else { // No Krediet dan Debiet ?>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kartu</td>
@@ -433,9 +433,9 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } ?>
+			<?php } ?>
 		</table>
 		</div>
 
@@ -445,12 +445,12 @@ for ($k=0; $k<$test; $k++) {
 			<div style="font-size: 8pt"> Terima kasih atas kunjungan nya</div>
 		</div>
 		</center>
-	<? } ?>
+	<?php } ?>
 
 	</table>
 	</center>
 
-	<? if ($khusus != 1) { ?>
+	<?php if ($khusus != 1) { ?>
 
 		<center>
 		<div class="col-md-12" style="margin-top:5%; border: 0px solid blue; float: left; margin-left: 5%">
@@ -459,13 +459,13 @@ for ($k=0; $k<$test; $k++) {
 		</div>
 		</center>
 
-	<? } ?>
+	<?php } ?>
 
    </div>
 	<!-- Sluiting div separator - Closing div separator -->
 </div>
 
-<?  } else if($k == 1) { ?>
+<?php  } else if($k == 1) { ?>
 
 <!-- Sisa nya perhitungan -->
 <!-- /////////////////////////////////////////////////////////////////////////// -->
@@ -474,11 +474,11 @@ for ($k=0; $k<$test; $k++) {
 
 	<div class="row" style="border: 0px solid red; margin-left: 0%;">
 		<div style="float:left; border: 0px solid green">
-			<div> No : ES<?=$kassier_aantal?>-<?=substr($transaction_code, 4)?> </div>
+			<div> No : ES<?php echo $kassier_aantal?>-<?php echo substr($transaction_code, 4)?> </div>
 		</div>
-		<div id="pageke" class="bok" style="float: left; margin-left: 20%"><?=$test?></div>
+		<div id="pageke" class="bok" style="float: left; margin-left: 20%"><?php echo $test?></div>
 		<div style="float: left; border: 0px solid blue; margin-left: 20%">
-			<div> <?=date("d/m/Y H:i", strtotime($trx_date))?> </div>
+			<div> <?php echo date("d/m/Y H:i", strtotime($trx_date))?> </div>
 		</div>
 	</div>
 	<br/>
@@ -514,14 +514,14 @@ for ($k=0; $k<$test; $k++) {
 	// Total all carts
 	$query_total_pay = "SELECT count(uid) FROM pos_detail2
 	WHERE pos_clientID = '$pos_client_id' AND transcode = '$transcode' AND temp = '9'";
-	$result_total_pay = mysql_query($query_total_pay);
+	$result_total_pay = mysqli_query($dbconn, $query_total_pay);
 	if (!$result_total_pay) {   error("QUERY_ERROR");   exit; }
-	$totuid = @mysql_result($result_total_pay,0,0);
+	$totuid = @mysqli_result($result_total_pay,0,0);
 
 	// Show all carts
 	$query_pay = "SELECT uid,detail,datedetail,temp,qty FROM pos_detail2
 	WHERE pos_clientID ='$pos_client_id' AND temp = '9' AND transcode = '$transcode'";
-	$result_pay = mysql_query($query_pay);
+	$result_pay = mysqli_query($dbconn, $query_pay);
 	if (!$result_pay) {   error("QUERY_ERROR");   exit; }
 
 	if ($new_totale > 18 AND $new_totale <= 40) {
@@ -539,13 +539,13 @@ for ($k=0; $k<$test; $k++) {
 
 	// Looping for carts
 	for ($i; $i <$totuid_K3; $i++) {
-		$uid_2 = @mysql_result($result_pay,$i,0);
-		$detail_2 = @mysql_result($result_pay,$i,1);
+		$uid_2 = @mysqli_result($result_pay,$i,0);
+		$detail_2 = @mysqli_result($result_pay,$i,1);
 		$detail_ex_2 = explode("|", $detail_2);
 		$detail_J_ex_2 = explode("|", $detail_J);
-		$datedetail_2 = @mysql_result($result_pay,$i,2);
-		$temp_2 = @mysql_result($result_pay,$i,3);
-		$qty_k_2 = @mysql_result($result_pay,$i,4);
+		$datedetail_2 = @mysqli_result($result_pay,$i,2);
+		$temp_2 = @mysqli_result($result_pay,$i,3);
+		$qty_k_2 = @mysqli_result($result_pay,$i,4);
 
 		$pcode_2 = $detail_ex_2[0];
 		$barcode_2 = $detail_ex_2[1];
@@ -557,29 +557,29 @@ for ($k=0; $k<$test; $k++) {
 	    $subtotal_2 = number_format($nett_2);
 
 	    $query = "SELECT pname FROM item_masters WHERE org_pcode = '$pcode_2'";
-	    $result = mysql_query($query);
+	    $result = mysqli_query($dbconn, $query);
 	    if (!$result) {   error("QUERY_ERROR");   exit; }
-	    $pname_2 =  @mysql_result($result,0,0);
+	    $pname_2 =  @mysqli_result($result,0,0);
 
 	    ?>
 		<tr>
 			<td>
-				<span><?=substr($pcode_2,0,12)?></span>
+				<span><?php echo substr($pcode_2,0,12)?></span>
 			</td>
 			<td>
-				<span><? echo substr($p_name[0],0,7).' '.substr($p_name[1],0,7);?></span>
+				<span><?php echo substr($p_name[0],0,7).' '.substr($p_name[1],0,7);?></span>
 			</td>
 			<td>
-				<center><span><?=number_format($qty_k_2)?></span></center>
+				<center><span><?php echo number_format($qty_k_2)?></span></center>
 			</td>
 			<td>
-				<center><span class="formaat"><?=number_format($price_2)?></span></center>
+				<center><span class="formaat"><?php echo number_format($price_2)?></span></center>
 			</td>
 			<td>
-				<center><span><?=$disc_rate_2?>%</span></center>
+				<center><span><?php echo $disc_rate_2?>%</span></center>
 			</td>
 			<td>
-				<center><span class="formaat"><?=$subtotal_2?></span></center>
+				<center><span class="formaat"><?php echo $subtotal_2?></span></center>
 			</td>
 		</tr>
 
@@ -587,14 +587,14 @@ for ($k=0; $k<$test; $k++) {
 	}
 	?>
 
-	<? if ($khusus == '2') { ?>
+	<?php if ($khusus == '2') { ?>
 
 		<tr class="lyn" style="margin-top: 30%">
 			<td colspan="2"><span><b><center>TOTAL</center></b></span></td>
-			<td><span><b><center><?=number_format($total_item)?></center></b></span></td>
-			<td><center><span class="formaat"><b><?=number_format($total_gross)?></b></span></center></td>
+			<td><span><b><center><?php echo number_format($total_item)?></center></b></span></td>
+			<td><center><span class="formaat"><b><?php echo number_format($total_gross)?></b></span></center></td>
 			<td>&nbsp;</td>
-			<td colspan="3"><center><span class="formaat"><b><?=number_format($total_nett);?></b></span></center></td>
+			<td colspan="3"><center><span class="formaat"><b><?php echo number_format($total_nett);?></b></span></center></td>
 		</tr>
 
 	</table>
@@ -609,12 +609,12 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td height="">&nbsp;</td>
 			</tr>
-			<? if($card_type == '6' OR $card_type == '9') { ?>
+			<?php if($card_type == '6' OR $card_type == '9') { ?>
 			<tr>
 				<td colspan="3">Nomor Kartu : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($card_no,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($card_no,-4);?></td>
 			</tr>
 			<tr>
 				<td><i>Harga sudah termasuk PPN</i></td>
@@ -624,18 +624,18 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
-			<? } else if ($krediet_kaart != '' AND $debiet_kaart != '') { ?>
+			<?php } else if ($krediet_kaart != '' AND $debiet_kaart != '') { ?>
 			<tr>
 				<td colspan="3">Kartu Debit : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($debiet_kaart,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($debiet_kaart,-4);?></td>
 			</tr>
 			<tr>
 				<td colspan="3">Kartu Kredit : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($krediet_kaart,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($krediet_kaart,-4);?></td>
 			</tr>
 			<tr>
 				<td><i>Harga sudah termasuk PPN</i></td>
@@ -645,7 +645,7 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
-			<? } else { ?>
+			<?php } else { ?>
 			<tr>
 				<td colspan="3">Nomor Kartu : </td>
 			</tr>
@@ -658,7 +658,7 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td height="">&nbsp;</td>
 			</tr>
-			<? } ?>
+			<?php } ?>
 		</table>
 		</div>
 
@@ -672,46 +672,46 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td colspan="3">Tunai</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=$nf_cash_amount?></b></td>
+				<td class="formaat"><b><?php echo $nf_cash_amount?></b></td>
 			</tr>
-			<? if ($card_type == '9' OR $card_type == 'TK') { // Krediet ?>
+			<?php if ($card_type == '9' OR $card_type == 'TK') { // Krediet ?>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kartu</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($credit_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($credit_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } else if ($card_type == '6' OR $card_type == 'TD') {  // Debiet ?>
+			<?php } else if ($card_type == '6' OR $card_type == 'TD') {  // Debiet ?>
 			<!-- Debiet  -->
 			<tr>
 				<td colspan="3">Debit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($debit_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($debit_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } else if ($krediet_kaart != '' AND $debiet_kaart != '') {  // Krediet & Debiet ?>
+			<?php } else if ($krediet_kaart != '' AND $debiet_kaart != '') {  // Krediet & Debiet ?>
 			<!-- Debiet  -->
 			<tr>
 				<td colspan="3">Debit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($debit_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($debit_amount)?></b></td>
 			</tr>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kredit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($credit_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($credit_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
@@ -719,7 +719,7 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;:&nbsp;</td>
 				<td class="formaat"><b>0</b></td>
 			</tr>
-			<? } else { // No Krediet dan Debiet ?>
+			<?php } else { // No Krediet dan Debiet ?>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kartu</td>
@@ -730,9 +730,9 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } ?>
+			<?php } ?>
 		</table>
 		</div>
 
@@ -743,12 +743,12 @@ for ($k=0; $k<$test; $k++) {
 		</div>
 		</center>
 
-		<? } ?>
+		<?php } ?>
 
 		</table>
 		</center>
 
-		<? if ($khusus != 2) { ?>
+		<?php if ($khusus != 2) { ?>
 
 			<center>
 			<div class="col-md-12" style="margin-top:5%; border: 0px solid blue; float: left; margin-left: 5%">
@@ -757,13 +757,13 @@ for ($k=0; $k<$test; $k++) {
 			</div>
 			</center>
 
-		<? 	} ?>
+		<?php 	} ?>
 
    </div>
 	<!-- Sluiting div separator - Closing div separator -->
 </div>
 
-<?  } else if($k == 2) { ?>
+<?php  } else if($k == 2) { ?>
 
 <!-- Sisa 3 perhitungan -->
 <!-- /////////////////////////////////////////////////////////////////////////// -->
@@ -772,11 +772,11 @@ for ($k=0; $k<$test; $k++) {
 
 	<div class="row" style="border: 0px solid red; margin-left: 0%;">
 		<div style="float:left; border: 0px solid green">
-			<div> No : ES<?=$kassier_aantal?>-<?=substr($transaction_code, 4)?> </div>
+			<div> No : ES<?php echo $kassier_aantal?>-<?php echo substr($transaction_code, 4)?> </div>
 		</div>
-		<div id="pageke" class="bok" style="float: left; margin-left: 20%"><?=$test?></div>
+		<div id="pageke" class="bok" style="float: left; margin-left: 20%"><?php echo $test?></div>
 		<div style="float: left; border: 0px solid blue; margin-left: 20%">
-			<div> <?=date("d/m/Y H:i", strtotime($trx_date))?> </div>
+			<div> <?php echo date("d/m/Y H:i", strtotime($trx_date))?> </div>
 		</div>
 	</div>
 	<br/>
@@ -812,14 +812,14 @@ for ($k=0; $k<$test; $k++) {
 	// Total all carts
 	$query_total_pay = "SELECT count(uid) FROM pos_detail2
 	WHERE pos_clientID = '$pos_client_id' AND transcode = '$transcode' AND temp = '9'";
-	$result_total_pay = mysql_query($query_total_pay);
+	$result_total_pay = mysqli_query($dbconn, $query_total_pay);
 	if (!$result_total_pay) {   error("QUERY_ERROR");   exit; }
-	$totuid = @mysql_result($result_total_pay,0,0);
+	$totuid = @mysqli_result($result_total_pay,0,0);
 
 	// Show all carts
 	$query_pay = "SELECT uid,detail,datedetail,temp,qty FROM pos_detail2
 	WHERE pos_clientID ='$pos_client_id' AND temp = '9' AND transcode = '$transcode'";
-	$result_pay = mysql_query($query_pay);
+	$result_pay = mysqli_query($dbconn, $query_pay);
 	if (!$result_pay) {   error("QUERY_ERROR");   exit; }
 
 
@@ -841,13 +841,13 @@ for ($k=0; $k<$test; $k++) {
 
 	// Looping for carts
 	for ($i; $i <$totuid_K3; $i++) {
-		$uid_3 = @mysql_result($result_pay,$i,0);
-		$detail_3 = @mysql_result($result_pay,$i,1);
+		$uid_3 = @mysqli_result($result_pay,$i,0);
+		$detail_3 = @mysqli_result($result_pay,$i,1);
 		$detail_ex_3 = explode("|", $detail_3);
 		$detail_J_ex_3 = explode("|", $detail_J);
-		$datedetail_3 = @mysql_result($result_pay,$i,2);
-		$temp_3 = @mysql_result($result_pay,$i,3);
-		$qty_k_3 = @mysql_result($result_pay,$i,4);
+		$datedetail_3 = @mysqli_result($result_pay,$i,2);
+		$temp_3 = @mysqli_result($result_pay,$i,3);
+		$qty_k_3 = @mysqli_result($result_pay,$i,4);
 
 		$pcode_3 = $detail_ex_3[0];
 		$barcode_3 = $detail_ex_3[1];
@@ -859,30 +859,30 @@ for ($k=0; $k<$test; $k++) {
 	    $subtotal_3 = number_format($nett_3);
 
 	    $query = "SELECT pname FROM item_masters WHERE org_pcode = '$pcode_3'";
-	    $result = mysql_query($query);
+	    $result = mysqli_query($dbconn, $query);
 	    if (!$result) {   error("QUERY_ERROR");   exit; }
-	    $pname_3 =  @mysql_result($result,0,0);
+	    $pname_3 =  @mysqli_result($result,0,0);
 	    $p_name_3 = explode(" ", $pname_3);
 
 	    ?>
 		<tr>
 			<td>
-				<span><?=substr($pcode_3,0,12)?></span>
+				<span><?php echo substr($pcode_3,0,12)?></span>
 			</td>
 			<td>
-				<span><? echo substr($p_name_3[0],0,7).' '.substr($p_name_3[1],0,7);?></span>
+				<span><?php echo substr($p_name_3[0],0,7).' '.substr($p_name_3[1],0,7);?></span>
 			</td>
 			<td>
-				<center><span><?=number_format($qty_k_3)?></span></center>
+				<center><span><?php echo number_format($qty_k_3)?></span></center>
 			</td>
 			<td>
-				<center><span class="formaat"><?=number_format($price_3)?></span></center>
+				<center><span class="formaat"><?php echo number_format($price_3)?></span></center>
 			</td>
 			<td>
-				<center><span><?=$disc_rate_3?>%</span></center>
+				<center><span><?php echo $disc_rate_3?>%</span></center>
 			</td>
 			<td>
-				<center><span class="formaat"><?=$subtotal_3?></span></center>
+				<center><span class="formaat"><?php echo $subtotal_3?></span></center>
 			</td>
 		</tr>
 
@@ -894,10 +894,10 @@ for ($k=0; $k<$test; $k++) {
 
 		<tr class="lyn" style="margin-top: 30%">
 			<td colspan="2"><span><b><center>TOTAL</center></b></span></td>
-			<td><span><b><center><?=number_format($total_item)?></center></b></span></td>
-			<td><center><span class="formaat"><b><?=number_format($total_gross)?></b></span></center></td>
+			<td><span><b><center><?php echo number_format($total_item)?></center></b></span></td>
+			<td><center><span class="formaat"><b><?php echo number_format($total_gross)?></b></span></center></td>
 			<td>&nbsp;</td>
-			<td colspan="3"><center><span class="formaat"><b><?=number_format($total_nett);?></b></span></center></td>
+			<td colspan="3"><center><span class="formaat"><b><?php echo number_format($total_nett);?></b></span></center></td>
 		</tr>
 
 	</table>
@@ -912,12 +912,12 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td height="">&nbsp;</td>
 			</tr>
-			<? if($card_type == '6' OR $card_type == '9') { ?>
+			<?php if($card_type == '6' OR $card_type == '9') { ?>
 			<tr>
 				<td colspan="3">Nomor Kartu : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($card_no,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($card_no,-4);?></td>
 			</tr>
 			<tr>
 				<td><i>Harga sudah termasuk PPN</i></td>
@@ -927,18 +927,18 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
-			<? } else if ($krediet_kaart != '' AND $debiet_kaart != '') { ?>
+			<?php } else if ($krediet_kaart != '' AND $debiet_kaart != '') { ?>
 			<tr>
 				<td colspan="3">Kartu Debit : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($debiet_kaart,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($debiet_kaart,-4);?></td>
 			</tr>
 			<tr>
 				<td colspan="3">Kartu Kredit : </td>
 			</tr>
 			<tr>
-				<td colspan="3"><? echo '****-****-****-'.substr($krediet_kaart,-4);?></td>
+				<td colspan="3"><?php echo '****-****-****-'.substr($krediet_kaart,-4);?></td>
 			</tr>
 			<tr>
 				<td><i>Harga sudah termasuk PPN</i></td>
@@ -948,7 +948,7 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
-			<? } else { ?>
+			<?php } else { ?>
 			<tr>
 				<td colspan="3">Nomor Kartu : </td>
 			</tr>
@@ -961,7 +961,7 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td height="">&nbsp;</td>
 			</tr>
-			<? } ?>
+			<?php } ?>
 		</table>
 		</div>
 
@@ -975,46 +975,46 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td colspan="3">Tunai</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=$nf_cash_amount?></b></td>
+				<td class="formaat"><b><?php echo $nf_cash_amount?></b></td>
 			</tr>
-			<? if ($card_type == '9' OR $card_type == 'TK') { // Krediet ?>
+			<?php if ($card_type == '9' OR $card_type == 'TK') { // Krediet ?>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kartu</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($credit_card_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($credit_card_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } else if ($card_type == '6' OR $card_type == 'TD') {  // Debiet ?>
+			<?php } else if ($card_type == '6' OR $card_type == 'TD') {  // Debiet ?>
 			<!-- Debiet  -->
 			<tr>
 				<td colspan="3">Debit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($debit_card_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($debit_card_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } else if ($krediet_kaart != '' AND $debiet_kaart != '') {  // Krediet & Debiet ?>
+			<?php } else if ($krediet_kaart != '' AND $debiet_kaart != '') {  // Krediet & Debiet ?>
 			<!-- Debiet  -->
 			<tr>
 				<td colspan="3">Debit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($debit_card_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($debit_card_amount)?></b></td>
 			</tr>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kredit</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($credit_card_amount)?></b></td>
+				<td class="formaat"><b><?php echo number_format($credit_card_amount)?></b></td>
 			</tr>
 			<!-- Bly - Remains -->
 			<tr>
@@ -1022,7 +1022,7 @@ for ($k=0; $k<$test; $k++) {
 				<td>&nbsp;:&nbsp;</td>
 				<td class="formaat"><b>0</b></td>
 			</tr>
-			<? } else { // No Krediet dan Debiet ?>
+			<?php } else { // No Krediet dan Debiet ?>
 			<!-- Krediet  -->
 			<tr>
 				<td colspan="3">Kartu</td>
@@ -1033,9 +1033,9 @@ for ($k=0; $k<$test; $k++) {
 			<tr>
 				<td colspan="3">Kembali</td>
 				<td>&nbsp;:&nbsp;</td>
-				<td class="formaat"><b><?=number_format($cash_remain)?></b></td>
+				<td class="formaat"><b><?php echo number_format($cash_remain)?></b></td>
 			</tr>
-			<? } ?>
+			<?php } ?>
 		</table>
 		</div>
 
@@ -1045,7 +1045,7 @@ for ($k=0; $k<$test; $k++) {
 			<div style="font-size: 8pt"> Terima kasih atas kunjungan nya</div>
 		</div>
 		</center>
-   <? } ?>
+   <?php } ?>
 
 	</table>
 	</center>
@@ -1054,7 +1054,7 @@ for ($k=0; $k<$test; $k++) {
 	<!-- Sluiting div separator - Closing div separator -->
 </div>
 
-<? } ?>
+<?php } ?>
 
 <?
 }
@@ -1079,21 +1079,21 @@ start_transaction();
 begin();
 $query_fin = "INSERT INTO pos_detail_backup (sales_code,detail,datedetail,transcode,temp,qty,dump)
 SELECT '$sales_code',detail,datedetail,transcode,temp,qty,'$detail_J' FROM pos_detail2 WHERE transcode = '$transcode'";
-$fetch_fin = mysql_query($query_fin);
+$fetch_fin = mysqli_query($dbconn, $query_fin);
 if (!$fetch_fin) { rollback(); error("QUERY_ERROR"); }
 commit();
 
 start_transaction();
 begin();
 $query_del = "DELETE FROM pos_detail2 WHERE transcode = '$transcode'";
-$fetch_del = mysql_query($query_del);
+$fetch_del = mysqli_query($dbconn, $query_del);
 if (!$fetch_del) { rollback(); error("QUERY_ERROR"); }
 commit();
 
 start_transaction();
 begin();
 $query_del2 = "DELETE FROM pos_total2 WHERE transcode = '$transcode' AND total IS NULL";
-$fetch_del2 = mysql_query($query_del2);
+$fetch_del2 = mysqli_query($dbconn, $query_del2);
 if (!$fetch_del2) { rollback(); error("QUERY_ERROR"); }
 commit();
 
